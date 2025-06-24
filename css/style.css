@@ -7,7 +7,7 @@
   --color-orange: #fc7642; /* Keep for CTAs or use a darker variation if needed */
   --color-white: #ffffff;
   --color-black: #000000;
-  --color-silver: #c0c0c0; /* Added for mercantile logo and nav links */
+  /* Removed --color-silver variable as it's no longer needed for logo/nav */
   font-family: 'Inter', sans-serif;
 }
 
@@ -60,11 +60,11 @@ header {
 }
 
 .logo span.mercantile {
-  color: var(--color-silver);
+  color: var(--color-dark-scarlet); /* Changed from silver to dark-scarlet */
 }
 
 nav a {
-  color: var(--color-silver);
+  color: var(--color-dark-scarlet); /* Changed from silver to dark-scarlet for consistency */
   margin: 0 1rem;
   text-decoration: none;
   font-weight: 600;
@@ -250,7 +250,6 @@ nav a:hover {
 
 main {
   padding: 3rem 2rem;
-  /* Removed the gradient from here as it was improperly placed */
 }
 
 .main-wrap {
@@ -259,7 +258,7 @@ main {
 }
 
 h1, h2, h3 {
-  color: var(--color-midnight); /* This variable is not defined, consider changing to a defined color like var(--color-crimson-noir) or var(--color-black) */
+  color: var(--color-crimson-noir); /* Changed from --color-midnight as it was undefined */
 }
 
 @media screen and (max-width: 768px) {
@@ -343,8 +342,6 @@ footer p {
   text-align: center;
   font-size: 0.9rem;
 }
-
-/* Removed the stray background gradient at the end of the file */
 
 
 /* --- New Styles for Added Sections --- */
