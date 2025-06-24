@@ -7,7 +7,6 @@
   --color-orange: #fc7642; /* Keep for CTAs or use a darker variation if needed */
   --color-white: #ffffff;
   --color-black: #000000;
-  /* Removed --color-silver variable as it's no longer needed for logo/nav */
   font-family: 'Inter', sans-serif;
 }
 
@@ -346,31 +345,14 @@ footer p {
 
 /* --- New Styles for Added Sections --- */
 
-.about-snippet,
+/* Removed .about-snippet styles */
+
 .trust-security,
 .partnerships,
 .corporate-cta {
   padding: 4rem 2rem;
   text-align: center;
   margin-bottom: 2rem; /* Add some space between sections */
-}
-
-.about-snippet {
-  background-color: var(--color-crimson-noir); /* Darker background for distinction */
-  color: var(--color-white);
-}
-
-.about-snippet h3 {
-  color: var(--color-white);
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-}
-
-.about-snippet p {
-  font-size: 1.1rem;
-  max-width: 800px;
-  margin: 0 auto 1.5rem;
-  line-height: 1.6;
 }
 
 .trust-security {
@@ -475,7 +457,6 @@ footer p {
 
 /* Media Queries for new sections */
 @media screen and (max-width: 768px) {
-  .about-snippet,
   .trust-security,
   .partnerships,
   .corporate-cta {
