@@ -2,14 +2,24 @@ document.addEventListener("DOMContentLoaded", function() {
   // Function to fetch and insert HTML content
   const loadComponent = (url, placeholderId) => {
     fetch(url)
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById(placeholderId).innerHTML = data;
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Failed to load ${url}: ${response.statusText}`);
+        }
+        return response.text();
       })
-      .catch(error => console.error(`Error loading ${url}:`, error));
+      .then(data => {
+        const placeholder = document.getElementById(placeholderId);
+        if (placeholder) {
+          placeholder.innerHTML = data;
+        } else {
+          console.error(`Placeholder element with id "${placeholderId}" not found.`);
+        }
+      })
+      .catch(error => console.error(error));
   };
 
-  // Load header and footer
+  // Load header and footer for root pages
   loadComponent('header.html', 'header-placeholder');
   loadComponent('footer.html', 'footer-placeholder');
   
