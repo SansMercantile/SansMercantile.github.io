@@ -1675,6 +1675,55 @@ footer p {
     text-align: center;
     padding: 1rem;
   }
+  
+  @media screen and (max-width: 992px) {
+  .desktop-nav {
+    display: none;
+  }
+  .mobile-nav-toggle {
+    display: flex;
+  }
+}
+
+  @media screen and (max-width: 480px) {
+  .language-selector select {
+    padding: 0.4rem 1rem;
+    font-size: 0.8rem;
+    max-width: 120px;
+  }
+    img {
+  max-width: 100%;
+  height: auto;
+}
+    
+  @media screen and (max-width: 768px) {
+  h2, h3 {
+    font-size: 1.4rem;
+  }
+  p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+}
+    .cta {
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+}
+    
+@media screen and (max-width: 768px) {
+  .cta {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+}
+
+  .language-selector {
+    bottom: 10px;
+    right: 10px;
+  }
+}
+
+  
 
   nav {
     margin-top: 1rem;
