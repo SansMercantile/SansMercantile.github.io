@@ -205,7 +205,21 @@
       <div class="footer-bottom">
         <p>&copy; 2025 Sans Mercantile. All Rights Reserved.</p>
         <div class="language-selector">
-          <span>Language: English</span>
+            <select id="language-select" name="language">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+                <option value="pt">Português</option>
+                <option value="ru">Русский</option>
+                <option value="zh">中文 (Mandarin)</option>
+                <option value="ar">العربية</option>
+                <option value="hi">हिन्दी</option>
+                <option value="sw">Kiswahili</option>
+                <option value="zu">isiZulu</option>
+            </select>
           </div>
       </div>
     </footer>
@@ -214,6 +228,7 @@
       AOS.init();
     </script>
     <script>
+      // Existing scripts for hero overlay...
       window.addEventListener('scroll', () => {
         const overlay = document.querySelector('.hero-overlay');
         if (window.scrollY > 100) {
@@ -224,8 +239,6 @@
           overlay.style.backgroundColor = 'rgba(31, 0, 0, 0.65)';
         }
       });
-    </script>
-    <script>
       window.addEventListener('scroll', () => {
         const overlay = document.querySelector('.hero-overlay');
         const triggerPoint = window.innerHeight * 0.01;
@@ -234,6 +247,43 @@
         } else {
           overlay.style.opacity = 0;
         }
+      });
+
+      // --- Language Detection Script ---
+      document.addEventListener('DOMContentLoaded', () => {
+        const languageSelect = document.getElementById('language-select');
+        
+        // 1. Define English-speaking regions
+        const englishRegions = ['en', 'en-US', 'en-GB', 'en-CA', 'en-AU', 'en-NZ', 'en-ZA'];
+
+        // 2. Get user's browser language
+        const userLang = navigator.language || navigator.userLanguage; 
+        
+        // 3. Set language based on rules
+        // Rule: If user's language is English (any variant), default to English.
+        if (englishRegions.some(region => userLang.startsWith(region))) {
+            languageSelect.value = 'en';
+        } else {
+            // For other users, try to match their browser language to an option
+            const langPrefix = userLang.split('-')[0]; // e.g., 'fr-CH' becomes 'fr'
+            const optionExists = languageSelect.querySelector(`option[value="${langPrefix}"]`);
+            if (optionExists) {
+                languageSelect.value = langPrefix;
+            } else {
+                // Default to English if no match is found
+                languageSelect.value = 'en';
+            }
+        }
+
+        // This is where you would add the logic to translate the page
+        // when a new language is selected from the dropdown.
+        languageSelect.addEventListener('change', (event) => {
+            const selectedLanguage = event.target.value;
+            console.log(`Language changed to: ${selectedLanguage}`);
+            // Example of what you might do next:
+            // window.location.href = `/${selectedLanguage}/index.html`;
+            alert(`Page would now translate to ${selectedLanguage}. You need to implement the translation logic.`);
+        });
       });
     </script>
   </body>
