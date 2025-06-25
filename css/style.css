@@ -383,6 +383,44 @@ nav a:hover {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* --- Platform Page Feature Grid --- */
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 3rem auto;
+    text-align: left;
+}
+
+.feature-card {
+    background-color: #fdfdfd;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(73, 12, 9, 0.1);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-color: var(--color-orange);
+}
+
+.feature-card h4 {
+    color: var(--color-dark-scarlet);
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.feature-card p {
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.6;
+    margin: 0;
+}
+
 /* Vision Snippet Section */
 .vision-snippet {
   background-color: var(--color-black-cherry);
