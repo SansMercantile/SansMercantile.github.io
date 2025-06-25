@@ -1,123 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <link rel="icon" type="image/png" href="img/logo.png" />
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title data-i18n="meta.title"></title>
-    <meta name="description" content="" data-i18n-placeholder="meta.description" />
-    <link rel="stylesheet" href="css/style.css" />
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-  </head>
-  <body>
+<html lang="en" class="dark-mode">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="meta.title">Sans Mercantile™ | Home</title>
+    <meta name="description" content="Sans Mercantile™ is an AI-native fintech platform transforming CFD trading with institutional-grade risk management and ethical AI. Discover our AI-regulated strategies and tokenized mobile finance solutions for emerging markets." data-i18n-placeholder="meta.description">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+<body>
+
     <div id="header-placeholder"></div>
 
-    <main role="main" class="main-wrap">
-      <section class="hero-section"></section>
+    <main>
+        <section class="latest-insights">
+            <h2 data-i18n="insights.title">Latest Insights</h2>
+            <div class="insights-grid">
+                <div class="insight-card" data-aos="fade-up">
+                    <img src="https://storage.googleapis.com/gemini-prod-us-west1-assets/images/cb6a4a4d65f5a89e.jpeg" alt="Abstract visualization of financial data streams">
+                    <h3 data-i18n="insights.0.title">Redefining Risk</h3>
+                    <p data-i18n="insights.0.description">How AI-driven strategy is revolutionizing risk management in township economies.</p>
+                    <a href="blogs/redefining-risk.html" data-i18n="insights.0.link">Read More &rarr;</a>
+                </div>
+                <div class="insight-card" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://storage.googleapis.com/gemini-prod-us-west1-assets/images/cb6a4a4d65f5a89e.jpeg" alt="Digital brain with interconnected nodes">
+                    <h3 data-i18n="insights.1.title">The AI Revolution</h3>
+                    <p data-i18n="insights.1.description">Exploring the transformative impact of AI on global finance and trading.</p>
+                    <a href="blogs/blog-ai-revolution.html" data-i18n="insights.1.link">Read More &rarr;</a>
+                </div>
+                <div class="insight-card" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://storage.googleapis.com/gemini-prod-us-west1-assets/images/cb6a4a4d65f5a89e.jpeg" alt="Stylized scales of justice with digital elements">
+                    <h3 data-i18n="insights.2.title">Compliance Frameworks</h3>
+                    <p data-i18n="insights.2.description">The role of AI in building robust, ethical, and transparent compliance systems.</p>
+                    <a href="blogs/blog-compliance-framework.html" data-i18n="insights.2.link">Read More &rarr;</a>
+                </div>
+            </div>
+        </section>
 
-      <section class="hero-overlay">
-        <h2 data-i18n="hero.title"></h2>
-        <p data-i18n="hero.subtitle"></p>
-        <a class="cta" href="platform.html" data-i18n="hero.cta"></a>
-      </section>
-
-      <section class="vision-snippet" data-aos="fade-up" data-aos-delay="100">
-        <h3 data-i18n="vision.heading"></h3>
-        <p data-i18n="vision.body"></p>
-      </section>
-
-      <section class="values" data-aos="fade-up" data-aos-delay="100">
-        <h3 data-i18n="values.heading"></h3>
-        <div class="value-grid">
-          <div class="value-card">
-            <svg class="animated-icon" width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10 50 Q25 20, 40 50 T70 50 T90 50" stroke="#490c09" stroke-width="4" fill="none">
-                <animate attributeName="d" dur="2s" repeatCount="indefinite"
-                         values="M10 50 Q25 20, 40 50 T70 50 T90 50;
-                                 M10 50 Q25 35, 40 30 T70 70 T90 50;
-                                 M10 50 Q25 20, 40 50 T70 50 T90 50" />
-              </path>
-            </svg>
-            <h4 data-i18n="values.aiRegulated.title"></h4>
-            <p data-i18n="values.aiRegulated.desc"></p>
-          </div>
-          <div class="value-card">
-            <svg class="animated-icon" width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="50" cy="50" r="6" fill="#781f25" />
-              <circle cx="50" cy="50" r="20" stroke="#3d0917" stroke-width="2" fill="none">
-                <animate attributeName="r" values="20;30;20" dur="2.5s" repeatCount="indefinite" />
-                <animate attributeName="opacity" values="1;0;1" dur="2.5s" repeatCount="indefinite" />
-              </circle>
-              <circle cx="50" cy="50" r="40" stroke="#490c09" stroke-width="1.5" fill="none" opacity="0.3" />
-            </svg>
-            <h4 data-i18n="values.inclusive.title"></h4>
-            <p data-i18n="values.inclusive.desc"></p>
-          </div>
-          <div class="value-card">
-            <svg class="animated-icon" width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="50" cy="50" r="40" stroke="#1f0000" stroke-width="2" opacity="0.3" />
-              <polygon points="50,30 53,50 50,70 47,50" fill="#310816" />
-              <g>
-                <polygon id="needle" points="50,25 52,50 50,75 48,50" fill="#490c09">
-                  <animateTransform attributeName="transform" attributeType="XML"
-                                  type="rotate" from="0 50 50" to="360 50 50"
-                                  dur="5s" repeatCount="indefinite"/>
-                </polygon>
-              </g>
-            </svg>
-            <h4 data-i18n="values.expert.title"></h4>
-            <p data-i18n="values.expert.desc"></p>
-          </div>
-        </div>
-      </section>
-
-      <section class="platform-preview" data-aos="fade-up" data-aos-delay="100">
-        <h3 data-i18n="platform.heading"></h3>
-        <div class="platform-content">
-          <div class="platform-metrics">
-            <ul>
-              <li>
-                <svg class="metric-icon" width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="6" fill="#490c09"><animate attributeName="r" values="6;8;6" dur="1.8s" repeatCount="indefinite" /><animate attributeName="opacity" values="1;0.6;1" dur="1.8s" repeatCount="indefinite" /></circle><circle cx="30" cy="30" r="3" fill="#781f25"><animate attributeName="opacity" values="0.3;1;0.3" dur="3s" begin="0s" repeatCount="indefinite" /></circle><circle cx="70" cy="30" r="3" fill="#781f25"><animate attributeName="opacity" values="0.3;1;0.3" dur="3s" begin="0.3s" repeatCount="indefinite" /></circle><circle cx="30" cy="70" r="3" fill="#781f25"><animate attributeName="opacity" values="0.3;1;0.3" dur="3s" begin="0.6s" repeatCount="indefinite" /></circle><circle cx="70" cy="70" r="3" fill="#781f25"><animate attributeName="opacity" values="0.3;1;0.3" dur="3s" begin="0.9s" repeatCount="indefinite" /></circle></svg>
-                <strong>98.7%</strong> <span data-i18n="metrics.confidence"></span>
-              </li>
-              <li>
-                <svg class="metric-icon" width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="30" stroke="#310816" stroke-width="4" fill="none" /><rect x="42" y="40" width="16" height="20" fill="#490c09" rx="2" /><path d="M50 32 a6 6 0 0 1 6 6 v2 h-12 v-2 a6 6 0 0 1 6 -6" fill="#781f25"><animateTransform attributeName="transform" type="scale" values="1;1.05;1" dur="1.8s" repeatCount="indefinite" additive="sum" /></path></svg>
-                <strong>4 min</strong> <span data-i18n="metrics.minutes"></span>
-              </li>
-              <li>
-                <svg class="metric-icon" width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="28" fill="#1f0000" /><path d="M22,50 a28,12 0 1,0 56,0 a28,12 0 1,0 -56,0" stroke="#3d0917" stroke-width="1.5" fill="none"><animateTransform attributeName="transform" type="rotate" values="0 50 50; 360 50 50" dur="6s" repeatCount="indefinite" /></path></svg>
-                <strong>Multi-Market</strong> <span data-i18n="metrics.surveillance"></span>
-              </li>
-            </ul>
-          </div>
-          <div class="platform-image">
-            <img src="img/platform-preview.png" alt="A preview of the Sans Mercantile™ AI-driven trading platform dashboard." />
-          </div>
-        </div>
-        <a class="cta" href="platform.html" data-i18n="platform.cta"></a>
-      </section>
-
-      <section class="latest-insights" data-aos="fade-up" data-aos-delay="100">
-        <h3 data-i18n="insights.heading"></h3>
-        <div class="articles-grid">
-          <article class="insight-card">
-            <h4 data-i18n="insights.0.title"></h4>
-            <p data-i18n="insights.0.body"></p>
-            <a href="blog.html#article1" data-i18n="insights.0.link"></a>
-          </article>
-          <article class="insight-card">
-            <h4 data-i18n="insights.1.title"></h4>
-            <p data-i18n="insights.1.body"></p>
-            <a href="blog.html#article2" data-i18n="insights.1.link"></a>
-          </article>
-        </div>
-        <a class="cta" href="blog.html" data-i18n="insights.viewAll"></a>
-      </section>
-    </main>
+        </main>
 
     <div id="footer-placeholder"></div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="js/main.js" defer></script>
-  </body>
+    <script src="js/main.js"></script>
+</body>
 </html>
