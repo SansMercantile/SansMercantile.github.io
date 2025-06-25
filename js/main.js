@@ -1,78 +1,74 @@
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // --- Initialize AOS (Animate on Scroll) ---
+    AOS.init();
 
-  // --- 1. Function to fetch and insert HTML components ---
-  // Using async/await for reliability
-  const loadComponent = async (id, url) => {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Failed to load ${url}: ${response.statusText}`);
-      }
-      const data = await response.text();
-      const placeholder = document.getElementById(id);
-      if (placeholder) {
-        placeholder.innerHTML = data;
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    // --- State for current language ---
+    let currentLanguage = 'en';
 
-  // --- 2. Load Header and Footer First ---
-  // Promise.all ensures both are loaded before the next steps run
-  await Promise.all([
-    loadComponent('header-placeholder', '_header.html'),
-    loadComponent('footer-placeholder', '_footer.html')
-  ]);
+    // --- Function to load and apply translations ---
+    async function setLanguage(lang) {
+        const response = await fetch(`lang/${lang}.json`);
+        const translations = await response.json();
 
-  // --- 3. Initialize Plugins and Scripts that depend on loaded content ---
-  AOS.init();
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            // Use lodash-like _.get to safely access nested properties
+            const text = key.split('.').reduce((obj, k) => obj && obj[k], translations);
+            if (text) {
+                element.textContent = text;
+            }
+        });
 
-  const languageSelect = document.getElementById('language-select');
-  if (languageSelect) {
-    const englishRegions = ['en', 'en-US', 'en-GB', 'en-CA', 'en-AU', 'en-NZ', 'en-ZA'];
-    const userLang = navigator.language || navigator.userLanguage;
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+            const key = element.getAttribute('data-i18n-placeholder');
+            const text = key.split('.').reduce((obj, k) => obj && obj[k], translations);
+            if (text) {
+                element.setAttribute('placeholder', text);
+            }
+        });
 
-    // Set the dropdown to the user's detected language
-    if (englishRegions.some(region => userLang.startsWith(region))) {
-      languageSelect.value = 'en';
-    } else {
-      const langPrefix = userLang.split('-')[0];
-      const optionExists = languageSelect.querySelector(`option[value="${langPrefix}"]`);
-      if (optionExists) {
-        languageSelect.value = langPrefix;
-      } else {
-        languageSelect.value = 'en';
-      }
+        // Special handling for meta description
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) {
+            const descKey = metaDesc.getAttribute('data-i18n-placeholder');
+            const text = descKey.split('.').reduce((obj, k) => obj && obj[k], translations);
+            if (text) {
+                metaDesc.setAttribute('content', text);
+            }
+        }
+        
+        currentLanguage = lang;
+        document.documentElement.lang = lang;
     }
 
-    // --- 4. Add the Language Switcher Event Listener (Your Logic) ---
-    languageSelect.addEventListener('change', (event) => {
-      const selectedLanguage = event.target.value;
-      
-      // Get the name of the current file (e.g., "index.html", "about.html")
-      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    // --- Function to load HTML partials (Header/Footer) ---
+    async function loadComponent(id, url) {
+        const response = await fetch(url);
+        const text = await response.text();
+        document.getElementById(id).innerHTML = text;
+    }
 
-      // Redirect to the new language version of the page
-      // For example, if on about.html and user selects 'es', it will go to '/es/about.html'
-      window.location.href = `/${selectedLanguage}/${currentPage}`;
-    });
-  }
+    // --- Load Header and Footer, then set language ---
+    await Promise.all([
+        loadComponent('header-placeholder', '_header.html'),
+        loadComponent('footer-placeholder', '_footer.html')
+    ]);
 
-  // --- 5. Scroll-triggered visual overlay effect for the homepage ---
-  const overlay = document.querySelector('.hero-overlay');
-  if (overlay) {
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 100) {
-        overlay.style.backdropFilter = 'blur(8px)';
-        overlay.style.backgroundColor = 'rgba(31, 0, 0, 0.8)';
-      } else {
-        overlay.style.backdropFilter = 'blur(6px)';
-        overlay.style.backgroundColor = 'rgba(31, 0, 0, 0.65)';
-      }
-      
-      const triggerPoint = window.innerHeight * 0.01;
-      overlay.style.opacity = window.scrollY > triggerPoint ? 1 : 0;
-    });
-  }
+    // --- Language Selector Logic ---
+    const languageSelect = document.getElementById('language-select');
+    if (languageSelect) {
+        // Detect browser language
+        const userLang = (navigator.language || navigator.userLanguage).split('-')[0];
+        if ([...languageSelect.options].some(o => o.value === userLang)) {
+            languageSelect.value = userLang;
+        }
+
+        // Set initial language
+        await setLanguage(languageSelect.value);
+
+        // Add event listener
+        languageSelect.addEventListener('change', (e) => {
+            setLanguage(e.target.value);
+        });
+    }
 });
