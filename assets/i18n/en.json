@@ -1,0 +1,44 @@
+{
+  "hero": {
+    "title": "AI-Native Financial Infrastructure for Tomorrow’s Economies",
+    "subtitle": "Empowering underbanked and high-growth markets with predictive, transparent, and institution-grade CFD trading intelligence.",
+    "cta": "Explore the AI Platform"
+  },
+  "vision": {
+    "heading": "Our Vision",
+    "body": "To redefine financial markets through AI-driven strategy, expert advisory, and automated precision..."
+  },
+  "values": {
+    "heading": "Our Edge",
+    "aiRegulated": {
+      "title": "AI Regulated",
+      "desc": "Real-time predictive governance built into every transaction."
+    },
+    "access": {
+      "title": "Inclusive Access",
+      "desc": "Serving underbanked markets through tokenized mobile finance."
+    },
+    "expert": {
+      "title": "Expert-Driven",
+      "desc": "Institutional intelligence. Grassroots strategy."
+    }
+  },
+  "platform": {
+    "heading": "Meet the Platform",
+    "cta": "See All Platform Features"
+  },
+  "insights": {
+    "heading": "Latest Insights",
+    "0": {
+      "title": "Redefining Risk: Why Township Markets Deserve Better Infrastructure",
+      "summary": "A deep dive into how our AI engine mitigates structural volatility...",
+      "readMore": "Read more about Redefining Risk"
+    },
+    "1": {
+      "title": "Compliance Isn’t a Checkbox. It’s a Framework.",
+      "summary": "Why built-in governance matters—and how Sans Mercantile™ approaches compliance...",
+      "readMore": "Read more about our Compliance Framework"
+    },
+    "cta": "View All Insights"
+  }
+}
