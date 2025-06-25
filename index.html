@@ -4,40 +4,45 @@
     <link rel="icon" type="image/png" href="img/logo.png" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sans Mercantile™ | Home</title>
+    <title data-i18n="meta.title">Sans Mercantile™ | Home</title>
+    <meta name="description" content="" data-i18n-placeholder="meta.description" />
     <link rel="stylesheet" href="css/style.css" />
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-    <meta name="description" content="Sans Mercantile™ is an AI-native fintech platform transforming CFD trading and township economies with predictive, transparent, and institution-grade intelligence." />
   </head>
   <body>
     <div id="header-placeholder"></div>
 
     <main role="main" class="main-wrap">
-       <section class="hero-section"></section>
+      <section class="hero-section"></section>
+
       <section class="hero-overlay">
-        <h2>AI-Native Financial Infrastructure for Tomorrow’s Economies</h2>
-        <p>
-          Empowering underbanked and high-growth markets with predictive,
-          transparent, and institution-grade CFD trading intelligence.
-        </p>
-        <a class="cta" href="platform.html">Explore the AI Platform</a>
+        <h2 data-i18n="hero.title"></h2>
+        <p data-i18n="hero.subtitle"></p>
+        <a class="cta" href="platform.html" data-i18n="hero.cta"></a>
       </section>
+
       <section class="vision-snippet" data-aos="fade-up" data-aos-delay="100">
-        <h3>Our Vision</h3>
-        <p>To redefine financial markets through AI-driven strategy, expert advisory, and automated precision, creating unmatched profitability and sustainable financial growth.</p>
+        <h3 data-i18n="vision.heading"></h3>
+        <p data-i18n="vision.body"></p>
       </section>
+
       <section class="values" data-aos="fade-up" data-aos-delay="100">
-        <h3>Our Edge</h3>
+        <h3 data-i18n="values.heading"></h3>
         <div class="value-grid">
+
           <div class="value-card">
             <svg class="animated-icon" width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M10 50 Q25 20, 40 50 T70 50 T90 50" stroke="#490c09" stroke-width="4" fill="none">
-                <animate attributeName="d" dur="2s" repeatCount="indefinite" values=" M10 50 Q25 20, 40 50 T70 50 T90 50; M10 50 Q25 35, 40 30 T70 70 T90 50; M10 50 Q25 20, 40 50 T70 50 T90 50"/>
+                <animate attributeName="d" dur="2s" repeatCount="indefinite"
+                         values="M10 50 Q25 20, 40 50 T70 50 T90 50;
+                                 M10 50 Q25 35, 40 30 T70 70 T90 50;
+                                 M10 50 Q25 20, 40 50 T70 50 T90 50" />
               </path>
             </svg>
-            <h4>AI Regulated</h4>
-            <p>Real-time predictive governance built into every transaction.</p>
+            <h4 data-i18n="values.aiRegulated.title"></h4>
+            <p data-i18n="values.aiRegulated.desc"></p>
           </div>
+
           <div class="value-card">
             <svg class="animated-icon" width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="50" cy="50" r="6" fill="#781f25" />
@@ -47,27 +52,31 @@
               </circle>
               <circle cx="50" cy="50" r="40" stroke="#490c09" stroke-width="1.5" fill="none" opacity="0.3" />
             </svg>
-            <h4>Inclusive Access</h4>
-            <p>Serving underbanked markets through tokenized mobile finance.</p>
+            <h4 data-i18n="values.inclusive.title"></h4>
+            <p data-i18n="values.inclusive.desc"></p>
           </div>
+
           <div class="value-card">
             <svg class="animated-icon" width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="50" cy="50" r="40" stroke="#1f0000" stroke-width="2" opacity="0.3" />
               <polygon points="50,30 53,50 50,70 47,50" fill="#310816" />
               <g>
                 <polygon id="needle" points="50,25 52,50 50,75 48,50" fill="#490c09">
-                  <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 50 50" to="360 50 50" dur="5s" repeatCount="indefinite"/>
+                  <animateTransform attributeName="transform" attributeType="XML"
+                                  type="rotate" from="0 50 50" to="360 50 50"
+                                  dur="5s" repeatCount="indefinite"/>
                 </polygon>
               </g>
             </svg>
-            <h4>Expert-Driven</h4>
-            <p>Institutional intelligence. Grassroots strategy.</p>
+            <h4 data-i18n="values.expert.title"></h4>
+            <p data-i18n="values.expert.desc"></p>
           </div>
+
         </div>
       </section>
 
       <section class="platform-preview" data-aos="fade-up" data-aos-delay="100">
-        <h3>Meet the Platform</h3>
+        <h3 data-i18n="platform.heading"></h3>
         <div class="platform-content">
           <div class="platform-metrics">
             <ul>
@@ -90,7 +99,7 @@
                     <animate attributeName="opacity" values="0.3;1;0.3" dur="3s" begin="0.9s" repeatCount="indefinite" />
                   </circle>
                 </svg>
-                <strong>98.7%</strong> Predictive Signal Confidence
+                <strong>98.7%</strong> <span data-i18n="metrics.confidence"></span>
               </li>
               <li>
                 <svg class="metric-icon" width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -100,7 +109,7 @@
                     <animateTransform attributeName="transform" type="scale" values="1;1.05;1" dur="1.8s" repeatCount="indefinite" additive="sum" />
                   </path>
                 </svg>
-                <strong>4 min</strong> Tokenized KYC Onboarding
+                <strong>4 min</strong> <span data-i18n="metrics.minutes"></span>
               </li>
               <li>
                 <svg class="metric-icon" width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -109,7 +118,7 @@
                     <animateTransform attributeName="transform" type="rotate" values="0 50 50; 360 50 50" dur="6s" repeatCount="indefinite" />
                   </path>
                 </svg>
-                <strong>Multi-Market</strong> ESG-Sensitive Surveillance
+                <strong>Multi-Market</strong> <span data-i18n="metrics.surveillance"></span>
               </li>
             </ul>
           </div>
@@ -117,30 +126,30 @@
             <img src="img/platform-preview.png" alt="A preview of the Sans Mercantile™ AI-driven trading platform dashboard, showing predictive signal confidence and other metrics." />
           </div>
         </div>
-        <a class="cta" href="platform.html">See All Platform Features</a>
+        <a class="cta" href="platform.html" data-i18n="platform.cta"></a>
       </section>
 
       <section class="latest-insights" data-aos="fade-up" data-aos-delay="100">
-        <h3>Latest Insights</h3>
+        <h3 data-i18n="insights.heading"></h3>
         <div class="articles-grid">
           <article class="insight-card">
-            <h4>Redefining Risk: Why Township Markets Deserve Better Infrastructure</h4>
-            <p>A deep dive into how our AI engine mitigates structural volatility while unlocking scalable growth for communities long overlooked by traditional finance.</p>
-            <a href="blog.html#article1">Read more about Redefining Risk</a>
+            <h4 data-i18n="insights.0.title"></h4>
+            <p data-i18n="insights.0.body"></p>
+            <a href="blog.html#article1" data-i18n="insights.0.link"></a>
           </article>
           <article class="insight-card">
-            <h4>Compliance Isn’t a Checkbox. It’s a Framework.</h4>
-            <p>Why built-in governance matters—and how Sans Mercantile™ approaches compliance as a trust-building opportunity, not a hurdle.</p>
-            <a href="blog.html#article2">Read more about our Compliance Framework</a>
+            <h4 data-i18n="insights.1.title"></h4>
+            <p data-i18n="insights.1.body"></p>
+            <a href="blog.html#article2" data-i18n="insights.1.link"></a>
           </article>
         </div>
-        <a class="cta" href="blog.html">View All Insights</a>
+        <a class="cta" href="blog.html" data-i18n="insights.viewAll"></a>
       </section>
     </main>
-    
+
     <div id="footer-placeholder"></div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/main.js" defer></script>
   </body>
 </html>
