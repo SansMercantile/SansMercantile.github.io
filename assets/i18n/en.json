@@ -43,7 +43,8 @@
   },
   "metrics": {
       "confidence": "Predictive Signal Confidence",
-      "minutes": "min Tokenized KYC Onboarding",
+      "minutes": "min",
+      "kyc": "Tokenized KYC Onboarding"
       "surveillance": "ESG-Sensitive Surveillance"
   },
   "insights": {
