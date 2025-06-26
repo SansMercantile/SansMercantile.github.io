@@ -2019,4 +2019,7 @@ body.legal-background {
     text-decoration: underline;
 }
 
-
+.job-page ul {
+  list-style-type: none;
+  padding-left: 0;
+}
