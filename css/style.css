@@ -1897,7 +1897,6 @@ body.legal-background {
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.125);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  color: var(--color-silver);
   text-align: left;
 }
 
@@ -1911,7 +1910,6 @@ body.legal-background {
 }
 
 .legal-page h3 {
-  color: var(--color-white);
   margin-top: 2.5rem;
   margin-bottom: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -1919,7 +1917,6 @@ body.legal-background {
 }
 
 .legal-page h4 {
-    color: var(--color-silver);
     margin-top: 1.5rem;
     font-style: italic;
 }
