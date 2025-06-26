@@ -1870,3 +1870,39 @@ footer p {
     position: relative;
     z-index: 2; /* In front of the image */
 }
+
+body.legal-background {
+  background-image: url('../img/hero.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+.legal-page {
+  max-width: 900px;
+  margin: 5rem auto;
+  padding: 3rem 4rem;
+  background: rgba(15, 0, 0, 0.65);
+  backdrop-filter: blur(15px) saturate(180%);
+  -webkit-backdrop-filter: blur(15px) saturate(180%);
+  border-radius: 12px;
+  /* ... other styles */
+}
+.article-page {
+    background-color: var(--color-white);
+    color: var(--color-black);
+}
+.article-hero {
+    width: 100%;
+    height: 60vh;
+    object-fit: cover;
+}
+.article-container {
+    max-width: 750px; /* Limits width for readability */
+    margin: 0 auto;  /* Centers the content */
+    padding: 4rem 2rem;
+}
+.article-container p {
+    font-size: 1.15rem; /* Larger font size */
+    line-height: 1.9;   /* More space between lines */
+    color: #333;
+}
