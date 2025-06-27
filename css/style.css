@@ -1872,6 +1872,14 @@ nav a:hover {
   padding: 3rem 2rem;
   text-align: center;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+  /* Responsive Fixed Positioning */
+  position: static; /* Default for mobile */
+  bottom: 0; /* Align to bottom when fixed */
+  left: 0;
+  width: 100%;
+  box-sizing: border-box; /* Include padding in width */
+  z-index: 100; /* Ensure it stays above other content */
 }
 
 .subscribe-section h3 {
@@ -2031,6 +2039,30 @@ footer p {
 }
 
 /* Media Queries */
+@media screen and (min-width: 768px) {
+  /* Apply fixed position for tablets and desktops */
+  .subscribe-section {
+    position: fixed;
+    bottom: 20px; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto; /* Adjust width for fixed position */
+    max-width: 600px; /* Constrain max-width */
+    padding: 1.5rem 2rem; /* Adjust padding for fixed size */
+    border-radius: 12px; /* Rounded corners */
+    background-color: rgba(31, 0, 0, 0.9); /* Slightly more opaque background */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .subscribe input {
+    width: auto;
+    flex-grow: 1; /* Allow input to grow within the flex container */
+  }
+}
+
 @media screen and (max-width: 992px) {
   h2 {
     font-size: 2.5rem;
