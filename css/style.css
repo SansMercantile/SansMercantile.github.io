@@ -985,173 +985,247 @@ nav a:hover {
   color: var(--color-orange);
   margin-bottom: 2rem;
 }
-/* Main Article Container */
-.article {
-    background-color: #1F1A1A; /* Dark reddish-brown from image */
-    color: #EAEAEA; /* Off-white text */
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 60px;
-}
 
-/* Header */
-.article .article-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 60px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #3a3a3a;
-}
 
-.article .logo {
-    font-size: 1.5rem;
-    font-weight: 600;
-}
+        /* --- Main Article Container --- */
+        .article {
+            background-color: #1f0000; /* Burgandy Black - REVERTED */
+            color: #EAEAEA; /* Off-white text */
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 60px;
+        }
 
-.article .navigation a {
-    text-decoration: none;
-    color: #EAEAEA;
-    font-size: 1rem;
-    font-weight: 400;
-}
+        /* --- Header --- */
+        .article .article-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #3a3a3a;
+        }
 
-.article .navigation a:hover {
-    color: #FFFFFF;
-}
+        .article .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #EAEAEA; /* Ensure logo text color matches article text */
+        }
 
-/* Hero Section (Title and Subtitle) */
-.article .hero {
-    margin-bottom: 40px;
-}
+        /* Custom styles for Sans Mercantile logo spans */
+        .article .logo .sans {
+            color: #EAEAEA; /* Adjusted to match main article text color */
+        }
 
-.article .hero h1 {
-    font-size: 3.5rem;
-    font-weight: 700;
-    margin: 0 0 15px 0;
-    line-height: 1.1;
-    max-width: 80%;
-}
+        .article .logo .mercantile {
+            color: #EAEAEA; /* Adjusted to match main article text color */
+        }
 
-.article .hero .author {
-    font-size: 1rem;
-    color: #b0b0b0;
-    margin: 0 0 25px 0;
-}
 
-.article .hero .subtitle {
-    font-size: 1.25rem;
-    line-height: 1.5;
-    color: #d0d0d0;
-    max-width: 90%;
-}
+        .article .navigation a {
+            text-decoration: none;
+            color: #EAEAEA;
+            font-size: 1rem;
+            font-weight: 400;
+            margin-left: 20px; /* Added spacing between nav links */
+        }
 
-/* Two-Column Grid Layout */
-.article .two-column-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 50px;
-    align-items: start;
-}
+        .article .navigation a:hover {
+            color: #FFFFFF;
+        }
 
-/* Specific Section Styling */
-.article .intro-section {
-    align-items: center; /* Vertically center image and intro text */
-    margin-bottom: 60px;
-}
+        /* --- Hero Section (Title and Subtitle) --- */
+        .article .hero {
+            margin-bottom: 40px;
+        }
 
-.article .details-section {
-    padding-top: 40px;
-    border-top: 1px solid #3a3a3a;
-}
+        .article .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            line-height: 1.1;
+            max-width: 80%;
+            color: #FFFFFF; /* Ensures title is white */
+        }
 
-/* Image container and styling */
-.article .image-container .feature-image {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 8px;
-    /* This shadow mimics the red glow in the original image */
-    box-shadow: 0 0 25px 5px rgba(224, 83, 63, 0.25);
-}
+        .article .hero .author {
+            font-size: 1rem;
+            color: #b0b0b0;
+            margin: 0 0 25px 0;
+        }
 
-/* General Text Container and Elements */
-.article .text-container h2 {
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: #FFFFFF;
-    margin-bottom: 1rem;
-}
+        .article .hero .subtitle {
+            font-size: 1.25rem;
+            line-height: 1.5;
+            color: #d0d0d0;
+            max-width: 90%;
+        }
 
-.article .text-container p {
-    font-size: 1rem;
-    line-height: 1.7;
-    margin: 0 0 1rem 0;
-    color: #c5c5c5;
-}
+        /* --- Two-Column Grid Layout --- */
+        .article .two-column-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: start;
+        }
 
-.article .text-container p:last-child {
-    margin-bottom: 0;
-}
+        /* --- Specific Section Styling --- */
+        .article .intro-section {
+            align-items: center; /* Vertically center image and intro text */
+            margin-bottom: 60px;
+        }
 
-.article .intro-text p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-}
+        .article .details-section {
+            padding-top: 40px;
+            border-top: 1px solid #3a3a3a;
+        }
 
-/* Custom List Styling */
-.article .custom-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
+        /* --- Image container and styling --- */
+        .article .image-container .feature-image {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px;
+            /* This shadow mimics the red glow in the original image */
+            box-shadow: 0 0 25px 5px rgba(224, 83, 63, 0.25);
+        }
 
-.article .custom-list li {
-    font-size: 1rem;
-    line-height: 1.7;
-    margin-bottom: 1rem;
-    color: #c5c5c5;
-}
+        /* --- General Text Container and Elements --- */
+        .article .text-container h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #FFFFFF; /* Headings are white */
+            margin-bottom: 1rem;
+        }
 
-.article .custom-list li strong {
-    color: #EAEAEA;
-    font-weight: 600;
-}
+        .article .text-container p {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin: 0 0 1rem 0;
+            color: #c5c5c5; /* Paragraph text color */
+        }
 
-/* Responsive Adjustments for smaller screens */
-@media (max-width: 992px) {
-    .article {
-        padding: 30px 40px;
-    }
+        .article .text-container p:last-child {
+            margin-bottom: 0;
+        }
 
-    .article .hero h1 {
-        font-size: 2.8rem;
-        max-width: 100%;
-    }
+        .article .intro-text p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
 
-    .article .hero .subtitle {
-        font-size: 1.1rem;
-    }
-}
+        /* --- Custom List Styling --- */
+        .article .custom-list {
+            list-style-type: disc; /* Use standard disc for lists */
+            padding-left: 20px; /* Add padding for disc */
+            margin: 0 0 1rem 0;
+        }
 
-@media (max-width: 768px) {
-    .article .two-column-grid {
-        grid-template-columns: 1fr; /* Stack columns */
-        gap: 40px;
-    }
+        .article .custom-list li {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 0.5rem; /* Reduced margin for list items */
+            color: #c5c5c5;
+        }
 
-    .article .hero h1 {
-        font-size: 2.2rem;
-    }
+        .article .custom-list li strong {
+            color: #EAEAEA;
+            font-weight: 600;
+        }
 
-    .article {
-        padding: 20px;
-    }
-    
-    .article .article-header {
-        margin-bottom: 40px;
-    }
-}
+        /* --- Final Section Styling --- */
+        .article .final-commitment-section {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid #3a3a3a;
+        }
+
+        .article .final-commitment-section h3 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 1.5rem;
+        }
+
+        .article .final-commitment-section p {
+            font-size: 1.1rem;
+            color: #d0d0d0;
+            max-width: 700px;
+            margin: 0 auto 1.5rem auto;
+            line-height: 1.6;
+        }
+
+        .article .final-commitment-section .tagline {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 2rem;
+        }
+
+        .article .final-commitment-section .call-to-action {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+        }
+
+        .article .final-commitment-section a {
+            color: #EAEAEA; /* Link color */
+            text-decoration: underline;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .article .final-commitment-section a:hover {
+            color: #FFFFFF;
+        }
+
+
+        /* --- Responsive Adjustments for smaller screens --- */
+        @media (max-width: 992px) {
+            .article {
+                padding: 30px 40px;
+            }
+
+            .article .hero h1 {
+                font-size: 2.8rem;
+                max-width: 100%;
+            }
+
+            .article .hero .subtitle {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .article .two-column-grid {
+                grid-template-columns: 1fr; /* Stack columns */
+                gap: 40px;
+            }
+
+            .article .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .article {
+                padding: 20px;
+            }
+            
+            .article .article-header {
+                margin-bottom: 40px;
+            }
+
+            .article .final-commitment-section h3 {
+                font-size: 1.6rem;
+            }
+            .article .final-commitment-section .tagline {
+                font-size: 1.2rem;
+            }
+            .article .final-commitment-section .call-to-action {
+                font-size: 1.5rem;
+            }
+        }
     font-size: 1.15rem; /* Larger font size */
     line-height: 1.9;   /* More space between lines */
     color: #333;
