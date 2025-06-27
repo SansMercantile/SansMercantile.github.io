@@ -9,7 +9,8 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <meta name="description" content="Discover how Sans Mercantile™ fuses AI-driven intelligence with human expertise to maximize trading profits and ensure ethical AI adoption." />
 </head>
-<body>
+<!-- Added data-article-id for JS navigation logic -->
+<body data-article-id="human-edge"> 
     <!-- The .article div now correctly wraps the entire page content,
          including the header and footer placeholders, so that .article styles apply universally. -->
     <div class="article">
@@ -56,11 +57,28 @@
                     <p>The future of finance is not a battle between man and machine. It is a partnership. At Sans Mercantile™, we are committed to building tools that amplify human potential, not replace it. By fusing the best of algorithmic precision with the wisdom of human experience, we are creating a new class of financial intelligence—one that is not only more profitable but also more responsible, ethical, and secure.</p>
                 </aside>
             </div>
+
+            <!-- Final Commitment Section - Added back with Glassmorphism -->
+            <section class="final-commitment-section" data-aos="fade-up">
+                <h3>A Future Driven by Insight</h3>
+                <p>
+                    Predictive analytics is more than just a tool; it's a new form of digital infrastructure that empowers businesses and individuals in emerging economies. By illuminating unseen patterns and providing actionable foresight, Sans Mercantile is helping to build smarter, more resilient markets.
+                </p>
+                <p class="tagline">
+                    We believe that with the right insights, every market can unlock its full potential.
+                </p>
+                <p class="call-to-action">Smarter Markets Start Here.</p>
+                <a href="http://www.sansmercantile.com" target="_blank" rel="noopener noreferrer">www.sansmercantile.com</a>
+            </section>
         </main>
-<div class="article-navigation fixed bottom-4 left-1/2 -translate-x-1/2 flex space-x-4 z-20">
-    <button id="prevArticleBtn" class="cta opacity-50 cursor-not-allowed">Previous Article</button>
-    <button id="nextArticleBtn" class="cta opacity-50 cursor-not-allowed">Next Article</button>
-</div>
+
+        <!-- Article Navigation Buttons -->
+        <!-- Moved inside the .article div for consistent styling and positioning -->
+        <div class="article-navigation fixed bottom-4 left-1/2 -translate-x-1/2 flex space-x-4 z-20">
+            <button id="prevArticleBtn" class="cta opacity-50 cursor-not-allowed">Previous Article</button>
+            <button id="nextArticleBtn" class="cta opacity-50 cursor-not-allowed">Next Article</button>
+        </div>
+
         <!-- Footer Placeholder - Will be loaded by main-jobs.js -->
         <div id="footer-placeholder"></div>
     </div>

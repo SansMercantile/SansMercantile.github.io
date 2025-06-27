@@ -191,11 +191,13 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function handleGesture() {
-      if (touchendX < touchstartX - 50) { // Swiped left
+      // Check if it's a significant swipe
+      const swipeThreshold = 50; // pixels
+      if (touchendX < touchstartX - swipeThreshold) { // Swiped left
         if (currentIndex < filteredArticles.length - 1) {
           window.location.href = '../' + filteredArticles[currentIndex + 1].path;
         }
-      } else if (touchendX > touchstartX + 50) { // Swiped right
+      } else if (touchendX > touchstartX + swipeThreshold) { // Swiped right
         if (currentIndex > 0) {
           window.location.href = '../' + filteredArticles[currentIndex - 1].path;
         }
