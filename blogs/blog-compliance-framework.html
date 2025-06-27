@@ -4,32 +4,42 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Compliance Isn’t a Checkbox. It’s a Framework. | Sans Mercantile™</title>
-    <!-- Corrected stylesheet link -->
+    <!-- Link to the main stylesheet -->
     <link rel="stylesheet" href="/css/style.css" />
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <meta name="description" content="Why built-in governance matters—and how Sans Mercantile™ approaches compliance as a trust-building opportunity, not a hurdle." />
-
 </head>
 <body>
-  <div id="header-placeholder"></div>
-        <main class="article-content">
-            <section class="hero">
+    <!-- The .article div now correctly wraps the entire page content,
+         including the header and footer placeholders, so that .article styles apply universally. -->
+    <div class="article">
+        <!-- Header Placeholder - Will be loaded by main.js -->
+        <div id="header-placeholder"></div>
+        
+        <main class="main-wrap">
+            <!-- Hero Section -->
+            <section class="hero" data-aos="fade-up">
                 <h1>Compliance Isn’t a Checkbox. It’s a Framework.</h1>
                 <p class="author">By Sans Mercantile Editorial Team</p>
                 <p class="subtitle">Why built-in governance matters—and how Sans Mercantile™ approaches compliance as a trust-building opportunity, not a hurdle.</p>
             </section>
 
-            <section class="two-column-grid intro-section">
+            <!-- Two-Column Grid Layout for main content - Introduction Section -->
+            <div class="two-column-grid intro-section">
+                <!-- Left Column: Image -->
                 <div class="image-container">
-                    <img src=".../img/compliance.png" alt="Stylized graphic of a hand touching a digital checklist" class="feature-image">
+                    <img src="assets/compliance.png" alt="Stylized graphic of a hand touching a digital checklist" class="feature-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/1F1A1A/EAEAEA?text=Compliance';" />
                 </div>
+                <!-- Right Column: Introduction Text -->
                 <div class="text-container intro-text">
                     <p>In today's hyperconnected markets, compliance has too often been relegated to a trailing checklist—tacked onto innovation after the fact, seen as an obligation rather than an opportunity.</p>
                     <p>But at Sans Mercantile, we view compliance not as a barrier to bold action, but as the foundation of it.</p>
                 </div>
-            </section>
+            </div>
 
-            <section class="two-column-grid details-section">
+            <!-- Two-Column Grid Layout for main content - Details Section -->
+            <div class="two-column-grid details-section">
+                <!-- Left Column: Governance Architecture -->
                 <div class="text-container">
                     <h2>Governance Isn’t an Afterthought—It’s Architecture</h2>
                     <p>Too many fintech platforms retroactively “plug in” policies once growth has accelerated. That approach might check legal boxes, but it doesn’t build trust capital with institutions, regulators, or communities.</p>
@@ -37,6 +47,7 @@
                     <p>We don’t ask, “How can we get away with this?”</p>
                     <p>We ask, “How can this advance our credibility in regulated ecosystems?”</p>
                 </div>
+                <!-- Right Column: Our Compliance Framework in Action -->
                 <div class="text-container">
                     <h2>Our Compliance Framework in Action</h2>
                     <p>Here’s how we turn principles into practices:</p>
@@ -46,25 +57,34 @@
                         <li><strong>Third-Party Ethics Review:</strong> For high-stakes use cases (e.g., predictive analytics for institutional portfolios), we consult external ethics boards to test for bias, opacity, and unintended outcomes.</li>
                     </ul>
                 </div>
-                 <div class="text-container">
+            </div>
+
+            <!-- New Two-Column Grid for additional content if needed, mimicking the above structure -->
+            <div class="two-column-grid details-section">
+                <!-- Left Column: Compliance as Competitive Advantage -->
+                <div class="text-container">
                     <h2>Compliance as Competitive Advantage</h2>
                     <p>When financial markets are skeptical of AI, governance becomes the differentiator.</p>
-                    <p>Our institutional partners don’t just want faster engines—they want systems built to withstand scrutiny. Our regulatory allies don't want evasive platforms—they want collaborators who understand the stakes.</p>
+                    <p>Our institutional partners don’t just want faster engines—they want systems built to withstand scrutiny. Our regulatory allies don’t want evasive platforms—they want collaborators who understand the stakes.</p>
                     <p>By making compliance visible and verifiable, we’re not slowing down—we’re making it safe to scale.</p>
                 </div>
+                <!-- Right Column: Trust Is the True Innovation -->
                 <div class="text-container">
-                     <h2>Trust Is the True Innovation</h2>
+                    <h2>Trust Is the True Innovation</h2>
                     <p>When users know the system is ethical by design, they engage more. When regulators see transparency upfront, they partner faster. When institutions can rely on consistency, they invest with confidence.</p>
                     <p>That’s what we mean when we say compliance isn’t a checkbox—it’s the blueprint.</p>
                     <p>And it’s how Sans Mercantile is redefining financial intelligence for a more transparent, accountable, and human-centered future.</p>
                 </div>
-            </section>
+            </div>
+            
         </main>
 
-    <div id="footer-placeholder"></div>
+        <!-- Footer Placeholder - Will be loaded by main.js -->
+        <div id="footer-placeholder"></div>
+    </div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>AOS.init();</script>
     <script src="/js/main.js"></script>
-  </body>
+</body>
 </html>
