@@ -22,7 +22,7 @@ body {
 }
 
 body {
-  background-color: var(--color-burgundy-black);
+  background-color: var(--color-burgundy-black); /* Set by this variable */
   color: var(--color-white);
   overflow-x: hidden;
 }
@@ -385,40 +385,40 @@ nav a:hover {
 
 /* --- Platform Page Feature Grid --- */
 .feature-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    max-width: 1200px;
-    margin: 3rem auto;
-    text-align: left;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 3rem auto;
+  text-align: left;
 }
 
 .feature-card {
-    background-color: #fdfdfd;
-    padding: 2rem;
-    border-radius: 12px;
-    border: 1px solid rgba(73, 12, 9, 0.1);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
+  background-color: #fdfdfd;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(73, 12, 9, 0.1);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
 }
 
 .feature-card:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    border-color: var(--color-orange);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  border-color: var(--color-orange);
 }
 
 .feature-card h4 {
-    color: var(--color-dark-scarlet);
-    font-size: 1.25rem;
-    margin-bottom: 0.75rem;
+  color: var(--color-dark-scarlet);
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
 }
 
 .feature-card p {
-    font-size: 1rem;
-    color: #444;
-    line-height: 1.6;
-    margin: 0;
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.6;
+  margin: 0;
 }
 
 /* Vision Snippet Section */
@@ -986,1134 +986,257 @@ nav a:hover {
   margin-bottom: 2rem;
 }
 
-
-        /* --- Main Article Container --- */
-        .article {
-            background-color: #1f0000; /* Burgandy Black - REVERTED */
-            color: #EAEAEA; /* Off-white text */
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 60px;
-        }
-
-        /* --- Header --- */
-        .article .article-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 60px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #3a3a3a;
-        }
-
-        .article .logo {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #EAEAEA; /* Ensure logo text color matches article text */
-        }
-
-        /* Custom styles for Sans Mercantile logo spans */
-        .article .logo .sans {
-            color: #EAEAEA; /* Adjusted to match main article text color */
-        }
-
-        .article .logo .mercantile {
-            color: #EAEAEA; /* Adjusted to match main article text color */
-        }
-
-
-        .article .navigation a {
-            text-decoration: none;
-            color: #EAEAEA;
-            font-size: 1rem;
-            font-weight: 400;
-            margin-left: 20px; /* Added spacing between nav links */
-        }
-
-        .article .navigation a:hover {
-            color: #FFFFFF;
-        }
-
-        /* --- Hero Section (Title and Subtitle) --- */
-        .article .hero {
-            margin-bottom: 40px;
-        }
-
-        .article .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin: 0 0 15px 0;
-            line-height: 1.1;
-            max-width: 80%;
-            color: #FFFFFF; /* Ensures title is white */
-        }
-
-        .article .hero .author {
-            font-size: 1rem;
-            color: #b0b0b0;
-            margin: 0 0 25px 0;
-        }
-
-        .article .hero .subtitle {
-            font-size: 1.25rem;
-            line-height: 1.5;
-            color: #d0d0d0;
-            max-width: 90%;
-        }
-
-        /* --- Two-Column Grid Layout --- */
-        .article .two-column-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: start;
-        }
-
-        /* --- Specific Section Styling --- */
-        .article .intro-section {
-            align-items: center; /* Vertically center image and intro text */
-            margin-bottom: 60px;
-        }
-
-        .article .details-section {
-            padding-top: 40px;
-            border-top: 1px solid #3a3a3a;
-        }
-
-        /* --- Image container and styling --- */
-        .article .image-container .feature-image {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-            border-radius: 8px;
-            /* This shadow mimics the red glow in the original image */
-            box-shadow: 0 0 25px 5px rgba(224, 83, 63, 0.25);
-        }
-
-        /* --- General Text Container and Elements --- */
-        .article .text-container h2 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: #FFFFFF; /* Headings are white */
-            margin-bottom: 1rem;
-        }
-
-        .article .text-container p {
-            font-size: 1rem;
-            line-height: 1.7;
-            margin: 0 0 1rem 0;
-            color: #c5c5c5; /* Paragraph text color */
-        }
-
-        .article .text-container p:last-child {
-            margin-bottom: 0;
-        }
-
-        .article .intro-text p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-
-        /* --- Custom List Styling --- */
-        .article .custom-list {
-            list-style-type: disc; /* Use standard disc for lists */
-            padding-left: 20px; /* Add padding for disc */
-            margin: 0 0 1rem 0;
-        }
-
-        .article .custom-list li {
-            font-size: 1rem;
-            line-height: 1.7;
-            margin-bottom: 0.5rem; /* Reduced margin for list items */
-            color: #c5c5c5;
-        }
-
-        .article .custom-list li strong {
-            color: #EAEAEA;
-            font-weight: 600;
-        }
-
-        /* --- Final Section Styling --- */
-        .article .final-commitment-section {
-            text-align: center;
-            margin-top: 60px;
-            padding-top: 40px;
-            border-top: 1px solid #3a3a3a;
-        }
-
-        .article .final-commitment-section h3 {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #FFFFFF;
-            margin-bottom: 1.5rem;
-        }
-
-        .article .final-commitment-section p {
-            font-size: 1.1rem;
-            color: #d0d0d0;
-            max-width: 700px;
-            margin: 0 auto 1.5rem auto;
-            line-height: 1.6;
-        }
-
-        .article .final-commitment-section .tagline {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #FFFFFF;
-            margin-bottom: 2rem;
-        }
-
-        .article .final-commitment-section .call-to-action {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #FFFFFF;
-            margin-bottom: 1rem;
-        }
-
-        .article .final-commitment-section a {
-            color: #EAEAEA; /* Link color */
-            text-decoration: underline;
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-
-        .article .final-commitment-section a:hover {
-            color: #FFFFFF;
-        }
-
-
-        /* --- Responsive Adjustments for smaller screens --- */
-        @media (max-width: 992px) {
-            .article {
-                padding: 30px 40px;
-            }
-
-            .article .hero h1 {
-                font-size: 2.8rem;
-                max-width: 100%;
-            }
-
-            .article .hero .subtitle {
-                font-size: 1.1rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .article .two-column-grid {
-                grid-template-columns: 1fr; /* Stack columns */
-                gap: 40px;
-            }
-
-            .article .hero h1 {
-                font-size: 2.2rem;
-            }
-
-            .article {
-                padding: 20px;
-            }
-            
-            .article .article-header {
-                margin-bottom: 40px;
-            }
-
-            .article .final-commitment-section h3 {
-                font-size: 1.6rem;
-            }
-            .article .final-commitment-section .tagline {
-                font-size: 1.2rem;
-            }
-            .article .final-commitment-section .call-to-action {
-                font-size: 1.5rem;
-            }
-        }
-    font-size: 1.15rem; /* Larger font size */
-    line-height: 1.9;   /* More space between lines */
-    color: #333;
-}
-
-.category-tags {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.tag {
-  background-color: var(--color-velvet-red-black);
-  color: var(--color-white);
-  padding: 0.6rem 1.2rem;
-  border-radius: 20px;
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.tag:hover {
-  background-color: var(--color-dark-scarlet);
-  transform: translateY(-2px);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-}
-
-/* Investors Page Sections */
-.investors-hero {
-  background-color: var(--color-burgundy-black);
-  color: var(--color-white);
-}
-
-.investors-hero h2 {
-  color: var(--color-white);
-}
-
-.investors-hero p {
-  font-size: 1.15rem;
-  max-width: 900px;
-}
-
-.why-invest {
-  background-color: var(--color-white);
-  color: var(--color-black);
-}
-
-.why-invest h3 {
-  color: var(--color-crimson-noir);
-  margin-bottom: 3rem;
-}
-
-.investment-highlights-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2.5rem;
+/* --- Article Specific Styling (Moved and Consolidated) --- */
+.article {
+  background-color: var(--color-burgundy-black); /* Set using the variable */
+  color: #EAEAEA; /* Off-white text */
   max-width: 1200px;
   margin: 0 auto;
+  padding: 40px 60px;
 }
 
-.highlight-item {
-  background-color: #f8f8f8;
-  padding: 2.5rem;
-  border-radius: 12px;
-  border: 1px solid rgba(73, 12, 9, 0.1);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  text-align: left;
-  transition: all 0.3s ease;
-}
-
-.highlight-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  border-color: var(--color-dark-scarlet);
-}
-
-.highlight-item h4 {
-  color: var(--color-dark-scarlet);
-  font-size: 1.4rem;
-  margin-bottom: 0.7rem;
-}
-
-.highlight-item p {
-  font-size: 0.98rem;
-  color: #444;
-  line-height: 1.6;
-  margin-bottom: 0;
-}
-
-.highlight-item strong {
-  color: var(--color-crimson-noir);
-}
-
-.our-financials {
-  background-color: var(--color-black-cherry);
-  color: var(--color-white);
-}
-
-.our-financials h3 {
-  color: var(--color-orange);
-  margin-bottom: 2rem;
-}
-
-.our-financials p {
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 2.5rem;
-}
-
-.financial-metrics {
+.article .article-header {
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 2.5rem;
-  margin-bottom: 3rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 60px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #3a3a3a;
 }
 
-.metric-item {
-  background-color: var(--color-velvet-red-black);
-  padding: 2rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-  flex: 1 1 250px;
-  max-width: 300px;
-  text-align: center;
-}
-
-.metric-item h4 {
-  color: var(--color-white);
-  margin-bottom: 0.5rem;
-  font-size: 1.3rem;
-}
-
-.metric-item p {
-  font-size: 1.2rem;
+.article .logo {
+  font-size: 1.5rem;
   font-weight: 600;
-  color: var(--color-orange);
-  margin-bottom: 0;
+  color: #EAEAEA; /* Ensure logo text color matches article text */
 }
 
-.metric-item strong {
-  font-size: 1.8rem;
-  display: block;
-  margin-bottom: 0.5rem;
+/* Custom styles for Sans Mercantile logo spans */
+.article .logo .sans {
+  color: #EAEAEA; /* Adjusted to match main article text color */
 }
 
-.security-for-investors {
-  background-color: var(--color-white);
-  color: var(--color-black);
+.article .logo .mercantile {
+  color: #EAEAEA; /* Adjusted to match main article text color */
 }
 
-.security-for-investors h3 {
-  color: var(--color-crimson-noir);
-  margin-bottom: 2rem;
-}
-
-.security-for-investors p {
-  color: #444;
-  margin-bottom: 2rem;
-}
-
-.security-for-investors ul {
-  list-style: none;
-  padding: 0;
-  margin: 0 auto;
-  max-width: 800px;
-  text-align: left;
-}
-
-.security-for-investors li {
-  font-size: 1.05rem;
-  line-height: 1.8;
-  margin-bottom: 0.8rem;
-  padding-left: 1.8rem;
-  position: relative;
-  color: #333;
-}
-
-.security-for-investors li::before {
-  content: '✅';
-  color: green;
-  font-size: 1.2rem;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.investor-downloads {
-  background-color: var(--color-burgundy-black);
-  color: var(--color-white);
-}
-
-.investor-downloads h3 {
-  color: var(--color-orange);
-  margin-bottom: 2.5rem;
-}
-
-.download-list {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-}
-
-.download-list li a {
-  background-color: var(--color-crimson-noir);
-  color: var(--color-white);
-  padding: 0.9rem 1.5rem;
-  border-radius: 8px;
+.article .navigation a {
   text-decoration: none;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  display: inline-block;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.download-list li a:hover {
-  background-color: var(--color-dark-scarlet);
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.schedule-pitch {
-  padding: 4rem 2rem;
-  background-color: var(--color-white);
-}
-
-.schedule-pitch .cta {
-  background-color: var(--color-orange);
-  color: var(--color-black);
-  font-weight: 800;
-}
-
-.schedule-pitch .cta:hover {
-  background-color: #ff916a;
-}
-
-/* Careers Page Sections */
-.careers-hero {
-  background-color: var(--color-burgundy-black);
-  color: var(--color-white);
-}
-
-.careers-hero h2 {
-  color: var(--color-white);
-}
-
-.careers-hero p {
-  font-size: 1.15rem;
-  max-width: 900px;
-}
-
-.open-roles-section {
-  background-color: var(--color-white);
-  color: var(--color-black);
-}
-
-.open-roles-section h3 {
-  color: var(--color-crimson-noir);
-  margin-bottom: 2.5rem;
-}
-
-.roles-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 auto 2rem;
-  max-width: 800px;
-}
-
-.role-item {
-  background-color: #f8f8f8;
-  padding: 2rem;
-  margin-bottom: 1.5rem;
-  border-radius: 12px;
-  border: 1px solid rgba(73, 12, 9, 0.1);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  text-align: left;
-  transition: all 0.3s ease;
-}
-
-.role-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  border-color: var(--color-dark-scarlet);
-}
-
-.role-item h4 {
-  color: var(--color-dark-scarlet);
-  font-size: 1.35rem;
-  margin-bottom: 0.5rem;
-}
-
-.role-item .role-location {
-  font-size: 0.95rem;
-  color: #666;
+  color: #EAEAEA;
+  font-size: 1rem;
   font-weight: 400;
+  margin-left: 20px; /* Added spacing between nav links */
 }
 
-.role-item p {
-  font-size: 0.95rem;
-  color: #444;
-  line-height: 1.6;
+.article .navigation a:hover {
+  color: #FFFFFF;
+}
+
+/* --- Hero Section (Title and Subtitle) --- */
+.article .hero {
+  margin-bottom: 40px;
+}
+
+.article .hero h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  line-height: 1.1;
+  max-width: 80%;
+  color: #FFFFFF; /* Ensures title is white */
+}
+
+.article .hero .author {
+  font-size: 1rem;
+  color: #b0b0b0;
+  margin: 0 0 25px 0;
+}
+
+.article .hero .subtitle {
+  font-size: 1.25rem;
+  line-height: 1.5;
+  color: #d0d0d0;
+  max-width: 90%;
+}
+
+/* --- Two-Column Grid Layout --- */
+.article .two-column-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: start;
+}
+
+/* --- Specific Section Styling --- */
+.article .intro-section {
+  align-items: center; /* Vertically center image and intro text */
+  margin-bottom: 60px;
+}
+
+.article .details-section {
+  padding-top: 40px;
+  border-top: 1px solid #3a3a3a;
+}
+
+/* --- Image container and styling --- */
+.article .image-container .feature-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  /* This shadow mimics the red glow in the original image */
+  box-shadow: 0 0 25px 5px rgba(224, 83, 63, 0.25);
+}
+
+/* --- General Text Container and Elements --- */
+.article .text-container h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #FFFFFF; /* Headings are white */
   margin-bottom: 1rem;
 }
 
-.role-item .role-link {
-  background-color: var(--color-crimson-noir);
-  color: var(--color-white);
-  padding: 0.6rem 1rem;
-  border-radius: 6px;
-  text-decoration: none;
+.article .text-container p {
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 0 0 1rem 0;
+  color: #c5c5c5; /* Paragraph text color */
+}
+
+.article .text-container p:last-child {
+  margin-bottom: 0;
+}
+
+.article .intro-text p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* --- Custom List Styling --- */
+.article .custom-list {
+  list-style-type: disc; /* Use standard disc for lists */
+  padding-left: 20px; /* Add padding for disc */
+  margin: 0 0 1rem 0;
+}
+
+.article .custom-list li {
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 0.5rem; /* Reduced margin for list items */
+  color: #c5c5c5;
+}
+
+.article .custom-list li strong {
+  color: #EAEAEA;
   font-weight: 600;
-  display: inline-block;
-  transition: background 0.3s ease;
 }
 
-.role-item .role-link:hover {
-  background-color: var(--color-dark-scarlet);
+/* --- Final Section Styling --- */
+.article .final-commitment-section {
+  text-align: center;
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid #3a3a3a;
 }
 
-.open-roles-section .cta {
-  margin-top: 1rem;
+.article .final-commitment-section h3 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 1.5rem;
+}
+
+.article .final-commitment-section p {
+  font-size: 1.1rem;
+  color: #d0d0d0;
+  max-width: 700px;
+  margin: 0 auto 1.5rem auto;
+  line-height: 1.6;
+}
+
+.article .final-commitment-section .tagline {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #FFFFFF;
   margin-bottom: 2rem;
 }
 
-.pitch-idea {
-  font-size: 1rem;
-  color: #666;
-  margin-top: 1rem;
-  margin-bottom: 0;
-}
-
-.pitch-idea a {
-  color: var(--color-dark-scarlet);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.pitch-idea a:hover {
-  color: var(--color-orange);
-  text-decoration: underline;
-}
-
-.why-join-us {
-  background-color: var(--color-black-cherry);
-  color: var(--color-white);
-}
-
-.why-join-us h3 {
-  color: var(--color-orange);
-  margin-bottom: 3rem;
-}
-
-.benefits-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.benefit-item {
-  background-color: var(--color-velvet-red-black);
-  padding: 2.5rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-  text-align: left;
-  transition: all 0.3s ease;
-}
-
-.benefit-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  border-color: var(--color-orange);
-}
-
-.benefit-item h4 {
-  color: var(--color-white);
-  font-size: 1.4rem;
-  margin-bottom: 0.7rem;
-}
-
-.benefit-item p {
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.6;
-  margin-bottom: 0;
-}
-
-/* Contact Page Sections */
-.contact-hero {
-  background-color: var(--color-burgundy-black);
-  color: var(--color-white);
-}
-
-.contact-hero h2 {
-  color: var(--color-white);
-}
-
-.contact-hero p {
-  font-size: 1.15rem;
-  max-width: 900px;
-}
-
-.contact-info-section {
-  background-color: var(--color-white);
-  color: var(--color-black);
-}
-
-.contact-info-section h3 {
-  color: var(--color-crimson-noir);
-  margin-bottom: 2.5rem;
-}
-
-.contact-details-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2.5rem;
-  max-width: 1000px;
-  margin: 0 auto 3rem;
-}
-
-.contact-item {
-  background-color: #f8f8f8;
-  padding: 2.5rem;
-  border-radius: 12px;
-  border: 1px solid rgba(73, 12, 9, 0.1);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  text-align: left;
-}
-
-.contact-item h4 {
-  color: var(--color-dark-scarlet);
-  font-size: 1.4rem;
+.article .final-commitment-section .call-to-action {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #FFFFFF;
   margin-bottom: 1rem;
 }
 
-.contact-item ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.contact-item li {
-  font-size: 1rem;
-  line-height: 1.8;
-  color: #444;
-}
-
-.contact-item a {
-  color: var(--color-dark-scarlet);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.contact-item a:hover {
-  color: var(--color-orange);
+.article .final-commitment-section a {
+  color: #EAEAEA; /* Link color */
   text-decoration: underline;
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 
-.social-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1rem;
+.article .final-commitment-section a:hover {
+  color: #FFFFFF;
 }
 
-.social-links li {
-  display: inline-block;
-  margin: 0;
-}
-
-.contact-form-section {
-  background-color: var(--color-black-cherry);
-  color: var(--color-white);
-}
-
-.contact-form-section h3 {
-  color: var(--color-orange);
-  margin-bottom: 2.5rem;
-}
-
-.contact-form {
-  max-width: 700px;
-  margin: 0 auto;
-  text-align: left;
-  padding: 2.5rem;
-  background-color: var(--color-velvet-red-black);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.contact-form label {
-  display: block;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-  color: var(--color-white);
-  font-weight: 600;
-}
-
-.contact-form input[type='text'],
-.contact-form input[type='email'],
-.contact-form textarea {
-  width: 100%;
-  padding: 0.8rem 1rem;
-  border: 1px solid var(--color-dark-scarlet);
-  border-radius: 6px;
-  background-color: rgba(255, 255, 255, 0.05);
-  color: var(--color-white);
-  font-size: 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.contact-form input[type='text']::placeholder,
-.contact-form input[type='email']::placeholder,
-.contact-form textarea::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.contact-form input[type='text']:focus,
-.contact-form input[type='email']:focus,
-.contact-form textarea:focus {
-  border-color: var(--color-orange);
-  outline: 0;
-  box-shadow: 0 0 0 3px rgba(252, 118, 66, 0.3);
-}
-
-.contact-form textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.contact-form .cta {
-  width: auto;
-  display: inline-block;
-  margin-top: 1rem;
-}
-
-/* Subscribe Section */
-.subscribe-section {
-  background-color: var(--color-black-cherry);
-  color: var(--color-white);
-  padding: 3rem 2rem;
-  text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.subscribe-section h3 {
-  color: var(--color-white);
-  margin-bottom: 1.5rem;
-}
-
-.subscribe {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.subscribe input {
-  padding: 0.8rem 1.2rem;
-  border: 1px solid var(--color-velvet-red-black);
-  border-radius: 6px;
-  width: 100%;
-  max-width: 280px;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: var(--color-white);
-  font-size: 1rem;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
-}
-
-.subscribe input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.subscribe input:focus {
-  border-color: var(--color-orange);
-  background-color: rgba(255, 255, 255, 0.15);
-  outline: 0;
-}
-
-.subscribe button {
-  padding: 0.8rem 1.5rem;
-  border: none;
-  background-color: var(--color-orange);
-  color: var(--color-black);
-  font-weight: 700;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.subscribe button:hover {
-  background-color: #ff916a;
-  transform: translateY(-2px);
-}
-
-/* Footer */
-footer {
-  background-color: var(--color-burgundy-black);
-  color: var(--color-white);
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-footer p {
-  margin: 1.5rem auto 0.5rem;
-  text-align: center;
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.footer-columns {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 2rem;
-  padding: 3rem 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.footer-col {
-  flex: 1 1 150px;
-  min-width: 150px;
-}
-
-.footer-col h4 {
-  color: var(--color-orange);
-  margin-bottom: 1.5rem;
-  font-size: 1.2rem;
-}
-
-.footer-col ul {
-  list-style: none;
-  padding: 0;
-}
-
-.footer-col ul li {
-  margin-bottom: 0.8rem;
-}
-
-.footer-col ul li a {
-  color: var(--color-silver);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.footer-col ul li a:hover {
-  color: var(--color-orange);
-  text-decoration: underline;
-}
-
-.footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 1.5rem 2rem;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* Language Selector Button */
-.language-selector {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 1000;
-}
-
-.language-selector select {
-  background-color: var(--color-black-cherry);
-  color: var(--color-silver);
-  padding: 0.5rem 2rem 0.5rem 1rem;
-  border-radius: 6px;
-  border: 1px solid var(--color-dark-scarlet);
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  cursor: pointer;
-}
-
-.language-selector::after {
-  content: '▼';
-  font-size: 0.8rem;
-  color: var(--color-silver);
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
-/* Media Queries */
-@media screen and (max-width: 992px) {
-  h2 {
-    font-size: 2.5rem;
+/* --- Responsive Adjustments for smaller screens --- */
+@media (max-width: 992px) {
+  .article {
+    padding: 30px 40px;
   }
 
-  h3 {
-    font-size: 2rem;
-  }
-
-  .hero-overlay h2 {
-    font-size: 2.2rem;
-  }
-
-  .hero-overlay p {
-    font-size: 1rem;
-  }
-
-  .platform-preview h3 {
-    font-size: 2.2rem;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  header,
-  footer {
-    flex-direction: column;
-    text-align: center;
-    padding: 1rem;
-  }
-
-@media screen and (max-width: 768px) {
-  .insight-preview .cta {
-    margin-top: 1.5rem;
-  }
-}
-
-  nav {
-    margin-top: 1rem;
-  }
-
-  nav a {
-    margin: 0.5rem 0.8rem;
-  }
-
-  .hero-overlay {
-    width: 95%;
-    padding: 2.5rem 1.5rem;
-    bottom: 3%;
-  }
-
-  .hero-overlay h2 {
-    font-size: 1.8rem;
-  }
-
-  .hero-overlay p {
-    font-size: 0.95rem;
-  }
-
-  .cta {
-    padding: 0.8rem 1.2rem;
-    font-size: 0.9rem;
-  }
-
-  .value-grid,
-  .articles-grid,
-  .service-card-grid,
-  .investment-highlights-grid,
-  .workflow-steps,
-  .financial-metrics,
-  .benefits-grid,
-  .contact-details-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .platform-content {
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  .platform-metrics ul {
-    text-align: center;
-  }
-
-  .platform-metrics li {
-    justify-content: center;
-  }
-
-  .platform-image img {
-    max-width: 90%;
-  }
-
-  section {
-    padding: 3rem 1rem;
-  }
-
-  h2 {
-    font-size: 2rem;
-  }
-
-  h3 {
-    font-size: 1.8rem;
-  }
-
-  p {
-    font-size: 1rem;
-  }
-
-  .subscribe input {
+  .article .hero h1 {
+    font-size: 2.8rem;
     max-width: 100%;
   }
 
-  .download-list {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .timeline::before {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .timeline-item {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .timeline-date {
-    margin-bottom: 1rem;
-    transform: translateX(0);
-  }
-
-  .timeline-content {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 95%;
-    text-align: center;
-  }
-
-  .timeline-item:nth-child(odd) .timeline-content,
-  .timeline-item:nth-child(even) .timeline-content {
-    margin: 0 auto;
-  }
-
-  .contact-form {
-    padding: 1.5rem;
-  }
-
-  .footer-columns {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .footer-bottom {
-    flex-direction: column;
-    gap: 1rem;
+  .article .hero .subtitle {
+    font-size: 1.1rem;
   }
 }
+
+@media (max-width: 768px) {
+  .article .two-column-grid {
+    grid-template-columns: 1fr; /* Stack columns */
+    gap: 40px;
+  }
+
+  .article .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .article {
+    padding: 20px;
+  }
+  
+  .article .article-header {
+    margin-bottom: 40px;
+  }
+
+  .article .final-commitment-section h3 {
+    font-size: 1.6rem;
+  }
+  .article .final-commitment-section .tagline {
+    font-size: 1.2rem;
+  }
+  .article .final-commitment-section .call-to-action {
+    font-size: 1.5rem;
+  }
+}
+
 /* Hero Image Styling for Blog Posts */
 .blog-hero .hero-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 1; /* Behind the content */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1; /* Behind the content */
 }
 
 .blog-hero .hero-content {
-    position: relative;
-    z-index: 2; /* In front of the image */
+  position: relative;
+  z-index: 2; /* In front of the image */
 }
 
 /* --- Legal & FAQ Pages --- */
@@ -2154,8 +1277,8 @@ body.legal-background {
 }
 
 .legal-page h4 {
-    margin-top: 1.5rem;
-    font-style: italic;
+  margin-top: 1.5rem;
+  font-style: italic;
 }
 
 .legal-page p, .legal-page li {
@@ -2173,12 +1296,12 @@ body.legal-background {
 }
 
 .legal-page a {
-    color: var(--color-orange);
-    text-decoration: none;
+  color: var(--color-orange);
+  text-decoration: none;
 }
 
 .legal-page a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .job-page ul {
