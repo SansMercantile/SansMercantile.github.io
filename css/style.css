@@ -1873,15 +1873,6 @@ nav a:hover {
   text-align: center;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 
-  /* Responsive Fixed Positioning */
-  position: static; /* Default for mobile */
-  bottom: 0; /* Align to bottom when fixed */
-  left: 0;
-  width: 100%;
-  box-sizing: border-box; /* Include padding in width */
-  z-index: 100; /* Ensure it stays above other content */
-}
-
 .subscribe-section h3 {
   color: var(--color-white);
   margin-bottom: 1.5rem;
