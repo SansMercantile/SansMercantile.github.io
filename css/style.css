@@ -9,6 +9,7 @@
   --color-white: #fff;
   --color-black: #000;
   --color-silver: #f0f0f0;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Global Styles */
@@ -21,10 +22,9 @@ body {
 }
 
 body {
-  background-color: var(--color-burgundy-black); /* Set by this variable */
+  background-color: var(--color-burgundy-black);
   color: var(--color-white);
   overflow-x: hidden;
-  font-family: 'Inter', sans-serif; /* Moved font-family here for global inheritance */
 }
 
 /* Typography */
@@ -176,7 +176,7 @@ nav a:hover {
   position: relative;
   height: 100vh;
   width: 100vw;
-  background-image: url(../img/hero.webp);
+  background-image: url(../img/hero.jpg);
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
@@ -283,7 +283,7 @@ nav a:hover {
   height: 70px;
   display: block;
   margin: 0 auto 1.5rem;
-  filter: drop-shadow(0 0 5px var(--color-orange));
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.1));
 }
 
 .value-card h4 {
@@ -385,40 +385,40 @@ nav a:hover {
 
 /* --- Platform Page Feature Grid --- */
 .feature-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  max-width: 1200px;
-  margin: 3rem auto;
-  text-align: left;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 3rem auto;
+    text-align: left;
 }
 
 .feature-card {
-  background-color: #fdfdfd;
-  padding: 2rem;
-  border-radius: 12px;
-  border: 1px solid rgba(73, 12, 9, 0.1);
-  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-  transition: all 0.3s ease;
+    background-color: #fdfdfd;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(73, 12, 9, 0.1);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
 }
 
 .feature-card:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  border-color: var(--color-orange);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-color: var(--color-orange);
 }
 
 .feature-card h4 {
-  color: var(--color-dark-scarlet);
-  font-size: 1.25rem;
-  margin-bottom: 0.75rem;
+    color: var(--color-dark-scarlet);
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
 }
 
 .feature-card p {
-  font-size: 1rem;
-  color: #444;
-  line-height: 1.6;
-  margin: 0;
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.6;
+    margin: 0;
 }
 
 /* Vision Snippet Section */
@@ -985,7 +985,6 @@ nav a:hover {
   color: var(--color-orange);
   margin-bottom: 2rem;
 }
-
 /* --- Article Specific Styling --- */
 /* This is the primary .article rule. All other duplicate/conflicting .article rules were removed. */
 .article {
@@ -1872,6 +1871,7 @@ nav a:hover {
   padding: 3rem 2rem;
   text-align: center;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
 
 .subscribe-section h3 {
   color: var(--color-white);
@@ -2030,30 +2030,6 @@ footer p {
 }
 
 /* Media Queries */
-@media screen and (min-width: 768px) {
-  /* Apply fixed position for tablets and desktops */
-  .subscribe-section {
-    position: fixed;
-    bottom: 20px; /* Adjust as needed */
-    left: 50%;
-    transform: translateX(-50%);
-    width: auto; /* Adjust width for fixed position */
-    max-width: 600px; /* Constrain max-width */
-    padding: 1.5rem 2rem; /* Adjust padding for fixed size */
-    border-radius: 12px; /* Rounded corners */
-    background-color: rgba(31, 0, 0, 0.9); /* Slightly more opaque background */
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .subscribe input {
-    width: auto;
-    flex-grow: 1; /* Allow input to grow within the flex container */
-  }
-}
-
 @media screen and (max-width: 992px) {
   h2 {
     font-size: 2.5rem;
@@ -2084,9 +2060,11 @@ footer p {
     padding: 1rem;
   }
 
+@media screen and (max-width: 768px) {
   .insight-preview .cta {
     margin-top: 1.5rem;
   }
+}
 
   nav {
     margin-top: 1rem;
@@ -2212,18 +2190,18 @@ footer p {
 }
 /* Hero Image Styling for Blog Posts */
 .blog-hero .hero-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1; /* Behind the content */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1; /* Behind the content */
 }
 
 .blog-hero .hero-content {
-  position: relative;
-  z-index: 2; /* In front of the image */
+    position: relative;
+    z-index: 2; /* In front of the image */
 }
 
 /* --- Legal & FAQ Pages --- */
