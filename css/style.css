@@ -9,7 +9,7 @@
   --color-white: #fff;
   --color-black: #000;
   --color-silver: #f0f0f0;
-  font-family: 'Inter', sans-serif;
+
 }
 
 /* Global Styles */
@@ -25,6 +25,7 @@ body {
   background-color: var(--color-burgundy-black);
   color: var(--color-white);
   overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Typography */
@@ -176,7 +177,7 @@ nav a:hover {
   position: relative;
   height: 100vh;
   width: 100vw;
-  background-image: url(../img/hero.jpg);
+  background-image: url(../img/hero.webp);
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
@@ -283,7 +284,7 @@ nav a:hover {
   height: 70px;
   display: block;
   margin: 0 auto 1.5rem;
-  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 0 5px var(--color-orange));
 }
 
 .value-card h4 {
