@@ -2275,3 +2275,8 @@ body.legal-background {
   list-style-type: none;
   padding-left: 0;
 }
+
+main.fade-in-content {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
