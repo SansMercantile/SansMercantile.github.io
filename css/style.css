@@ -2287,9 +2287,9 @@ main.fade-in-content {
 
 /* 2. Fix for Scaling Website on Desktops */
 /* This scales the website to 80% on screens wider than 1200px. */
-@media screen and (min-width: 1200px) {
+/*@media screen and (min-width: 1200px) {
   body {
     transform: scale(0.8);
     transform-origin: top left;
   }
-}
+} */
