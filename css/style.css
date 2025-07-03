@@ -2280,11 +2280,11 @@ body.legal-background {
 
 /* 1. Fix for Blinking (FOUC) */
 /* This class is added via JavaScript to hide content until it's ready. */
-main.fade-in-content {
+/*main.fade-in-content {
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
 }
-
+*/
 /* 2. Fix for Scaling Website on Desktops */
 /* This scales the website to 80% on screens wider than 1200px. */
 /*@media screen and (min-width: 1200px) {
