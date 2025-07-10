@@ -96,3 +96,40 @@ document.addEventListener("DOMContentLoaded", function() {
 
   loadAllComponents();
 });
+
+}
+
+        // Logo toggling functionality
+        const toggleLogo = () => {
+            const wordLogo = document.getElementById('word-logo');
+            const iconLogo = document.getElementById('icon-logo');
+
+            if (wordLogo.style.display === 'none') {
+                wordLogo.style.display = 'inline';
+                iconLogo.style.display = 'none';
+            } else {
+                wordLogo.style.display = 'none';
+                iconLogo.style.display = 'inline';
+            }
+        };
+
+        // Optional: Automatically revert to the word-based logo after a timeout
+        const revertAfterTimeout = () => {
+            setTimeout(() => {
+                document.getElementById('word-logo').style.display = 'inline';
+                document.getElementById('icon-logo').style.display = 'none';
+            }, 60000); // 1 minute
+        };
+
+        // Initialize logo functionality
+        document.getElementById('word-logo').addEventListener('click', () => {
+            toggleLogo();
+            revertAfterTimeout();
+        });
+
+        document.getElementById('icon-logo').addEventListener('click', toggleLogo);
+    };
+
+    // Start loading components
+    loadAllComponents();
+});
