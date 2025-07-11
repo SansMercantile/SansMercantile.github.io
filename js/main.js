@@ -9,14 +9,25 @@ function toggleLogo() {
 
   if (isIconVisible) {
     iconLogo.classList.remove('visible');
-    wordLogoSans.style.display = 'inline';
-    wordLogoMerc.style.display = 'inline';
+    iconLogo.classList.add('hidden');
+
+    wordLogoSans.classList.remove('hidden');
+    wordLogoSans.classList.add('visible');
+
+    wordLogoMerc.classList.remove('hidden');
+    wordLogoMerc.classList.add('visible');
   } else {
+    iconLogo.classList.remove('hidden');
     iconLogo.classList.add('visible');
-    wordLogoSans.style.display = 'none';
-    wordLogoMerc.style.display = 'none';
+
+    wordLogoSans.classList.remove('visible');
+    wordLogoSans.classList.add('hidden');
+
+    wordLogoMerc.classList.remove('visible');
+    wordLogoMerc.classList.add('hidden');
   }
 }
+
 
 document.addEventListener("DOMContentLoaded", function() {
   const mainContent = document.querySelector('main');
