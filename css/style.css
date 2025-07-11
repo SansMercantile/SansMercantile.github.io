@@ -2274,7 +2274,7 @@ body.legal-background {
   list-style-type: none;
   padding-left: 0;
 }
-/*
+
 .hidden {
   visibility: hidden;
   opacity: 0;
@@ -2285,7 +2285,7 @@ body.legal-background {
   visibility: visible;
   opacity: 1;
   transition: opacity 0.5s ease;
-} */
+} 
 
 /* --- Fixes for Blinking and Scaling --- */
 
