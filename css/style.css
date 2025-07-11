@@ -2275,13 +2275,13 @@ body.legal-background {
   padding-left: 0;
 }
 
-#logo-container {
-    text-align: center;
-    cursor: pointer;
+#icon-logo {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
 }
 
-#word-logo, #icon-logo {
-    transition: opacity 0.5s ease-in-out;
+#icon-logo.visible {
+  opacity: 1;
 }
 
 /* --- Fixes for Blinking and Scaling --- */
