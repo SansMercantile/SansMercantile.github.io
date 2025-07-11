@@ -2275,13 +2275,16 @@ body.legal-background {
   padding-left: 0;
 }
 
-#icon-logo {
+.hidden {
+  visibility: hidden;
   opacity: 0;
-  transition: opacity 0.5s ease-in-out;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
 }
-
-#icon-logo.visible {
+.visible {
+  visibility: visible;
   opacity: 1;
+  transition: opacity 0.5s ease;
 }
 
 /* --- Fixes for Blinking and Scaling --- */
