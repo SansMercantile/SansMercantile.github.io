@@ -1,34 +1,5 @@
 // js/main.js
 // This script is for pages in the root directory.
-function toggleLogo() {
-  const wordLogoSans = document.querySelector('.logo-container .sans');
-  const wordLogoMerc = document.querySelector('.logo-container .mercantile');
-  const iconLogo = document.getElementById('icon-logo');
-
-  const isIconVisible = iconLogo.classList.contains('visible');
-
-  if (isIconVisible) {
-    iconLogo.classList.remove('visible');
-    iconLogo.classList.add('hidden');
-
-    wordLogoSans.classList.remove('hidden');
-    wordLogoSans.classList.add('visible');
-
-    wordLogoMerc.classList.remove('hidden');
-    wordLogoMerc.classList.add('visible');
-  } else {
-    iconLogo.classList.remove('hidden');
-    iconLogo.classList.add('visible');
-
-    wordLogoSans.classList.remove('visible');
-    wordLogoSans.classList.add('hidden');
-
-    wordLogoMerc.classList.remove('visible');
-    wordLogoMerc.classList.add('hidden');
-  }
-}
-
-
 document.addEventListener("DOMContentLoaded", function() {
   const mainContent = document.querySelector('main');
   if (mainContent) {
