@@ -1,8 +1,8 @@
 // js/main.js
 // This script is for pages in the root directory.
 function toggleLogo() {
-  const wordLogoSans = document.querySelector('.logo-container .sans');
-  const wordLogoMerc = document.querySelector('.logo-container .mercantile');
+  const wordLogoSans = document.querySelector('.logo .sans');
+  const wordLogoMerc = document.querySelector('.logo .mercantile');
   const iconLogo = document.getElementById('icon-logo');
 
   const isIconVisible = iconLogo.classList.contains('visible');
