@@ -1,8 +1,4 @@
 # .github/workflows/build-for-github.yml
-# FREE WORKFLOW: Runs from a public repo to build and test without cost.
-# It builds images and pushes them to GitHub Container Registry (GHCR).
-# It deploys the frontend to GitHub Pages.
-# It does NOT deploy to Google Cloud.
 
 name: Build and Test on GitHub
 
