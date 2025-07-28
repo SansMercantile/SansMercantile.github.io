@@ -1,9 +1,10 @@
-# .github/workflows/build.yml
-# This workflow runs in a PUBLIC repository to get free build minutes.
-# It securely checks out code from your PRIVATE repository using a secret token,
-# builds all services with secrets, and deploys the public-facing artifacts.
+# .github/workflows/build-for-github.yml
+# FREE WORKFLOW: Runs from a public repo to build and test without cost.
+# It builds images and pushes them to GitHub Container Registry (GHCR).
+# It deploys the frontend to GitHub Pages.
+# It does NOT deploy to Google Cloud.
 
-name: Build Private Code from Public Repo
+name: Build and Test on GitHub
 
 on:
   push:
@@ -12,7 +13,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy-frontend:
+  build-and-deploy-frontend-gh-pages:
+    name: Build and Deploy Frontend to GitHub Pages
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Private Repository
@@ -28,8 +30,6 @@ jobs:
 
       - name: Install Dependencies and Build Frontend
         working-directory: ./sans-mercantile-app
-        # Pass secrets as environment variables to the React build process.
-        # Create React App automatically picks up variables prefixed with REACT_APP_.
         env:
           REACT_APP_BACKEND_API_URL: ${{ secrets.REACT_APP_BACKEND_API_URL }}
           REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
@@ -41,7 +41,7 @@ jobs:
           REACT_APP_FIREBASE_STORAGE_BUCKET: ${{ secrets.REACT_APP_FIREBASE_STORAGE_BUCKET }}
           REACT_APP_INITIAL_AUTH_TOKEN: ${{ secrets.REACT_APP_INITIAL_AUTH_TOKEN }}
         run: |
-          npm install firebase
+          npm install firebase lucide-react
           npm install
           npm run build
 
@@ -51,7 +51,8 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./sans-mercantile-app/build
 
-  build-and-push-services:
+  build-and-push-services-ghcr:
+    name: Build and Push Services to GHCR
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -96,9 +97,6 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.repo_owner }}/${{ matrix.service.name }}:latest
           no-cache: true
-          # Pass secrets as build arguments to Docker.
-          # IMPORTANT: You must add corresponding `ARG SECRET_NAME` and `ENV SECRET_NAME=$SECRET_NAME`
-          # lines in your Dockerfiles for your application to receive these values.
           build-args: |
             ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }}
             ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }}
@@ -171,7 +169,8 @@ jobs:
             SIMFIN_BASE_URL=${{ secrets.SIMFIN_BASE_URL }}
             TRADING_STRATEGY_MODE=${{ secrets.TRADING_STRATEGY_MODE }}
             TWELVEDATA_API_KEY=${{ secrets.TWELVEDATA_API_KEY }}
-
+            TWELVEDATA_API_KEY=${{ secrets.TWELVEDATA_API_KEY }}
+            
   build-matlab-service:
     runs-on: ubuntu-latest
     steps:
@@ -190,7 +189,6 @@ jobs:
           # The installer will be placed in the correct directory for the Docker build context.
           wget -q -O ./sans-mercantile-app/matlab_module/MATLAB_Runtime_R2023a_Update_8_glnxa64.zip "${{ secrets.MATLAB_RUNTIME_DOWNLOAD_URL }}"
           echo "Download complete."
-
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
