@@ -1868,7 +1868,7 @@ nav a:hover {
 /* Subscribe Section */
 .subscribe-section {
   background-color: var(--color-black-cherry);
-  max-width: 300px;
+  max-width: 200px;
   color: var(--color-white);
   padding: 3rem 2rem;
   text-align: center;
