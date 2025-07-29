@@ -187,7 +187,11 @@
                         await signOut(auth);
                     }
                 } catch (err) {
-                    setError(err.message);
+                    if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+                        setError("Invalid credentials. Please check your email and password and try again.");
+                    } else {
+                        setError("An unexpected error occurred. Please try again later.");
+                    }
                 }
             };
 
@@ -200,7 +204,10 @@
                 const password = form.password.value;
 
                 if (!email.endsWith('@sansmercantile.com')) {
-                    setError('Individual signups are restricted to @sansmercantile.com emails.');
+                    setError('This is a restricted area.');
+                    setTimeout(() => {
+                        window.location.href = "https://www.sansmercantile.com";
+                    }, 2000);
                     return;
                 }
 
@@ -216,7 +223,7 @@
 
                     const employeeDoc = querySnapshot.docs[0];
                     if (employeeDoc.data().accountCreated) {
-                        setError("An account for this email already exists. Please log in.");
+                        setError("It appears that you are already a member of the team. Why don't you try signing in?");
                         return;
                     }
 
@@ -244,7 +251,11 @@
                     setView('login');
 
                 } catch (err) {
-                    setError(err.message);
+                    if (err.code === 'auth/email-already-in-use') {
+                        setError("It appears that you are already a member of the team. Why don't you try signing in?");
+                    } else {
+                        setError("An unexpected error occurred during registration. Please try again.");
+                    }
                 }
             };
 
