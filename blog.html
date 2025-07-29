@@ -61,8 +61,9 @@
                 const app = initializeApp(window.firebaseConfig);
                 const db = getFirestore(app);
 
+                // Corrected the collection path to have an odd number of segments
                 const q = query(
-                    collection(db, `artifacts/${window.appId}/public/blogs`), 
+                    collection(db, 'artifacts', window.appId, 'public', 'data', 'blogs'), 
                     where("status", "==", "approved"),
                     orderBy("approvedAt", "desc") // Order by most recent
                 );
