@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post - Sans Mercantile</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <!-- Firebase SDK -->
+    <script type="module">
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        window.firebaseConfig = firebaseConfig;
+        window.appId = appId;
+    </script>
+    <style>
+        /* Ensure images and videos from the editor are responsive */
+        .article-content img, .article-content iframe {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <main class="container">
+        <article class="blog-post" data-aos="fade-in">
+            <div id="post-content-container">
+                <!-- Post content will be dynamically inserted here -->
+                <div id="loading-indicator" class="loading-spinner"></div>
+            </div>
+        </article>
+        
+        <div id="article-footer-placeholder"></div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="/js/main.js"></script>
+
+    <!-- Script to fetch and display a single blog post -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const contentContainer = document.getElementById('post-content-container');
+            const loadingIndicator = document.getElementById('loading-indicator');
+
+            try {
+                const app = initializeApp(window.firebaseConfig);
+                const db = getFirestore(app);
+
+                // Get post ID from URL
+                const params = new URLSearchParams(window.location.search);
+                const postId = params.get('id');
+
+                if (!postId) {
+                    if(loadingIndicator) loadingIndicator.style.display = 'none';
+                    contentContainer.innerHTML = '<h1>Post not found</h1><p>No post ID was provided. Please access this page through a link from the main blog page.</p>';
+                    // Exit gracefully without throwing an error
+                    return;
+                }
+
+                // Fetch the specific blog post with the corrected path
+                const postRef = doc(db, `artifacts/${window.appId}/public/data/blogs`, postId);
+                const docSnap = await getDoc(postRef);
+
+                if (docSnap.exists() && docSnap.data().status === 'approved') {
+                    const post = docSnap.data();
+                    if(loadingIndicator) loadingIndicator.style.display = 'none';
+
+                    // Update page title
+                    document.title = `${post.title} - Sans Mercantile`;
+
+                    // Populate the content
+                    contentContainer.innerHTML = `
+                        <header class="post-header">
+                            <h1>${post.title}</h1>
+                            <div class="post-meta">
+                                <span>By ${post.authorName}</span> | 
+                                <span>Published on ${new Date(post.approvedAt?.toDate()).toLocaleDateString()}</span>
+                            </div>
+                        </header>
+                        <div class="article-content">
+                            ${post.content}
+                        </div>
+                    `;
+
+                    // --- Dynamic Next/Previous Post Logic ---
+                    // Corrected the collection path here as well
+                    const q = query(
+                        collection(db, `artifacts/${window.appId}/public/data/blogs`), 
+                        where("status", "==", "approved"),
+                        orderBy("approvedAt", "desc")
+                    );
+                    const querySnapshot = await getDocs(q);
+                    const allPosts = [];
+                    querySnapshot.forEach(doc => allPosts.push({ id: doc.id, ...doc.data() }));
+                    
+                    const currentIndex = allPosts.findIndex(p => p.id === postId);
+
+                    const prevPostLink = document.getElementById('prev-post-link');
+                    const nextPostLink = document.getElementById('next-post-link');
+
+                    // Note: Since we sort descending, the "next" post in time is at a lower index
+                    // and the "previous" post is at a higher index.
+                    if (prevPostLink) {
+                        const prevIndex = currentIndex + 1;
+                        if (prevIndex < allPosts.length) {
+                            prevPostLink.href = `/blogs/post.html?id=${allPosts[prevIndex].id}`;
+                        } else {
+                            prevPostLink.style.display = 'none';
+                        }
+                    }
+
+                    if (nextPostLink) {
+                        const nextIndex = currentIndex - 1;
+                        if (nextIndex >= 0) {
+                            nextPostLink.href = `/blogs/post.html?id=${allPosts[nextIndex].id}`;
+                        } else {
+                            nextPostLink.style.display = 'none';
+                        }
+                    }
+
+                } else {
+                    if(loadingIndicator) loadingIndicator.style.display = 'none';
+                    contentContainer.innerHTML = '<h1>Post not found</h1><p>This post may have been removed or does not exist.</p>';
+                }
+            } catch (error) {
+                console.error("Error fetching post: ", error);
+                if(loadingIndicator) loadingIndicator.style.display = 'none';
+                if(contentContainer) contentContainer.innerHTML = '<h1>Error</h1><p>Could not load the post.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
