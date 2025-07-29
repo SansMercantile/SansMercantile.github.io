@@ -56,6 +56,10 @@
         .btn-primary:hover {
             background-color: #490c09; /* crimson-noir */
         }
+        .btn-primary:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
         .btn-secondary {
             background-color: #e5e7eb;
             color: #1f2937;
@@ -92,34 +96,9 @@
 
     <script type="text/babel" data-type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { 
-            getAuth, 
-            onAuthStateChanged,
-            createUserWithEmailAndPassword, 
-            signInWithEmailAndPassword,
-            signInWithCustomToken,
-            signInAnonymously,
-            signOut
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            setDoc,
-            getDoc,
-            collection,
-            addDoc,
-            updateDoc,
-            serverTimestamp,
-            query,
-            onSnapshot,
-            where
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { 
-            getStorage, 
-            ref, 
-            uploadBytes, 
-            getDownloadURL 
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithCustomToken, signInAnonymously, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, getDocs, collection, addDoc, updateDoc, serverTimestamp, query, onSnapshot, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
         const { useState, useEffect, useCallback, useRef } = React;
 
@@ -127,13 +106,13 @@
         let app, auth, db, storage;
         let firebaseError = null;
         try {
-            if (window.firebaseConfig && window.firebaseConfig.apiKey) {
+            if (window.firebaseConfig && window.firebaseConfig.apiKey && window.firebaseConfig.apiKey !== "YOUR_API_KEY") {
                 app = initializeApp(window.firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
                 storage = getStorage(app);
             } else {
-                throw new Error("Firebase configuration is missing or invalid.");
+                throw new Error("Firebase configuration is missing or invalid. Please replace placeholder values in the HTML file.");
             }
         } catch (e) {
             console.error("Firebase initialization error:", e);
@@ -163,7 +142,6 @@
             const [user, setUser] = useState(null);
             const [isLoading, setIsLoading] = useState(true);
             const [view, setView] = useState('login');
-            const [userType, setUserType] = useState('individual');
             const [error, setError] = useState('');
             const [success, setSuccess] = useState('');
 
@@ -199,14 +177,15 @@
             const handleLogin = async (e) => {
                 e.preventDefault();
                 setError('');
+                setSuccess('');
                 const email = e.target.email.value;
                 const password = e.target.password.value;
-                if (!email.endsWith('@sansmercantile.com')) {
-                    setError('Access restricted to @sansmercantile.com emails.');
-                    return;
-                }
                 try {
-                    await signInWithEmailAndPassword(auth, email, password);
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    if (!userCredential.user.emailVerified) {
+                        setError("Please verify your email address. Check your inbox for a verification link.");
+                        await signOut(auth);
+                    }
                 } catch (err) {
                     setError(err.message);
                 }
@@ -219,37 +198,52 @@
                 const form = e.target;
                 const email = form.email.value;
                 const password = form.password.value;
-                if (userType === 'individual') {
-                    if (!email.endsWith('@sansmercantile.com')) {
-                         setError('Individual signups are restricted to @sansmercantile.com emails.');
-                         return;
+
+                if (!email.endsWith('@sansmercantile.com')) {
+                    setError('Individual signups are restricted to @sansmercantile.com emails.');
+                    return;
+                }
+
+                try {
+                    const recordsRef = collection(db, `artifacts/${window.appId}/public/data/employee_records`);
+                    const q = query(recordsRef, where("email", "==", email));
+                    const querySnapshot = await getDocs(q);
+
+                    if (querySnapshot.empty) {
+                        setError("Your email is not registered. Please contact an administrator.");
+                        return;
                     }
-                    try {
-                        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                        const newUser = userCredential.user;
-                        const userProfile = {
-                            fullName: form.fullName.value, email: newUser.email, employeeId: form.employeeId.value,
-                            nationalId: form.nationalId.value, designation: form.designation.value,
-                            createdAt: serverTimestamp(), userType: 'individual', status: 'active'
-                        };
-                        const userDocRef = doc(db, `artifacts/${window.appId}/users`, newUser.uid);
-                        await setDoc(userDocRef, userProfile);
-                    } catch (err) {
-                        setError(err.message);
+
+                    const employeeDoc = querySnapshot.docs[0];
+                    if (employeeDoc.data().accountCreated) {
+                        setError("An account for this email already exists. Please log in.");
+                        return;
                     }
-                } else {
-                    try {
-                        const orgData = {
-                            orgName: form.orgName.value, orgEmail: email, orgReg: form.orgReg.value,
-                            contactPerson: form.contactPerson.value, status: 'pending', submittedAt: serverTimestamp()
-                        };
-                        const pendingRef = collection(db, `artifacts/${window.appId}/public/data/pendingApprovals`);
-                        await addDoc(pendingRef, orgData);
-                        setSuccess('Application submitted. We will contact you upon review.');
-                        setTimeout(() => { setView('login'); setSuccess(''); }, 3000);
-                    } catch (err) {
-                         setError(err.message);
-                    }
+
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    await sendEmailVerification(userCredential.user);
+
+                    const userProfile = {
+                        fullName: employeeDoc.data().fullName,
+                        email: userCredential.user.email,
+                        employeeId: employeeDoc.data().employeeId,
+                        nationalId: employeeDoc.data().nationalId,
+                        designation: employeeDoc.data().designation,
+                        createdAt: serverTimestamp(),
+                        userType: 'individual',
+                        status: 'active'
+                    };
+                    const userDocRef = doc(db, `artifacts/${window.appId}/users`, userCredential.user.uid);
+                    await setDoc(userDocRef, userProfile);
+
+                    await updateDoc(employeeDoc.ref, { accountCreated: true });
+
+                    setSuccess("Registration successful! A verification link has been sent to your email. Please verify before logging in.");
+                    await signOut(auth);
+                    setView('login');
+
+                } catch (err) {
+                    setError(err.message);
                 }
             };
 
@@ -265,7 +259,7 @@
                 return <div className="min-h-screen flex items-center justify-center">Loading...</div>
             }
 
-            if (user && user.email) {
+            if (user && user.emailVerified) {
                 return <Dashboard user={user} onSignOut={handleSignOut} />;
             }
 
@@ -275,12 +269,12 @@
                         <div className="text-center">
                             <WordLogo className="text-4xl justify-center flex" />
                              <h2 className="mt-6 text-center text-2xl font-display text-gray-700">
-                                {view === 'login' ? 'Portal Sign In' : 'Create a New Account'}
+                                {view === 'login' ? 'Portal Sign In' : 'Employee Account Registration'}
                             </h2>
                         </div>
                         {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">{error}</div>}
                         {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">{success}</div>}
-                        {view === 'login' ? <LoginForm handleLogin={handleLogin} setView={setView} /> : <SignupForm handleSignup={handleSignup} setView={setView} userType={userType} setUserType={setUserType} />}
+                        {view === 'login' ? <LoginForm handleLogin={handleLogin} setView={setView} /> : <SignupForm handleSignup={handleSignup} setView={setView} />}
                     </div>
                 </div>
             );
@@ -294,20 +288,19 @@
                         <InputField id="password" name="password" type="password" placeholder="Password" icon={Lock} />
                     </div>
                     <div><button type="submit" className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md btn-primary transition-colors">Sign in</button></div>
-                    <p className="mt-2 text-center text-sm text-gray-600">Don't have an account?{' '}<a href="#" onClick={(e) => { e.preventDefault(); setView('signup'); }} className="font-medium text-accent hover:underline">Sign up</a></p>
+                    <p className="mt-2 text-center text-sm text-gray-600">Need to register?{' '}<a href="#" onClick={(e) => { e.preventDefault(); setView('signup'); }} className="font-medium text-accent hover:underline">Create Account</a></p>
                 </form>
             );
         }
 
-        function SignupForm({ handleSignup, setView, userType, setUserType }) {
+        function SignupForm({ handleSignup, setView }) {
             return (
                 <form className="mt-8 space-y-6" onSubmit={handleSignup}>
-                    <div className="flex justify-center rounded-md border border-gray-300 p-1 bg-gray-200">
-                        <button type="button" onClick={() => setUserType('individual')} className={`w-1/2 py-2 text-sm font-medium rounded-md ${userType === 'individual' ? 'bg-white text-accent shadow' : 'text-gray-600'}`}>Individual</button>
-                        <button type="button" onClick={() => setUserType('organization')} className={`w-1/2 py-2 text-sm font-medium rounded-md ${userType === 'organization' ? 'bg-white text-accent shadow' : 'text-gray-600'}`}>Organization</button>
+                    <div className="rounded-md shadow-sm space-y-4">
+                        <InputField id="email" name="email" type="email" placeholder="Company Email (@sansmercantile.com)" icon={Mail} />
+                        <InputField id="password" name="password" type="password" placeholder="Create a Password" icon={Lock} />
                     </div>
-                    {userType === 'individual' ? <IndividualFields /> : <OrganizationFields />}
-                    <div><button type="submit" className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md btn-primary transition-colors">Create Account</button></div>
+                    <div><button type="submit" className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md btn-primary transition-colors">Register</button></div>
                     <p className="mt-2 text-center text-sm text-gray-600">Already have an account?{' '}<a href="#" onClick={(e) => { e.preventDefault(); setView('login'); }} className="font-medium text-accent hover:underline">Sign In</a></p>
                 </form>
             );
@@ -320,69 +313,29 @@
             </div>
         );
 
-        function IndividualFields() { /* Unchanged */ return ( <div className="space-y-4"> <InputField id="full-name" name="fullName" type="text" placeholder="Full Name" icon={User} /> <InputField id="email" name="email" type="email" placeholder="Email (@sansmercantile.com)" icon={Mail} /> <InputField id="password" name="password" type="password" placeholder="Password" icon={Lock} /> <InputField id="employee-id" name="employeeId" type="text" placeholder="Employee ID" icon={User} /> <InputField id="national-id" name="nationalId" type="text" placeholder="National ID / Passport" icon={User} /> <InputField id="designation" name="designation" type="text" placeholder="Designation" icon={User} /> </div> ); }
-        function OrganizationFields() { /* Unchanged */ return ( <div className="space-y-4"> <InputField id="org-name" name="orgName" type="text" placeholder="Organization Name" icon={Building} /> <InputField id="org-email" name="email" type="email" placeholder="Official Email" icon={Mail} /> <InputField id="password" name="password" type="password" placeholder="Password" icon={Lock} /> <InputField id="org-registration" name="orgReg" type="text" placeholder="Company Registration Number" icon={Building} /> <InputField id="org-contact-person" name="contactPerson" type="text" placeholder="Contact Person Name" icon={User} /> </div> ); }
-
         // --- Blog Components ---
-
         function BlogEditor({ post, onSave, onCancel }) {
             const [title, setTitle] = useState(post?.title || '');
             const [content, setContent] = useState(post?.content || '');
+            const [isSaving, setIsSaving] = useState(false);
             const quillRef = useRef();
 
-            const imageHandler = useCallback(() => {
-                const input = document.createElement('input');
-                input.setAttribute('type', 'file');
-                input.setAttribute('accept', 'image/*');
-                input.click();
-                input.onchange = async () => {
-                    const file = input.files[0];
-                    if (!file) return;
-                    const quill = quillRef.current;
-                    const range = quill.getSelection(true);
-                    quill.enable(false);
-                    try {
-                        const storageRef = ref(storage, `blogs/${Date.now()}_${file.name}`);
-                        const snapshot = await uploadBytes(storageRef, file);
-                        const url = await getDownloadURL(snapshot.ref);
-                        quill.enable(true);
-                        quill.insertEmbed(range.index, 'image', url);
-                        quill.setSelection(range.index + 1);
-                    } catch (error) {
-                        console.error("Image upload failed:", error);
-                        quill.enable(true);
-                    }
-                };
-            }, []);
+            const imageHandler = useCallback(() => { /* Unchanged */ const input = document.createElement('input'); input.setAttribute('type', 'file'); input.setAttribute('accept', 'image/*'); input.click(); input.onchange = async () => { const file = input.files[0]; if (!file) return; const quill = quillRef.current; const range = quill.getSelection(true); quill.enable(false); try { const storageRef = ref(storage, `blogs/${Date.now()}_${file.name}`); const snapshot = await uploadBytes(storageRef, file); const url = await getDownloadURL(snapshot.ref); quill.enable(true); quill.insertEmbed(range.index, 'image', url); quill.setSelection(range.index + 1); } catch (error) { console.error("Image upload failed:", error); quill.enable(true); } }; }, []);
 
-            useEffect(() => {
-                if (quillRef.current) return;
-                const editor = new Quill('#editor', {
-                    theme: 'snow',
-                    modules: {
-                        toolbar: {
-                            container: [
-                                [{ 'header': [1, 2, 3, false] }],
-                                ['bold', 'italic', 'underline', 'strike'],
-                                [{'list': 'ordered'}, {'list': 'bullet'}],
-                                ['link', 'image', 'video'],
-                                ['clean']
-                            ],
-                            handlers: { image: imageHandler }
-                        }
-                    }
-                });
-                quillRef.current = editor;
-                editor.on('text-change', () => { setContent(editor.root.innerHTML); });
-            }, [imageHandler]);
+            useEffect(() => { /* Unchanged */ if (quillRef.current) return; const editor = new Quill('#editor', { theme: 'snow', modules: { toolbar: { container: [ [{ 'header': [1, 2, 3, false] }], ['bold', 'italic', 'underline', 'strike'], [{'list': 'ordered'}, {'list': 'bullet'}], ['link', 'image', 'video'], ['clean'] ], handlers: { image: imageHandler } } } }); quillRef.current = editor; editor.on('text-change', () => { setContent(editor.root.innerHTML); }); }, [imageHandler]);
             
-            useEffect(() => {
-                if (quillRef.current && content !== quillRef.current.root.innerHTML) {
-                    quillRef.current.root.innerHTML = content;
-                }
-            }, [content]);
+            useEffect(() => { /* Unchanged */ if (quillRef.current && content !== quillRef.current.root.innerHTML) { quillRef.current.root.innerHTML = content; } }, [content]);
 
-            const handleSave = () => { onSave({ ...post, title, content }); };
+            const handleSave = async () => {
+                setIsSaving(true);
+                try {
+                    await onSave({ ...post, title, content });
+                } catch (error) {
+                    console.error("Failed to save post:", error);
+                } finally {
+                    setIsSaving(false);
+                }
+            };
 
             return (
                 <div className="space-y-4">
@@ -390,35 +343,15 @@
                     <div id="editor"></div>
                     <div className="flex justify-end space-x-4 pt-4">
                         <button onClick={onCancel} className="btn-secondary px-6 py-2 rounded-md font-semibold">Cancel</button>
-                        <button onClick={handleSave} className="btn-primary px-6 py-2 rounded-md font-semibold">Submit for Review</button>
+                        <button onClick={handleSave} disabled={isSaving || title.trim() === ''} className="btn-primary px-6 py-2 rounded-md font-semibold">
+                            {isSaving ? 'Saving...' : 'Submit for Review'}
+                        </button>
                     </div>
                 </div>
             );
         }
 
-        function BlogList({ title, posts, onEdit, onApprove }) {
-            return (
-                <div>
-                    <h3 className="text-xl font-display mb-4">{title}</h3>
-                    <div className="space-y-3">
-                        {posts.length === 0 ? <p className="text-gray-500">No posts found.</p> :
-                            posts.map(post => (
-                                <div key={post.id} className="bg-white p-4 rounded-lg shadow-sm flex justify-between items-center">
-                                    <div>
-                                        <p className="font-bold">{post.title}</p>
-                                        <p className="text-sm text-gray-500">By {post.authorName} on {new Date(post.createdAt?.toDate()).toLocaleDateString()}</p>
-                                    </div>
-                                    <div className="flex space-x-2">
-                                        {onEdit && post.status !== 'approved' && <button onClick={() => onEdit(post)} className="btn-secondary px-3 py-1 text-sm rounded-md">Edit</button>}
-                                        {onApprove && post.status === 'pending' && <button onClick={() => onApprove(post.id)} className="bg-green-500 text-white px-3 py-1 text-sm rounded-md hover:bg-green-600">Approve</button>}
-                                    </div>
-                                </div>
-                            ))
-                        }
-                    </div>
-                </div>
-            );
-        }
+        function BlogList({ title, posts, onEdit, onApprove }) { /* Unchanged */ return ( <div> <h3 className="text-xl font-display mb-4">{title}</h3> <div className="space-y-3"> {posts.length === 0 ? <p className="text-gray-500">No posts found.</p> : posts.map(post => ( <div key={post.id} className="bg-white p-4 rounded-lg shadow-sm flex justify-between items-center"> <div> <p className="font-bold">{post.title}</p> <p className="text-sm text-gray-500">By {post.authorName} on {new Date(post.createdAt?.toDate()).toLocaleDateString()}</p> </div> <div className="flex space-x-2"> {onEdit && post.status !== 'approved' && <button onClick={() => onEdit(post)} className="btn-secondary px-3 py-1 text-sm rounded-md">Edit</button>} {onApprove && post.status === 'pending' && <button onClick={() => onApprove(post.id)} className="bg-green-500 text-white px-3 py-1 text-sm rounded-md hover:bg-green-600">Approve</button>} </div> </div> ))} </div> </div> ); }
 
         function BlogManager({ user, onBack }) {
             const [view, setView] = useState('list');
@@ -427,32 +360,12 @@
             const [approvedPosts, setApprovedPosts] = useState([]);
             const [userProfile, setUserProfile] = useState(null);
 
-            useEffect(() => {
-                const fetchUserProfile = async () => {
-                    const userDocRef = doc(db, `artifacts/${window.appId}/users`, user.uid);
-                    const docSnap = await getDoc(userDocRef);
-                    if (docSnap.exists()) { setUserProfile(docSnap.data()); }
-                };
-                fetchUserProfile();
-            }, [user.uid]);
-
-            useEffect(() => {
-                const q = query(collection(db, `artifacts/${window.appId}/public/data/blogs`));
-                const unsubscribe = onSnapshot(q, (querySnapshot) => {
-                    const allPosts = [];
-                    querySnapshot.forEach((doc) => { allPosts.push({ id: doc.id, ...doc.data() }); });
-                    setPendingPosts(allPosts.filter(p => p.status === 'pending'));
-                    setApprovedPosts(allPosts.filter(p => p.status === 'approved'));
-                });
-                return unsubscribe;
-            }, []);
+            useEffect(() => { /* Unchanged */ const fetchUserProfile = async () => { const userDocRef = doc(db, `artifacts/${window.appId}/users`, user.uid); const docSnap = await getDoc(userDocRef); if (docSnap.exists()) { setUserProfile(docSnap.data()); } }; fetchUserProfile(); }, [user.uid]);
+            useEffect(() => { /* Unchanged */ const q = query(collection(db, `artifacts/${window.appId}/public/data/blogs`)); const unsubscribe = onSnapshot(q, (querySnapshot) => { const allPosts = []; querySnapshot.forEach((doc) => { allPosts.push({ id: doc.id, ...doc.data() }); }); setPendingPosts(allPosts.filter(p => p.status === 'pending')); setApprovedPosts(allPosts.filter(p => p.status === 'approved')); }); return unsubscribe; }, []);
 
             const handleSavePost = async (postData) => {
                 if (!userProfile) { alert("User profile not loaded. Cannot save post."); return; }
-                const dataToSave = {
-                    title: postData.title, content: postData.content, authorId: user.uid,
-                    authorName: userProfile.fullName, status: 'pending',
-                };
+                const dataToSave = { title: postData.title, content: postData.content, authorId: user.uid, authorName: userProfile.fullName, status: 'pending' };
                 const collectionRef = collection(db, `artifacts/${window.appId}/public/data/blogs`);
                 if (postData.id) {
                     const postRef = doc(collectionRef, postData.id);
@@ -466,100 +379,14 @@
             };
 
             const handleEditPost = (post) => { setCurrentPost(post); setView('edit'); };
-            const handleApprovePost = async (postId) => {
-                const postRef = doc(db, `artifacts/${window.appId}/public/data/blogs`, postId);
-                await updateDoc(postRef, { status: 'approved', approvedAt: serverTimestamp() });
-            };
+            const handleApprovePost = async (postId) => { const postRef = doc(db, `artifacts/${window.appId}/public/data/blogs`, postId); await updateDoc(postRef, { status: 'approved', approvedAt: serverTimestamp() }); };
 
-            if (view === 'create' || view === 'edit') {
-                return (
-                    <div>
-                         <h2 className="text-2xl font-display mb-4">{view === 'create' ? 'Create New Blog Post' : 'Edit Blog Post'}</h2>
-                         <BlogEditor post={currentPost} onSave={handleSavePost} onCancel={() => { setView('list'); setCurrentPost(null); }} />
-                    </div>
-                );
-            }
-
-            return (
-                <div>
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-2xl font-display">Blog Management</h2>
-                        <div>
-                           <button onClick={() => onBack()} className="btn-secondary px-4 py-2 mr-2 rounded-md font-semibold">Dashboard</button>
-                           <button onClick={() => { setView('create'); setCurrentPost(null); }} className="btn-primary px-4 py-2 rounded-md font-semibold">Create New Post</button>
-                        </div>
-                    </div>
-                    <div className="space-y-8">
-                        <BlogList title="Pending Review" posts={pendingPosts} onEdit={handleEditPost} onApprove={handleApprovePost} />
-                        <BlogList title="Approved Blogs" posts={approvedPosts} onEdit={handleEditPost} />
-                    </div>
-                </div>
-            );
+            if (view === 'create' || view === 'edit') { return ( <div> <h2 className="text-2xl font-display mb-4">{view === 'create' ? 'Create New Blog Post' : 'Edit Blog Post'}</h2> <BlogEditor post={currentPost} onSave={handleSavePost} onCancel={() => { setView('list'); setCurrentPost(null); }} /> </div> ); }
+            return ( <div> <div className="flex justify-between items-center mb-6"> <h2 className="text-2xl font-display">Blog Management</h2> <div> <button onClick={() => onBack()} className="btn-secondary px-4 py-2 mr-2 rounded-md font-semibold">Dashboard</button> <button onClick={() => { setView('create'); setCurrentPost(null); }} className="btn-primary px-4 py-2 rounded-md font-semibold">Create New Post</button> </div> </div> <div className="space-y-8"> <BlogList title="Pending Review" posts={pendingPosts} onEdit={handleEditPost} onApprove={handleApprovePost} /> <BlogList title="Approved Blogs" posts={approvedPosts} onEdit={handleEditPost} /> </div> </div> );
         }
 
-        function Dashboard({ user, onSignOut }) {
-            const [view, setView] = useState('main');
-            if (view === 'blog') {
-                return (
-                    <div className="min-h-screen bg-gray-100">
-                        <DashboardNav user={user} onSignOut={onSignOut} />
-                        <main className="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                            <BlogManager user={user} onBack={() => setView('main')} />
-                        </main>
-                    </div>
-                );
-            }
-             return (
-                <div className="min-h-screen bg-gray-100">
-                    <DashboardNav user={user} onSignOut={onSignOut} />
-                    <div className="py-10">
-                        <header>
-                            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                                <h1 className="text-3xl font-bold leading-tight text-gray-900 font-display">Dashboard</h1>
-                            </div>
-                        </header>
-                        <main>
-                            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                                <div className="px-4 py-8 sm:px-0">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        <div onClick={() => setView('blog')} className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer border-l-4 border-accent">
-                                            <h3 className="text-lg font-semibold font-display" style={{color: 'var(--color-text-primary)'}}>Blog Management</h3>
-                                            <p className="text-gray-600 mt-2">Create, review, and publish new blog posts.</p>
-                                        </div>
-                                         <div className="bg-gray-200 p-6 rounded-lg shadow-md cursor-not-allowed border-l-4 border-gray-400">
-                                            <h3 className="text-lg font-semibold text-gray-500 font-display">User Management</h3>
-                                            <p className="text-gray-400 mt-2">(Coming Soon)</p>
-                                        </div>
-                                         <div className="bg-gray-200 p-6 rounded-lg shadow-md cursor-not-allowed border-l-4 border-gray-400">
-                                            <h3 className="text-lg font-semibold text-gray-500 font-display">Platform Analytics</h3>
-                                            <p className="text-gray-400 mt-2">(Coming Soon)</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </main>
-                    </div>
-                </div>
-            );
-        }
-
-        const DashboardNav = ({ user, onSignOut }) => (
-            <nav className="bg-white shadow-sm" style={{backgroundColor: 'var(--color-text-primary)'}}>
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between h-16">
-                        <div className="flex">
-                            <div className="flex-shrink-0 flex items-center">
-                                <WordLogo onDarkBg={true} className="text-2xl" />
-                            </div>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <span className="text-white text-sm">{user.email}</span>
-                            <button onClick={onSignOut} className="text-sm font-medium text-gray-300 hover:text-white">Sign out</button>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-        );
+        function Dashboard({ user, onSignOut }) { /* Unchanged */ const [view, setView] = useState('main'); if (view === 'blog') { return ( <div className="min-h-screen bg-gray-100"> <DashboardNav user={user} onSignOut={onSignOut} /> <main className="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8"> <BlogManager user={user} onBack={() => setView('main')} /> </main> </div> ); } return ( <div className="min-h-screen bg-gray-100"> <DashboardNav user={user} onSignOut={onSignOut} /> <div className="py-10"> <header> <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> <h1 className="text-3xl font-bold leading-tight text-gray-900 font-display">Dashboard</h1> </div> </header> <main> <div className="max-w-7xl mx-auto sm:px-6 lg:px-8"> <div className="px-4 py-8 sm:px-0"> <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> <div onClick={() => setView('blog')} className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer border-l-4 border-accent"> <h3 className="text-lg font-semibold font-display" style={{color: 'var(--color-text-primary)'}}>Blog Management</h3> <p className="text-gray-600 mt-2">Create, review, and publish new blog posts.</p> </div> <div className="bg-gray-200 p-6 rounded-lg shadow-md cursor-not-allowed border-l-4 border-gray-400"> <h3 className="text-lg font-semibold text-gray-500 font-display">User Management</h3> <p className="text-gray-400 mt-2">(Coming Soon)</p> </div> <div className="bg-gray-200 p-6 rounded-lg shadow-md cursor-not-allowed border-l-4 border-gray-400"> <h3 className="text-lg font-semibold text-gray-500 font-display">Platform Analytics</h3> <p className="text-gray-400 mt-2">(Coming Soon)</p> </div> </div> </div> </div> </main> </div> </div> ); }
+        const DashboardNav = ({ user, onSignOut }) => { /* Unchanged */ return ( <nav className="bg-white shadow-sm" style={{backgroundColor: 'var(--color-text-primary)'}}> <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> <div className="flex justify-between h-16"> <div className="flex"> <div className="flex-shrink-0 flex items-center"> <WordLogo onDarkBg={true} className="text-2xl" /> </div> </div> <div className="flex items-center space-x-4"> <span className="text-white text-sm">{user.email}</span> <button onClick={onSignOut} className="text-sm font-medium text-gray-300 hover:text-white">Sign out</button> </div> </div> </div> </nav> ); };
 
         const container = document.getElementById('root');
         const root = ReactDOM.createRoot(container);
