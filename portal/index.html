@@ -231,7 +231,8 @@
                         designation: employeeDoc.data().designation,
                         createdAt: serverTimestamp(),
                         userType: 'individual',
-                        status: 'active'
+                        status: 'active',
+                        role: 'editor' // Default role for new signups
                     };
                     const userDocRef = doc(db, `artifacts/${window.appId}/users`, userCredential.user.uid);
                     await setDoc(userDocRef, userProfile);
@@ -384,8 +385,184 @@
             if (view === 'create' || view === 'edit') { return ( <div> <h2 className="text-2xl font-display mb-4">{view === 'create' ? 'Create New Blog Post' : 'Edit Blog Post'}</h2> <BlogEditor post={currentPost} onSave={handleSavePost} onCancel={() => { setView('list'); setCurrentPost(null); }} /> </div> ); }
             return ( <div> <div className="flex justify-between items-center mb-6"> <h2 className="text-2xl font-display">Blog Management</h2> <div> <button onClick={() => onBack()} className="btn-secondary px-4 py-2 mr-2 rounded-md font-semibold">Dashboard</button> <button onClick={() => { setView('create'); setCurrentPost(null); }} className="btn-primary px-4 py-2 rounded-md font-semibold">Create New Post</button> </div> </div> <div className="space-y-8"> <BlogList title="Pending Review" posts={pendingPosts} onEdit={handleEditPost} onApprove={handleApprovePost} /> <BlogList title="Approved Blogs" posts={approvedPosts} onEdit={handleEditPost} /> </div> </div> );
         }
+        
+        // --- User Management Component ---
+        function UserManagement({ user, onBack }) {
+            const [employeeData, setEmployeeData] = useState({ fullName: '', email: '', employeeId: '', nationalId: '', designation: '' });
+            const [feedback, setFeedback] = useState({ message: '', isError: false });
+            const [allUsers, setAllUsers] = useState([]);
 
-        function Dashboard({ user, onSignOut }) { /* Unchanged */ const [view, setView] = useState('main'); if (view === 'blog') { return ( <div className="min-h-screen bg-gray-100"> <DashboardNav user={user} onSignOut={onSignOut} /> <main className="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8"> <BlogManager user={user} onBack={() => setView('main')} /> </main> </div> ); } return ( <div className="min-h-screen bg-gray-100"> <DashboardNav user={user} onSignOut={onSignOut} /> <div className="py-10"> <header> <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> <h1 className="text-3xl font-bold leading-tight text-gray-900 font-display">Dashboard</h1> </div> </header> <main> <div className="max-w-7xl mx-auto sm:px-6 lg:px-8"> <div className="px-4 py-8 sm:px-0"> <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> <div onClick={() => setView('blog')} className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer border-l-4 border-accent"> <h3 className="text-lg font-semibold font-display" style={{color: 'var(--color-text-primary)'}}>Blog Management</h3> <p className="text-gray-600 mt-2">Create, review, and publish new blog posts.</p> </div> <div className="bg-gray-200 p-6 rounded-lg shadow-md cursor-not-allowed border-l-4 border-gray-400"> <h3 className="text-lg font-semibold text-gray-500 font-display">User Management</h3> <p className="text-gray-400 mt-2">(Coming Soon)</p> </div> <div className="bg-gray-200 p-6 rounded-lg shadow-md cursor-not-allowed border-l-4 border-gray-400"> <h3 className="text-lg font-semibold text-gray-500 font-display">Platform Analytics</h3> <p className="text-gray-400 mt-2">(Coming Soon)</p> </div> </div> </div> </div> </main> </div> </div> ); }
+            // Fetch all users to manage roles
+            useEffect(() => {
+                const usersRef = collection(db, `artifacts/${window.appId}/users`);
+                const unsubscribe = onSnapshot(usersRef, (snapshot) => {
+                    const usersList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    setAllUsers(usersList);
+                });
+                return unsubscribe;
+            }, []);
+
+            const handleChange = (e) => {
+                setEmployeeData({ ...employeeData, [e.target.name]: e.target.value });
+            };
+
+            const handleAddEmployee = async (e) => {
+                e.preventDefault();
+                setFeedback({ message: '', isError: false });
+
+                if (!employeeData.email.endsWith('@sansmercantile.com')) {
+                    setFeedback({ message: 'Employee email must be a @sansmercantile.com address.', isError: true });
+                    return;
+                }
+
+                try {
+                    const recordsRef = collection(db, `artifacts/${window.appId}/public/data/employee_records`);
+                    const newRecord = { ...employeeData, accountCreated: false, role: 'editor' }; // Default role
+                    await addDoc(recordsRef, newRecord);
+                    
+                    setFeedback({ message: `Successfully added ${employeeData.fullName}. They can now register.`, isError: false });
+                    setEmployeeData({ fullName: '', email: '', employeeId: '', nationalId: '', designation: '' }); // Clear form
+                } catch (error) {
+                    console.error("Error adding employee record:", error);
+                    setFeedback({ message: `Failed to add employee: ${error.message}`, isError: true });
+                }
+            };
+
+            const handleRoleChange = async (targetUserId, newRole) => {
+                const userDocRef = doc(db, `artifacts/${window.appId}/users`, targetUserId);
+                try {
+                    await updateDoc(userDocRef, { role: newRole });
+                    setFeedback({ message: 'User role updated successfully.', isError: false });
+                } catch (error) {
+                    setFeedback({ message: `Failed to update role: ${error.message}`, isError: true });
+                }
+            };
+            
+            return (
+                <div>
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-2xl font-display">User Management</h2>
+                        <button onClick={onBack} className="btn-secondary px-4 py-2 rounded-md font-semibold">Dashboard</button>
+                    </div>
+                    {/* Add Employee Form */}
+                    <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+                        <h3 className="text-xl font-display mb-4">Add New Employee Record</h3>
+                        <p className="text-gray-600 mb-6">Authorize a new employee to create a portal account.</p>
+                        <form onSubmit={handleAddEmployee} className="space-y-4">
+                            <InputField name="fullName" type="text" placeholder="Full Name" value={employeeData.fullName} onChange={handleChange} icon={User} />
+                            <InputField name="email" type="email" placeholder="Email (@sansmercantile.com)" value={employeeData.email} onChange={handleChange} icon={Mail} />
+                            <InputField name="employeeId" type="text" placeholder="Employee ID" value={employeeData.employeeId} onChange={handleChange} icon={User} />
+                            <InputField name="nationalId" type="text" placeholder="National ID / Passport" value={employeeData.nationalId} onChange={handleChange} icon={User} />
+                            <InputField name="designation" type="text" placeholder="Designation" value={employeeData.designation} onChange={handleChange} icon={User} />
+                            <button type="submit" className="btn-primary w-full py-2 rounded-md font-semibold">Add Employee</button>
+                        </form>
+                        {feedback.message && (
+                            <div className={`mt-4 p-3 rounded-md text-center ${feedback.isError ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                                {feedback.message}
+                            </div>
+                        )}
+                    </div>
+                    {/* Manage Existing Users */}
+                    <div className="bg-white p-6 rounded-lg shadow-md">
+                         <h3 className="text-xl font-display mb-4">Manage Roles</h3>
+                         <div className="space-y-3">
+                            {allUsers.map(u => (
+                                <div key={u.id} className="p-3 border rounded-md flex justify-between items-center">
+                                    <div>
+                                        <p className="font-bold">{u.fullName}</p>
+                                        <p className="text-sm text-gray-500">{u.email} - <span className="font-semibold capitalize">{u.role}</span></p>
+                                    </div>
+                                    {u.email !== 'hello@sansmercantile.com' && (
+                                        <div className="flex space-x-2">
+                                            {u.role !== 'admin' ? (
+                                                <button onClick={() => handleRoleChange(u.id, 'admin')} className="bg-blue-500 text-white px-3 py-1 text-sm rounded-md hover:bg-blue-600">Make Admin</button>
+                                            ) : (
+                                                <button onClick={() => handleRoleChange(u.id, 'editor')} className="bg-yellow-500 text-white px-3 py-1 text-sm rounded-md hover:bg-yellow-600">Make Editor</button>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                         </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function Dashboard({ user, onSignOut }) {
+            const [view, setView] = useState('main');
+            const [userProfile, setUserProfile] = useState(null);
+            const PRIMARY_ADMIN_EMAIL = "hello@sansmercantile.com"; 
+
+            useEffect(() => {
+                const userDocRef = doc(db, `artifacts/${window.appId}/users`, user.uid);
+                const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        setUserProfile(docSnap.data());
+                    }
+                });
+                return unsubscribe;
+            }, [user.uid]);
+
+            const isAdmin = userProfile?.role === 'admin' || user.email === PRIMARY_ADMIN_EMAIL;
+
+            if (view === 'blog') {
+                return (
+                    <div className="min-h-screen bg-gray-100">
+                        <DashboardNav user={user} onSignOut={onSignOut} />
+                        <main className="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+                            <BlogManager user={user} onBack={() => setView('main')} />
+                        </main>
+                    </div>
+                );
+            }
+
+            if (view === 'users' && isAdmin) {
+                 return (
+                    <div className="min-h-screen bg-gray-100">
+                        <DashboardNav user={user} onSignOut={onSignOut} />
+                        <main className="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+                            <UserManagement user={user} onBack={() => setView('main')} />
+                        </main>
+                    </div>
+                );
+            }
+
+             return (
+                <div className="min-h-screen bg-gray-100">
+                    <DashboardNav user={user} onSignOut={onSignOut} />
+                    <div className="py-10">
+                        <header>
+                            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                                <h1 className="text-3xl font-bold leading-tight text-gray-900 font-display">Dashboard</h1>
+                            </div>
+                        </header>
+                        <main>
+                            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                                <div className="px-4 py-8 sm:px-0">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        <div onClick={() => setView('blog')} className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer border-l-4 border-accent">
+                                            <h3 className="text-lg font-semibold font-display" style={{color: 'var(--color-text-primary)'}}>Blog Management</h3>
+                                            <p className="text-gray-600 mt-2">Create, review, and publish new blog posts.</p>
+                                        </div>
+                                         {isAdmin && (
+                                            <div onClick={() => setView('users')} className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer border-l-4 border-accent">
+                                                <h3 className="text-lg font-semibold font-display" style={{color: 'var(--color-text-primary)'}}>User Management</h3>
+                                                <p className="text-gray-600 mt-2">Add employees and manage admin roles.</p>
+                                            </div>
+                                         )}
+                                         <div className="bg-gray-200 p-6 rounded-lg shadow-md cursor-not-allowed border-l-4 border-gray-400">
+                                            <h3 className="text-lg font-semibold text-gray-500 font-display">Platform Analytics</h3>
+                                            <p className="text-gray-400 mt-2">(Coming Soon)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            );
+        }
         const DashboardNav = ({ user, onSignOut }) => { /* Unchanged */ return ( <nav className="bg-white shadow-sm" style={{backgroundColor: 'var(--color-text-primary)'}}> <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> <div className="flex justify-between h-16"> <div className="flex"> <div className="flex-shrink-0 flex items-center"> <WordLogo onDarkBg={true} className="text-2xl" /> </div> </div> <div className="flex items-center space-x-4"> <span className="text-white text-sm">{user.email}</span> <button onClick={onSignOut} className="text-sm font-medium text-gray-300 hover:text-white">Sign out</button> </div> </div> </div> </nav> ); };
 
         const container = document.getElementById('root');
