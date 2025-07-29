@@ -1,64 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="icon" type="image/svg+xml" href="img/logo.svg" />
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sans Mercantile™ | Thought Leadership</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <meta name="description" content="Dive into Sans Mercantile's™ research, expert analysis, and thought leadership on AI-powered trading, compliance, and inclusive market development." />
+    <link rel="icon" type="image/svg+xml" href="/img/logo.svg" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sans Mercantile™ | Thought Leadership</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <meta name="description" content="Dive into Sans Mercantile's™ research, expert analysis, and thought leadership on AI-powered trading, compliance, and inclusive market development." />
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+    <!-- Firebase SDK -->
+    <script type="module">
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        window.firebaseConfig = firebaseConfig;
+        window.appId = appId;
+    </script>
 </head>
 <body>
-  <div id="header-placeholder"></div>
+    <div id="header-placeholder"></div>
 
-<main role="main" class="main-wrap">
-  <section class="blog-hero" data-aos="fade-up">
-    <h2>Insights & Innovation: Shaping the Future of AI Finance</h2>
-    <p>Dive into Sans Mercantile’s™ research, expert analysis, and thought leadership on AI-powered trading, compliance, and inclusive market development. </p>
-  </section>
+    <main role="main" class="main-wrap">
+        <section class="blog-hero" data-aos="fade-up">
+            <h2>Insights & Innovation: Shaping the Future of AI Finance</h2>
+            <p>Dive into Sans Mercantile’s™ research, expert analysis, and thought leadership on AI-powered trading, compliance, and inclusive market development. </p>
+        </section>
 
-  <section class="blog-articles-grid" data-aos="fade-up" data-aos-delay="100">
-    <article class="blog-card" id="article1">
-      <h3>Redefining Risk: Why Township Markets Deserve Better Infrastructure</h3>
-      <p>A deep dive into how our AI engine mitigates structural volatility while unlocking scalable growth for communities long overlooked by traditional finance.</p>
-      <a href="blogs/redefining-risk.html">Read More &rarr;</a>
-    </article>
+        <section id="blog-posts-container" class="blog-articles-grid" data-aos="fade-up" data-aos-delay="100">
+            <!-- Blog posts will be dynamically inserted here -->
+            <div id="loading-indicator" class="loading-spinner"></div>
+        </section>
 
-    <article class="blog-card" id="article2">
-      <h3>Compliance Isn’t a Checkbox. It’s a Framework.</h3>
-      <p>Why built-in governance matters—and how Sans Mercantile™ approaches compliance as a trust-building opportunity, not a hurdle.</p>
-      <a href="blogs/blog-compliance-framework.html">Read More &rarr;</a>
-    </article>
+        <section class="blog-categories" data-aos="fade-up" data-aos-delay="200">
+            <h3>Explore by Category</h3>
+            <div class="category-tags">
+                <a href="#" class="tag">#AITrading</a>
+                <a href="#" class="tag">#FintechInnovation</a>
+                <a href="#" class="tag">#RegulatoryCompliance</a>
+                <a href="#" class="tag">#EmergingMarkets</a>
+                <a href="#" class="tag">#MarketIntelligence</a>
+                <a href="#" class="tag">#Cybersecurity</a>
+            </div>
+        </section>
+    </main>
 
-    <article class="blog-card">
-      <h3>The AI Revolution in CFD Trading: Precision & Profitability</h3>
-      <p>Explore how deep-learning models are transforming CFD market analysis, delivering unmatched accuracy and automated execution.</p>
-      <a href="blogs/blog-ai-revolution.html">Read More &rarr;</a>
-    </article>
+    <div id="footer-placeholder"></div>
 
-    <article class="blog-card">
-      <h3>Beyond Algorithms: The Human Edge in AI-Driven Finance</h3>
-      <p>Discover how Sans Mercantile™ fuses AI-driven intelligence with human expertise to maximize trading profits and ensure ethical AI adoption.</p>
-      <a href="blogs/blog-human-edge.html">Read More &rarr;</a>
-    </article>
-  </section>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="/js/main.js"></script>
 
-  <section class="blog-categories" data-aos="fade-up" data-aos-delay="200">
-    <h3>Explore by Category</h3>
-    <div class="category-tags">
-      <a href="#" class="tag">#AITrading</a>
-      <a href="#" class="tag">#FintechInnovation</a>
-      <a href="#" class="tag">#RegulatoryCompliance</a>
-      <a href="#" class="tag">#EmergingMarkets</a>
-      <a href="#" class="tag">#MarketIntelligence</a>
-      <a href="#" class="tag">#Cybersecurity</a>
-    </div>
-  </section>
-</main>
+    <!-- Script to fetch and display blog posts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-  <div id="footer-placeholder"></div>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const postsContainer = document.getElementById('blog-posts-container');
+            const loadingIndicator = document.getElementById('loading-indicator');
 
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script src="js/main.js"></script>
+            try {
+                const app = initializeApp(window.firebaseConfig);
+                const db = getFirestore(app);
+
+                const q = query(
+                    collection(db, `artifacts/${window.appId}/public/blogs`), 
+                    where("status", "==", "approved"),
+                    orderBy("approvedAt", "desc") // Order by most recent
+                );
+                
+                const querySnapshot = await getDocs(q);
+                
+                if (loadingIndicator) {
+                    loadingIndicator.style.display = 'none';
+                }
+
+                if (querySnapshot.empty) {
+                    postsContainer.innerHTML = '<p>No blog posts found.</p>';
+                } else {
+                    let articlesHtml = '';
+                    querySnapshot.forEach((doc) => {
+                        const post = { id: doc.id, ...doc.data() };
+                        
+                        // Create a summary from the content
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = post.content;
+                        const summary = tempDiv.textContent.substring(0, 120) + '...';
+
+                        // Use the original article structure
+                        articlesHtml += `
+                            <article class="blog-card">
+                                <h3>${post.title}</h3>
+                                <p>${summary}</p>
+                                <a href="/blogs/post.html?id=${post.id}">Read More &rarr;</a>
+                            </article>
+                        `;
+                    });
+                    postsContainer.innerHTML = articlesHtml;
+                    
+                    // Re-initialize animations after adding new content
+                    // This needs to be done after main.js has already initialized it
+                    if (window.AOS) {
+                        AOS.refresh();
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching blog posts: ", error);
+                if (loadingIndicator) {
+                    loadingIndicator.style.display = 'none';
+                }
+                if(postsContainer) postsContainer.innerHTML = '<p>Error loading posts. Please try again later.</p>';
+            }
+        });
+    </script>
 </body>
 </html>
