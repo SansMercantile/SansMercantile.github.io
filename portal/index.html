@@ -116,13 +116,20 @@
 
         // --- Initialize Firebase ---
         let app, auth, db, storage;
+        let firebaseError = null;
         try {
-            app = initializeApp(window.firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-            storage = getStorage(app);
+            // Add a check to ensure config is valid before initializing
+            if (window.firebaseConfig && window.firebaseConfig.apiKey) {
+                app = initializeApp(window.firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                storage = getStorage(app);
+            } else {
+                throw new Error("Firebase configuration is missing or invalid.");
+            }
         } catch (e) {
             console.error("Firebase initialization error:", e);
+            firebaseError = e.message;
         }
 
         // --- Icon Components ---
@@ -141,7 +148,10 @@
             const [success, setSuccess] = useState('');
 
             useEffect(() => {
-                if (!auth) return;
+                if (!auth) {
+                    setIsLoading(false); // Stop loading if Firebase failed to init
+                    return;
+                };
                 const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
                     setUser(currentUser);
                     setIsLoading(false);
@@ -150,20 +160,21 @@
             }, []);
             
             useEffect(() => {
+                if (!auth) return;
                 const signInWithToken = async () => {
-                    if (auth && window.initialAuthToken && !auth.currentUser) {
+                    if (window.initialAuthToken && !auth.currentUser) {
                         try {
                             await signInWithCustomToken(auth, window.initialAuthToken);
                         } catch (e) {
                             console.error("Custom token sign-in failed:", e);
                             await signInAnonymously(auth);
                         }
-                    } else if (auth && !auth.currentUser) {
+                    } else if (!auth.currentUser) {
                         await signInAnonymously(auth);
                     }
                 };
                 signInWithToken();
-            }, [auth]);
+            }, []);
 
             const handleLogin = async (e) => {
                 e.preventDefault();
@@ -212,7 +223,7 @@
                             orgName: form.orgName.value, orgEmail: email, orgReg: form.orgReg.value,
                             contactPerson: form.contactPerson.value, status: 'pending', submittedAt: serverTimestamp()
                         };
-                        const pendingRef = collection(db, `artifacts/${window.appId}/public/pendingApprovals`);
+                        const pendingRef = collection(db, `artifacts/${window.appId}/public/data/pendingApprovals`);
                         await addDoc(pendingRef, orgData);
                         setSuccess('Application submitted. We will contact you upon review.');
                         setTimeout(() => { setView('login'); setSuccess(''); }, 3000);
@@ -226,6 +237,11 @@
                 await signOut(auth);
             }
             
+            // --- Render Logic ---
+            if (firebaseError) {
+                return <div className="min-h-screen flex items-center justify-center text-red-500 font-bold">Error: {firebaseError}</div>
+            }
+
             if (isLoading) {
                 return <div className="min-h-screen flex items-center justify-center">Loading...</div>
             }
@@ -295,36 +311,24 @@
             const [content, setContent] = useState(post?.content || '');
             const quillRef = useRef();
 
-            // Image upload handler
             const imageHandler = useCallback(() => {
                 const input = document.createElement('input');
                 input.setAttribute('type', 'file');
                 input.setAttribute('accept', 'image/*');
                 input.click();
-
                 input.onchange = async () => {
                     const file = input.files[0];
                     if (!file) return;
-
                     const quill = quillRef.current;
                     const range = quill.getSelection(true);
-                    quill.enable(false); // Disable editor during upload
-
+                    quill.enable(false);
                     try {
-                        // Create a storage reference
                         const storageRef = ref(storage, `blogs/${Date.now()}_${file.name}`);
-                        
-                        // Upload file
                         const snapshot = await uploadBytes(storageRef, file);
-                        
-                        // Get download URL
                         const url = await getDownloadURL(snapshot.ref);
-
-                        // Insert image into editor
                         quill.enable(true);
                         quill.insertEmbed(range.index, 'image', url);
                         quill.setSelection(range.index + 1);
-
                     } catch (error) {
                         console.error("Image upload failed:", error);
                         quill.enable(true);
@@ -345,16 +349,12 @@
                                 ['link', 'image', 'video'],
                                 ['clean']
                             ],
-                            handlers: {
-                                image: imageHandler
-                            }
+                            handlers: { image: imageHandler }
                         }
                     }
                 });
                 quillRef.current = editor;
-                editor.on('text-change', () => {
-                    setContent(editor.root.innerHTML);
-                });
+                editor.on('text-change', () => { setContent(editor.root.innerHTML); });
             }, [imageHandler]);
             
             useEffect(() => {
@@ -363,19 +363,11 @@
                 }
             }, [content]);
 
-            const handleSave = () => {
-                onSave({ ...post, title, content });
-            };
+            const handleSave = () => { onSave({ ...post, title, content }); };
 
             return (
                 <div className="space-y-4">
-                    <input
-                        type="text"
-                        placeholder="Blog Title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        className="w-full p-3 text-2xl font-bold font-display border-b-2 focus:outline-none focus:border-accent"
-                    />
+                    <input type="text" placeholder="Blog Title" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full p-3 text-2xl font-bold font-display border-b-2 focus:outline-none focus:border-accent" />
                     <div id="editor"></div>
                     <div className="flex justify-end space-x-4 pt-4">
                         <button onClick={onCancel} className="btn-secondary px-6 py-2 rounded-md font-semibold">Cancel</button>
@@ -410,7 +402,7 @@
         }
 
         function BlogManager({ user, onBack }) {
-            const [view, setView] = useState('list'); // 'list', 'create', 'edit'
+            const [view, setView] = useState('list');
             const [currentPost, setCurrentPost] = useState(null);
             const [pendingPosts, setPendingPosts] = useState([]);
             const [approvedPosts, setApprovedPosts] = useState([]);
@@ -420,20 +412,16 @@
                 const fetchUserProfile = async () => {
                     const userDocRef = doc(db, `artifacts/${window.appId}/users`, user.uid);
                     const docSnap = await getDoc(userDocRef);
-                    if (docSnap.exists()) {
-                        setUserProfile(docSnap.data());
-                    }
+                    if (docSnap.exists()) { setUserProfile(docSnap.data()); }
                 };
                 fetchUserProfile();
             }, [user.uid]);
 
             useEffect(() => {
-                const q = query(collection(db, `artifacts/${window.appId}/public/blogs`));
+                const q = query(collection(db, `artifacts/${window.appId}/public/data/blogs`));
                 const unsubscribe = onSnapshot(q, (querySnapshot) => {
                     const allPosts = [];
-                    querySnapshot.forEach((doc) => {
-                        allPosts.push({ id: doc.id, ...doc.data() });
-                    });
+                    querySnapshot.forEach((doc) => { allPosts.push({ id: doc.id, ...doc.data() }); });
                     setPendingPosts(allPosts.filter(p => p.status === 'pending'));
                     setApprovedPosts(allPosts.filter(p => p.status === 'approved'));
                 });
@@ -441,39 +429,26 @@
             }, []);
 
             const handleSavePost = async (postData) => {
-                if (!userProfile) {
-                    alert("User profile not loaded. Cannot save post.");
-                    return;
-                }
+                if (!userProfile) { alert("User profile not loaded. Cannot save post."); return; }
                 const dataToSave = {
-                    title: postData.title,
-                    content: postData.content,
-                    authorId: user.uid,
-                    authorName: userProfile.fullName,
-                    status: 'pending',
+                    title: postData.title, content: postData.content, authorId: user.uid,
+                    authorName: userProfile.fullName, status: 'pending',
                 };
-
+                const collectionRef = collection(db, `artifacts/${window.appId}/public/data/blogs`);
                 if (postData.id) {
-                    const postRef = doc(db, `artifacts/${window.appId}/public/blogs`, postData.id);
+                    const postRef = doc(collectionRef, postData.id);
                     await updateDoc(postRef, { ...dataToSave, updatedAt: serverTimestamp() });
                 } else {
-                    const collectionRef = collection(db, `artifacts/${window.appId}/public/blogs`);
                     await addDoc(collectionRef, { ...dataToSave, createdAt: serverTimestamp() });
                 }
-                
                 console.log(`Email notification to hello@sansmercantile.com: Blog post '${postData.title}' is pending review.`);
-                
                 setView('list');
                 setCurrentPost(null);
             };
 
-            const handleEditPost = (post) => {
-                setCurrentPost(post);
-                setView('edit');
-            };
-            
+            const handleEditPost = (post) => { setCurrentPost(post); setView('edit'); };
             const handleApprovePost = async (postId) => {
-                const postRef = doc(db, `artifacts/${window.appId}/public/blogs`, postId);
+                const postRef = doc(db, `artifacts/${window.appId}/public/data/blogs`, postId);
                 await updateDoc(postRef, { status: 'approved', approvedAt: serverTimestamp() });
             };
 
@@ -503,10 +478,8 @@
             );
         }
 
-        // --- Dashboard Component ---
         function Dashboard({ user, onSignOut }) {
-            const [view, setView] = useState('main'); // 'main', 'blog'
-
+            const [view, setView] = useState('main');
             if (view === 'blog') {
                 return (
                     <div className="min-h-screen bg-gray-100">
@@ -517,7 +490,6 @@
                     </div>
                 );
             }
-
              return (
                 <div className="min-h-screen bg-gray-100">
                     <DashboardNav user={user} onSignOut={onSignOut} />
