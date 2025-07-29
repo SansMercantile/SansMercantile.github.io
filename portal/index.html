@@ -155,7 +155,8 @@
                     setIsLoading(false);
                     return;
                 };
-                const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+                // Reverted to the simpler, correct listener
+                const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
                     setUser(currentUser);
                     setIsLoading(false);
                 });
