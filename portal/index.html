@@ -154,19 +154,6 @@
                     return;
                 };
                 const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-                    if (currentUser && currentUser.email === PRIMARY_ADMIN_EMAIL) {
-                        // Automatically create profile for primary admin if it doesn't exist
-                        const userDocRef = doc(db, `artifacts/${window.appId}/users`, currentUser.uid);
-                        const docSnap = await getDoc(userDocRef);
-                        if (!docSnap.exists()) {
-                            await setDoc(userDocRef, {
-                                fullName: "Primary Admin",
-                                email: currentUser.email,
-                                role: 'admin',
-                                createdAt: serverTimestamp()
-                            });
-                        }
-                    }
                     setUser(currentUser);
                     setIsLoading(false);
                 });
@@ -220,12 +207,28 @@
                 const email = form.email.value;
                 const password = form.password.value;
 
-                if (email === PRIMARY_ADMIN_EMAIL) {
-                    setError("This email address is reserved. Please use a different email.");
-                    return;
-                }
-
                 if (userType === 'individual') {
+                    if (email === PRIMARY_ADMIN_EMAIL) {
+                        try {
+                            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                            const userDocRef = doc(db, `artifacts/${window.appId}/users`, userCredential.user.uid);
+                            await setDoc(userDocRef, {
+                                fullName: "Primary Admin", email: userCredential.user.email, role: 'admin',
+                                createdAt: serverTimestamp()
+                            });
+                            setSuccess("Primary admin account created successfully. You can now log in.");
+                            await signOut(auth);
+                            setView('login');
+                        } catch (err) {
+                            if (err.code === 'auth/email-already-in-use') {
+                                setError("It appears that you are already a member of the team. Why don't you try signing in?");
+                            } else {
+                                setError("An unexpected error occurred during registration.");
+                            }
+                        }
+                        return;
+                    }
+
                     if (!email.endsWith('@sansmercantile.com')) {
                         setError('This is a restricted area.');
                         setTimeout(() => { window.location.href = "https://www.sansmercantile.com"; }, 2000);
@@ -362,7 +365,7 @@
         function IndividualFields() {
             return (
                 <div className="space-y-4">
-                    <InputField name="email" type="email" placeholder="Company Email (@sansmercantile.com)" icon={Mail} />
+                    <InputField name="email" type="email" placeholder="Company Email" icon={Mail} />
                     <InputField name="password" type="password" placeholder="Create a Password" icon={Lock} />
                 </div>
             );
