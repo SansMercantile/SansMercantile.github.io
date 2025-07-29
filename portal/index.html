@@ -142,6 +142,7 @@
             const [user, setUser] = useState(null);
             const [isLoading, setIsLoading] = useState(true);
             const [view, setView] = useState('login');
+            const [userType, setUserType] = useState('individual');
             const [error, setError] = useState('');
             const [success, setSuccess] = useState('');
 
@@ -203,57 +204,67 @@
                 const email = form.email.value;
                 const password = form.password.value;
 
-                if (!email.endsWith('@sansmercantile.com')) {
-                    setError('This is a restricted area.');
-                    setTimeout(() => {
-                        window.location.href = "https://www.sansmercantile.com";
-                    }, 2000);
-                    return;
-                }
-
-                try {
-                    const recordsRef = collection(db, `artifacts/${window.appId}/public/data/employee_records`);
-                    const q = query(recordsRef, where("email", "==", email));
-                    const querySnapshot = await getDocs(q);
-
-                    if (querySnapshot.empty) {
-                        setError("Your email is not registered. Please contact an administrator.");
+                if (userType === 'individual') {
+                    if (!email.endsWith('@sansmercantile.com')) {
+                        setError('This is a restricted area.');
+                        setTimeout(() => { window.location.href = "https://www.sansmercantile.com"; }, 2000);
                         return;
                     }
+                    try {
+                        const recordsRef = collection(db, `artifacts/${window.appId}/public/data/employee_records`);
+                        const q = query(recordsRef, where("email", "==", email));
+                        const querySnapshot = await getDocs(q);
 
-                    const employeeDoc = querySnapshot.docs[0];
-                    if (employeeDoc.data().accountCreated) {
-                        setError("It appears that you are already a member of the team. Why don't you try signing in?");
+                        if (querySnapshot.empty) {
+                            setError("Your email is not registered. Please contact an administrator.");
+                            return;
+                        }
+
+                        const employeeDoc = querySnapshot.docs[0];
+                        if (employeeDoc.data().accountCreated) {
+                            setError("It appears that you are already a member of the team. Why don't you try signing in?");
+                            return;
+                        }
+
+                        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                        await sendEmailVerification(userCredential.user);
+
+                        const userProfile = {
+                            fullName: employeeDoc.data().fullName, email: userCredential.user.email, employeeId: employeeDoc.data().employeeId,
+                            nationalId: employeeDoc.data().nationalId, designation: employeeDoc.data().designation,
+                            createdAt: serverTimestamp(), userType: 'individual', status: 'active', role: 'editor'
+                        };
+                        const userDocRef = doc(db, `artifacts/${window.appId}/users`, userCredential.user.uid);
+                        await setDoc(userDocRef, userProfile);
+                        await updateDoc(employeeDoc.ref, { accountCreated: true });
+                        setSuccess("Registration successful! A verification link has been sent to your email. Please verify before logging in.");
+                        await signOut(auth);
+                        setView('login');
+                    } catch (err) {
+                        if (err.code === 'auth/email-already-in-use') {
+                            setError("It appears that you are already a member of the team. Why don't you try signing in?");
+                        } else {
+                            setError("An unexpected error occurred during registration. Please try again.");
+                        }
+                    }
+                } else { // Organization signup
+                    const personalDomains = ['gmail.com', 'outlook.com', 'yahoo.com', 'aol.com', 'hotmail.com', 'live.com', 'icloud.com'];
+                    const domain = email.split('@')[1];
+
+                    if (personalDomains.includes(domain)) {
+                        setError('Please use a business email address for organization registration. Personal email domains are not permitted.');
                         return;
                     }
-
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    await sendEmailVerification(userCredential.user);
-
-                    const userProfile = {
-                        fullName: employeeDoc.data().fullName,
-                        email: userCredential.user.email,
-                        employeeId: employeeDoc.data().employeeId,
-                        nationalId: employeeDoc.data().nationalId,
-                        designation: employeeDoc.data().designation,
-                        createdAt: serverTimestamp(),
-                        userType: 'individual',
-                        status: 'active',
-                        role: 'editor' // Default role for new signups
-                    };
-                    const userDocRef = doc(db, `artifacts/${window.appId}/users`, userCredential.user.uid);
-                    await setDoc(userDocRef, userProfile);
-
-                    await updateDoc(employeeDoc.ref, { accountCreated: true });
-
-                    setSuccess("Registration successful! A verification link has been sent to your email. Please verify before logging in.");
-                    await signOut(auth);
-                    setView('login');
-
-                } catch (err) {
-                    if (err.code === 'auth/email-already-in-use') {
-                        setError("It appears that you are already a member of the team. Why don't you try signing in?");
-                    } else {
+                    try {
+                        const orgData = {
+                            orgName: form.orgName.value, orgEmail: email, orgReg: form.orgReg.value,
+                            contactPerson: form.contactPerson.value, status: 'pending', submittedAt: serverTimestamp()
+                        };
+                        const pendingRef = collection(db, `artifacts/${window.appId}/public/data/pendingApprovals`);
+                        await addDoc(pendingRef, orgData);
+                        setSuccess('Application submitted successfully. We will contact you upon review.');
+                        setView('login');
+                    } catch (err) {
                         setError("An unexpected error occurred during registration. Please try again.");
                     }
                 }
@@ -281,12 +292,12 @@
                         <div className="text-center">
                             <WordLogo className="text-4xl justify-center flex" />
                              <h2 className="mt-6 text-center text-2xl font-display text-gray-700">
-                                {view === 'login' ? 'Portal Sign In' : 'Employee Account Registration'}
+                                {view === 'login' ? 'Portal Sign In' : 'Account Registration'}
                             </h2>
                         </div>
                         {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">{error}</div>}
                         {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">{success}</div>}
-                        {view === 'login' ? <LoginForm handleLogin={handleLogin} setView={setView} /> : <SignupForm handleSignup={handleSignup} setView={setView} />}
+                        {view === 'login' ? <LoginForm handleLogin={handleLogin} setView={setView} /> : <SignupForm handleSignup={handleSignup} setView={setView} userType={userType} setUserType={setUserType} />}
                     </div>
                 </div>
             );
@@ -300,18 +311,19 @@
                         <InputField id="password" name="password" type="password" placeholder="Password" icon={Lock} />
                     </div>
                     <div><button type="submit" className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md btn-primary transition-colors">Sign in</button></div>
-                    <p className="mt-2 text-center text-sm text-gray-600">Need to register?{' '}<a href="#" onClick={(e) => { e.preventDefault(); setView('signup'); }} className="font-medium text-accent hover:underline">Create Account</a></p>
+                    <p className="mt-2 text-center text-sm text-gray-600">Need an account?{' '}<a href="#" onClick={(e) => { e.preventDefault(); setView('signup'); }} className="font-medium text-accent hover:underline">Register</a></p>
                 </form>
             );
         }
 
-        function SignupForm({ handleSignup, setView }) {
+        function SignupForm({ handleSignup, setView, userType, setUserType }) {
             return (
                 <form className="mt-8 space-y-6" onSubmit={handleSignup}>
-                    <div className="rounded-md shadow-sm space-y-4">
-                        <InputField id="email" name="email" type="email" placeholder="Company Email (@sansmercantile.com)" icon={Mail} />
-                        <InputField id="password" name="password" type="password" placeholder="Create a Password" icon={Lock} />
+                    <div className="flex justify-center rounded-md border border-gray-300 p-1 bg-gray-200">
+                        <button type="button" onClick={() => setUserType('individual')} className={`w-1/2 py-2 text-sm font-medium rounded-md ${userType === 'individual' ? 'bg-white text-accent shadow' : 'text-gray-600'}`}>Employee</button>
+                        <button type="button" onClick={() => setUserType('organization')} className={`w-1/2 py-2 text-sm font-medium rounded-md ${userType === 'organization' ? 'bg-white text-accent shadow' : 'text-gray-600'}`}>Organization</button>
                     </div>
+                    {userType === 'individual' ? <IndividualFields /> : <OrganizationFields />}
                     <div><button type="submit" className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md btn-primary transition-colors">Register</button></div>
                     <p className="mt-2 text-center text-sm text-gray-600">Already have an account?{' '}<a href="#" onClick={(e) => { e.preventDefault(); setView('login'); }} className="font-medium text-accent hover:underline">Sign In</a></p>
                 </form>
@@ -324,6 +336,27 @@
                 <input id={id} name={name} type={type} required value={value} onChange={onChange} className="appearance-none rounded-md relative block w-full px-3 py-3 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 ring-accent border-accent sm:text-sm" placeholder={placeholder} />
             </div>
         );
+
+        function IndividualFields() {
+            return (
+                <div className="space-y-4">
+                    <InputField name="email" type="email" placeholder="Company Email (@sansmercantile.com)" icon={Mail} />
+                    <InputField name="password" type="password" placeholder="Create a Password" icon={Lock} />
+                </div>
+            );
+        }
+
+        function OrganizationFields() {
+            return (
+                <div className="space-y-4">
+                    <InputField name="orgName" type="text" placeholder="Organization Name" icon={Building} />
+                    <InputField name="email" type="email" placeholder="Business Email" icon={Mail} />
+                    <InputField name="password" type="password" placeholder="Create a Password" icon={Lock} />
+                    <InputField name="orgReg" type="text" placeholder="Company Registration Number" icon={Building} />
+                    <InputField name="contactPerson" type="text" placeholder="Contact Person Name" icon={User} />
+                </div>
+            );
+        }
 
         // --- Blog Components ---
         function BlogEditor({ post, onSave, onCancel }) {
