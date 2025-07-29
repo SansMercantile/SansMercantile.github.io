@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sans Mercantile - Admin Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React and Babel for JSX compilation -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Google Fonts: Inter & Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // These global variables are provided by the environment.
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        window.firebaseConfig = firebaseConfig;
+        window.initialAuthToken = initialAuthToken;
+        window.appId = appId;
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            --color-text-primary: #1f0000; /* burgundy-black */
+            --color-accent-primary: #FC7642; /* orange */
+            --color-bg-main: #f0f0f0; /* silver */
+        }
+        h1, h2, h3, .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+        .btn-primary {
+            background-color: var(--color-text-primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #490c09; /* crimson-noir */
+        }
+        .text-accent {
+            color: var(--color-accent-primary);
+        }
+        .ring-accent:focus {
+            --tw-ring-color: var(--color-accent-primary) !important;
+        }
+        .border-accent:focus {
+             border-color: var(--color-accent-primary) !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged,
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword,
+            signInWithCustomToken,
+            signInAnonymously,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc,
+            collection,
+            addDoc,
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const { useState, useEffect, useCallback } = React;
+
+        // --- Initialize Firebase ---
+        let app, auth, db;
+        try {
+            app = initializeApp(window.firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+        } catch (e) {
+            console.error("Firebase initialization error:", e);
+        }
+
+        // --- Icon Components ---
+        const Lock = (props) => ( <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}> <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect> <path d="M7 11V7a5 5 0 0 1 10 0v4"></path> </svg> );
+        const Mail = (props) => ( <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}> <rect width="20" height="16" x="2" y="4" rx="2"></rect> <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path> </svg> );
+        const User = (props) => ( <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}> <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path> <circle cx="12" cy="7" r="4"></circle> </svg> );
+        const Building = (props) => ( <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}> <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect> <path d="M9 22v-4h6v4"></path><path d="M8 6h.01"></path><path d="M16 6h.01"></path><path d="M12 6h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M16 10h.01"></path><path d="M16 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path> </svg> );
+        
+        // --- Main Application Component ---
+        function App() {
+            const [user, setUser] = useState(null);
+            const [isLoading, setIsLoading] = useState(true);
+            const [view, setView] = useState('login'); // 'login', 'signup'
+            const [userType, setUserType] = useState('individual'); // 'individual', 'organization'
+            const [error, setError] = useState('');
+            const [success, setSuccess] = useState('');
+
+            // --- Authentication Listener ---
+            useEffect(() => {
+                if (!auth) return;
+                const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+                    setUser(currentUser);
+                    setIsLoading(false);
+                });
+                return () => unsubscribe();
+            }, []);
+            
+            // --- Initial Token Sign In ---
+            useEffect(() => {
+                const signInWithToken = async () => {
+                    if (auth && window.initialAuthToken && !auth.currentUser) {
+                        try {
+                            await signInWithCustomToken(auth, window.initialAuthToken);
+                        } catch (e) {
+                            console.error("Custom token sign-in failed:", e);
+                            await signInAnonymously(auth); // Fallback
+                        }
+                    } else if (auth && !auth.currentUser) {
+                        await signInAnonymously(auth); // Fallback if no token
+                    }
+                };
+                signInWithToken();
+            }, [auth]);
+
+
+            // --- Handlers ---
+            const handleLogin = async (e) => {
+                e.preventDefault();
+                setError('');
+                const email = e.target.email.value;
+                const password = e.target.password.value;
+
+                if (!email.endsWith('@sansmercantile.com')) {
+                    setError('Access restricted to @sansmercantile.com emails.');
+                    return;
+                }
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    // onAuthStateChanged will handle redirecting to dashboard
+                } catch (err) {
+                    setError(err.message);
+                }
+            };
+
+            const handleSignup = async (e) => {
+                e.preventDefault();
+                setError('');
+                setSuccess('');
+                const form = e.target;
+                const email = form.email.value;
+                const password = form.password.value;
+
+                if (userType === 'individual') {
+                    if (!email.endsWith('@sansmercantile.com')) {
+                         setError('Individual signups are restricted to @sansmercantile.com emails.');
+                         return;
+                    }
+                    try {
+                        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                        const newUser = userCredential.user;
+                        
+                        // Save user profile to Firestore
+                        const userProfile = {
+                            fullName: form.fullName.value,
+                            email: newUser.email,
+                            employeeId: form.employeeId.value,
+                            nationalId: form.nationalId.value,
+                            designation: form.designation.value,
+                            createdAt: serverTimestamp(),
+                            userType: 'individual',
+                            status: 'active'
+                        };
+                        const userDocRef = doc(db, `artifacts/${window.appId}/users`, newUser.uid);
+                        await setDoc(userDocRef, userProfile);
+                        // onAuthStateChanged will handle redirect
+                    } catch (err) {
+                        setError(err.message);
+                    }
+                } else { // Organization Signup
+                    try {
+                        const orgData = {
+                            orgName: form.orgName.value,
+                            orgEmail: email,
+                            orgReg: form.orgReg.value,
+                            contactPerson: form.contactPerson.value,
+                            status: 'pending',
+                            submittedAt: serverTimestamp()
+                        };
+                        // Save to a public collection for admin review
+                        const pendingRef = collection(db, `artifacts/${window.appId}/public/pendingApprovals`);
+                        await addDoc(pendingRef, orgData);
+                        setSuccess('Application submitted. We will contact you upon review.');
+                        setTimeout(() => {
+                            setView('login');
+                            setSuccess('');
+                        }, 3000);
+                    } catch (err) {
+                         setError(err.message);
+                    }
+                }
+            };
+
+            const handleSignOut = async () => {
+                await signOut(auth);
+            }
+            
+            // --- Render Logic ---
+            if (isLoading) {
+                return <div className="min-h-screen flex items-center justify-center">Loading...</div>
+            }
+
+            if (user && user.email) { // Check for a real user, not anonymous
+                return <Dashboard user={user} onSignOut={handleSignOut} />;
+            }
+
+            return (
+                <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+                    <div className="w-full max-w-md space-y-8">
+                        <div>
+                            <img className="mx-auto h-16 w-auto" src="/img/logo.svg" alt="Sans Mercantile" />
+                            <h2 className="mt-6 text-center text-3xl font-display text-gray-900" style={{color: 'var(--color-text-primary)'}}>
+                                {view === 'login' ? 'Sans Mercantile Portal' : 'Create a New Account'}
+                            </h2>
+                        </div>
+                        
+                        {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">{error}</div>}
+                        {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">{success}</div>}
+
+                        {view === 'login' ? 
+                            <LoginForm handleLogin={handleLogin} setView={setView} /> : 
+                            <SignupForm handleSignup={handleSignup} setView={setView} userType={userType} setUserType={setUserType} />
+                        }
+                    </div>
+                </div>
+            );
+        }
+
+        // --- Login Form Component ---
+        function LoginForm({ handleLogin, setView }) {
+            return (
+                <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+                     <div className="rounded-md shadow-sm space-y-4">
+                        <InputField id="email-address" name="email" type="email" placeholder="Email address" icon={Mail} />
+                        <InputField id="password" name="password" type="password" placeholder="Password" icon={Lock} />
+                    </div>
+
+                    <div>
+                        <button type="submit" className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md btn-primary transition-colors">
+                            Sign in
+                        </button>
+                    </div>
+                     <p className="mt-2 text-center text-sm text-gray-600">
+                        Don't have an account?{' '}
+                        <a href="#" onClick={(e) => { e.preventDefault(); setView('signup'); }} className="font-medium text-accent hover:underline">
+                            Sign up
+                        </a>
+                    </p>
+                </form>
+            );
+        }
+
+        // --- Signup Form Component ---
+        function SignupForm({ handleSignup, setView, userType, setUserType }) {
+            return (
+                <form className="mt-8 space-y-6" onSubmit={handleSignup}>
+                    <div className="flex justify-center rounded-md border border-gray-300 p-1 bg-gray-200">
+                        <button type="button" onClick={() => setUserType('individual')} className={`w-1/2 py-2 text-sm font-medium rounded-md ${userType === 'individual' ? 'bg-white text-accent shadow' : 'text-gray-600'}`}>
+                            Individual
+                        </button>
+                        <button type="button" onClick={() => setUserType('organization')} className={`w-1/2 py-2 text-sm font-medium rounded-md ${userType === 'organization' ? 'bg-white text-accent shadow' : 'text-gray-600'}`}>
+                            Organization
+                        </button>
+                    </div>
+
+                    {userType === 'individual' ? <IndividualFields /> : <OrganizationFields />}
+                    
+                    <div>
+                        <button type="submit" className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md btn-primary transition-colors">
+                            Create Account
+                        </button>
+                    </div>
+                     <p className="mt-2 text-center text-sm text-gray-600">
+                        Already have an account?{' '}
+                        <a href="#" onClick={(e) => { e.preventDefault(); setView('login'); }} className="font-medium text-accent hover:underline">
+                            Sign In
+                        </a>
+                    </p>
+                </form>
+            );
+        }
+
+        const InputField = ({ id, name, type, placeholder, icon: Icon }) => (
+            <div className="relative">
+                <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input id={id} name={name} type={type} required className="appearance-none rounded-md relative block w-full px-3 py-3 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 ring-accent border-accent sm:text-sm" placeholder={placeholder} />
+            </div>
+        );
+
+        function IndividualFields() {
+            return (
+                <div className="space-y-4">
+                    <InputField id="full-name" name="fullName" type="text" placeholder="Full Name" icon={User} />
+                    <InputField id="email" name="email" type="email" placeholder="Email (@sansmercantile.com)" icon={Mail} />
+                    <InputField id="password" name="password" type="password" placeholder="Password" icon={Lock} />
+                    <InputField id="employee-id" name="employeeId" type="text" placeholder="Employee ID" icon={User} />
+                    <InputField id="national-id" name="nationalId" type="text" placeholder="National ID / Passport" icon={User} />
+                    <InputField id="designation" name="designation" type="text" placeholder="Designation" icon={User} />
+                </div>
+            );
+        }
+
+        function OrganizationFields() {
+            return (
+                <div className="space-y-4">
+                    <InputField id="org-name" name="orgName" type="text" placeholder="Organization Name" icon={Building} />
+                    <InputField id="org-email" name="email" type="email" placeholder="Official Email" icon={Mail} />
+                    <InputField id="password" name="password" type="password" placeholder="Password" icon={Lock} />
+                    <InputField id="org-registration" name="orgReg" type="text" placeholder="Company Registration Number" icon={Building} />
+                    <InputField id="org-contact-person" name="contactPerson" type="text" placeholder="Contact Person Name" icon={User} />
+                </div>
+            );
+        }
+
+        // --- Placeholder Dashboard Component ---
+        function Dashboard({ user, onSignOut }) {
+             return (
+                <div className="min-h-screen bg-gray-100">
+                    <nav className="bg-white shadow-sm" style={{backgroundColor: 'var(--color-text-primary)'}}>
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex justify-between h-16">
+                                <div className="flex">
+                                    <div className="flex-shrink-0 flex items-center">
+                                        <img className="h-8 w-auto" src="/img/logo.svg" alt="Sans Mercantile" style={{filter: 'brightness(0) invert(1)'}}/>
+                                    </div>
+                                </div>
+                                <div className="flex items-center space-x-4">
+                                    <span className="text-white text-sm">{user.email}</span>
+                                    <button onClick={onSignOut} className="text-sm font-medium text-gray-300 hover:text-white">
+                                        Sign out
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                    <div className="py-10">
+                        <header>
+                            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                                <h1 className="text-3xl font-bold leading-tight text-gray-900 font-display">Dashboard</h1>
+                            </div>
+                        </header>
+                        <main>
+                            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                                <div className="px-4 py-8 sm:px-0">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer border-l-4 border-accent">
+                                            <h3 className="text-lg font-semibold font-display" style={{color: 'var(--color-text-primary)'}}>Blog Management</h3>
+                                            <p className="text-gray-600 mt-2">Create, review, and publish new blog posts.</p>
+                                        </div>
+                                         <div className="bg-gray-200 p-6 rounded-lg shadow-md cursor-not-allowed border-l-4 border-gray-400">
+                                            <h3 className="text-lg font-semibold text-gray-500 font-display">User Management</h3>
+                                            <p className="text-gray-400 mt-2">(Coming Soon)</p>
+                                        </div>
+                                         <div className="bg-gray-200 p-6 rounded-lg shadow-md cursor-not-allowed border-l-4 border-gray-400">
+                                            <h3 className="text-lg font-semibold text-gray-500 font-display">Platform Analytics</h3>
+                                            <p className="text-gray-400 mt-2">(Coming Soon)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);
+
+    </script>
+</body>
+</html>
