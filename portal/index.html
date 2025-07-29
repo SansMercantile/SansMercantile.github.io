@@ -146,13 +146,27 @@
             const [userType, setUserType] = useState('individual');
             const [error, setError] = useState('');
             const [success, setSuccess] = useState('');
+            const PRIMARY_ADMIN_EMAIL = "hello@sansmercantile.com";
 
             useEffect(() => {
                 if (!auth) {
                     setIsLoading(false);
                     return;
                 };
-                const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+                const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+                    if (currentUser && currentUser.email === PRIMARY_ADMIN_EMAIL) {
+                        // Automatically create profile for primary admin if it doesn't exist
+                        const userDocRef = doc(db, `artifacts/${window.appId}/users`, currentUser.uid);
+                        const docSnap = await getDoc(userDocRef);
+                        if (!docSnap.exists()) {
+                            await setDoc(userDocRef, {
+                                fullName: "Primary Admin",
+                                email: currentUser.email,
+                                role: 'admin',
+                                createdAt: serverTimestamp()
+                            });
+                        }
+                    }
                     setUser(currentUser);
                     setIsLoading(false);
                 });
@@ -184,7 +198,8 @@
                 const password = e.target.password.value;
                 try {
                     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                    if (!userCredential.user.emailVerified) {
+                    // Special case for primary admin to bypass email verification check
+                    if (userCredential.user.email !== PRIMARY_ADMIN_EMAIL && !userCredential.user.emailVerified) {
                         setError("Please verify your email address. Check your inbox for a verification link.");
                         await signOut(auth);
                     }
@@ -204,6 +219,11 @@
                 const form = e.target;
                 const email = form.email.value;
                 const password = form.password.value;
+
+                if (email === PRIMARY_ADMIN_EMAIL) {
+                    setError("This email address is reserved. Please use a different email.");
+                    return;
+                }
 
                 if (userType === 'individual') {
                     if (!email.endsWith('@sansmercantile.com')) {
@@ -283,7 +303,8 @@
                 return <div className="min-h-screen flex items-center justify-center">Loading...</div>
             }
 
-            if (user && user.emailVerified) {
+            const isVerified = user && (user.email === PRIMARY_ADMIN_EMAIL || user.emailVerified);
+            if (user && isVerified) {
                 return <Dashboard user={user} onSignOut={handleSignOut} />;
             }
 
