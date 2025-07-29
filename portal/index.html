@@ -127,7 +127,7 @@
         const Sparkles = (props) => ( <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="m12 3-1.9 5.8-5.8 1.9 5.8 1.9 1.9 5.8 1.9-5.8 5.8-1.9-5.8-1.9z"/></svg>);
 
         const WordLogo = ({ onDarkBg = false, className = '' }) => {
-            const mercantileColor = onDarkBg ? '#f0f0f0' : '#1f0000';
+        const mercantileColor = onDarkBg ? '#f0f0f0' : '#1f0000';
             return (
                 <div className={`font-display font-bold tracking-tight ${className}`}>
                     <span style={{ color: 'var(--color-accent-primary)' }}>Sans</span>
@@ -146,6 +146,7 @@
             const [userType, setUserType] = useState('individual');
             const [error, setError] = useState('');
             const [success, setSuccess] = useState('');
+            const [initializationError, setInitializationError] = useState(firebaseError);
             const PRIMARY_ADMIN_EMAIL = "hello@sansmercantile.com";
 
             useEffect(() => {
@@ -163,15 +164,16 @@
             useEffect(() => {
                 if (!auth) return;
                 const signInWithToken = async () => {
-                    if (window.initialAuthToken && !auth.currentUser) {
-                        try {
+                    try {
+                        if (window.initialAuthToken && !auth.currentUser) {
                             await signInWithCustomToken(auth, window.initialAuthToken);
-                        } catch (e) {
-                            console.error("Custom token sign-in failed:", e);
+                        } else if (!auth.currentUser) {
                             await signInAnonymously(auth);
                         }
-                    } else if (!auth.currentUser) {
-                        await signInAnonymously(auth);
+                    } catch(err) {
+                        console.error("Initial sign-in failed:", err);
+                        setInitializationError(err.message);
+                        setIsLoading(false);
                     }
                 };
                 signInWithToken();
@@ -185,7 +187,6 @@
                 const password = e.target.password.value;
                 try {
                     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                    // Special case for primary admin to bypass email verification check
                     if (userCredential.user.email !== PRIMARY_ADMIN_EMAIL && !userCredential.user.emailVerified) {
                         setError("Please verify your email address. Check your inbox for a verification link.");
                         await signOut(auth);
@@ -298,8 +299,27 @@
                 await signOut(auth);
             }
             
-            if (firebaseError) {
-                return <div className="min-h-screen flex items-center justify-center text-red-500 font-bold p-8 text-center">{firebaseError}</div>
+            if (initializationError) {
+                let friendlyMessage = (
+                    <div>
+                        <h2 className="text-2xl font-bold mb-4 text-red-700">Connection Error</h2>
+                        <p className="text-gray-800">An unexpected error occurred: {initializationError}</p>
+                    </div>
+                );
+                if (initializationError.includes('auth/requests-from-referer')) {
+                    friendlyMessage = (
+                        <div className="text-gray-800">
+                            <h2 className="text-2xl font-bold mb-4 text-red-700">Configuration Required</h2>
+                            <p className="mb-2">The application can't connect to the backend because its current web address (URL) is not authorized.</p>
+                            <p className="mb-4">This is a security feature. To fix this, you must add the current URL to your API key's list of allowed websites in the Google Cloud Console.</p>
+                            <p className="font-mono bg-gray-200 p-2 rounded text-sm break-all mb-4">
+                                <strong>Current URL to add:</strong> {window.location.origin}
+                            </p>
+                            <a href="https://console.cloud.google.com/apis/credentials" target="_blank" className="text-blue-600 underline hover:text-blue-800">Go to Google Cloud Credentials</a>
+                        </div>
+                    );
+                }
+                return <div className="min-h-screen flex items-center justify-center p-8 text-center bg-red-50">{friendlyMessage}</div>
             }
 
             if (isLoading) {
@@ -355,10 +375,10 @@
             );
         }
 
-        const InputField = ({ id, name, type, placeholder, icon: Icon, value, onChange }) => (
+        const InputField = ({ id, name, type, placeholder, icon: Icon, value, onChange, required = true }) => (
             <div className="relative">
                 {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />}
-                <input id={id} name={name} type={type} required value={value} onChange={onChange} className="appearance-none rounded-md relative block w-full px-3 py-3 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 ring-accent border-accent sm:text-sm" placeholder={placeholder} />
+                <input id={id} name={name} type={type} required={required} value={value} onChange={onChange} className="appearance-none rounded-md relative block w-full px-3 py-3 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 ring-accent border-accent sm:text-sm" placeholder={placeholder} />
             </div>
         );
 
@@ -700,7 +720,7 @@
                             <InputField name="email" type="email" placeholder="Email (@sansmercantile.com)" value={employeeData.email} onChange={handleChange} icon={Mail} />
                             <InputField name="employeeId" type="text" placeholder="Employee ID" value={employeeData.employeeId} onChange={handleChange} icon={User} />
                             <InputField name="nationalId" type="text" placeholder="National ID / Passport" value={employeeData.nationalId} onChange={handleChange} icon={User} />
-                            <InputField name="designation" type="text" placeholder="Designation" value={employeeData.designation} onChange={handleChange} icon={User} />
+                            <InputField name="designation" type="text" placeholder="Designation" value={employeeData.designation} onChange={handleChange} icon={User} required={false} />
                             <button type="submit" className="btn-primary w-full py-2 rounded-md font-semibold">Add Employee</button>
                         </form>
                         {feedback.message && (
