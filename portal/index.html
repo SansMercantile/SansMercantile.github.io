@@ -45,6 +45,7 @@
             --color-text-primary: #1f0000; /* burgundy-black */
             --color-accent-primary: #FC7642; /* orange */
             --color-bg-main: #f0f0f0; /* silver */
+            --color-border-focus: #4b5563; /* A classy, darker gray for focus */
         }
         h1, h2, h3, .font-display {
             font-family: 'Playfair Display', serif;
@@ -70,11 +71,11 @@
         .text-accent {
             color: var(--color-accent-primary);
         }
-        .ring-accent:focus {
-            --tw-ring-color: var(--color-accent-primary) !important;
-        }
-        .border-accent, .border-accent:focus {
-             border-color: var(--color-accent-primary) !important;
+        /* STYLING FIX: Removed the orange ring and replaced with a subtle border color */
+        .input-focus:focus {
+            outline: none;
+            border-color: var(--color-border-focus);
+            box-shadow: 0 0 0 1px var(--color-border-focus);
         }
         /* Quill Editor Styling */
         .ql-editor {
@@ -127,7 +128,7 @@
         const Sparkles = (props) => ( <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="m12 3-1.9 5.8-5.8 1.9 5.8 1.9 1.9 5.8 1.9-5.8 5.8-1.9-5.8-1.9z"/></svg>);
 
         const WordLogo = ({ onDarkBg = false, className = '' }) => {
-        const mercantileColor = onDarkBg ? '#f0f0f0' : '#1f0000';
+            const mercantileColor = onDarkBg ? 'var(--color-bg-main)' : 'var(--color-text-primary)';
             return (
                 <div className={`font-display font-bold tracking-tight ${className}`}>
                     <span style={{ color: 'var(--color-accent-primary)' }}>Sans</span>
@@ -378,7 +379,7 @@
         const InputField = ({ id, name, type, placeholder, icon: Icon, value, onChange, required = true }) => (
             <div className="relative">
                 {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />}
-                <input id={id} name={name} type={type} required={required} value={value} onChange={onChange} className="appearance-none rounded-md relative block w-full px-3 py-3 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 ring-accent border-accent sm:text-sm" placeholder={placeholder} />
+                <input id={id} name={name} type={type} required={required} value={value} onChange={onChange} className="appearance-none rounded-md relative block w-full px-3 py-3 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none input-focus sm:text-sm" placeholder={placeholder} />
             </div>
         );
 
@@ -594,7 +595,7 @@
             return (
                 <div className="flex flex-col md:flex-row gap-6">
                     <div className="flex-grow">
-                        <input type="text" placeholder="Blog Title" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full p-3 text-2xl font-bold font-display border-b-2 focus:outline-none focus:border-accent mb-4" />
+                        <input type="text" placeholder="Blog Title" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full p-3 text-2xl font-bold font-display border-b-2 focus:outline-none input-focus mb-4" />
                         <div id="editor"></div>
                     </div>
                     <AIAssistant quill={quillRef.current} onApplySuggestion={handleApplySuggestion} onInsertImage={handleInsertImage} />
@@ -720,7 +721,7 @@
                             <InputField name="email" type="email" placeholder="Email (@sansmercantile.com)" value={employeeData.email} onChange={handleChange} icon={Mail} />
                             <InputField name="employeeId" type="text" placeholder="Employee ID" value={employeeData.employeeId} onChange={handleChange} icon={User} />
                             <InputField name="nationalId" type="text" placeholder="National ID / Passport" value={employeeData.nationalId} onChange={handleChange} icon={User} />
-                            <InputField name="designation" type="text" placeholder="Designation" value={employeeData.designation} onChange={handleChange} icon={User} required={false} />
+                            <InputField name="designation" type="text" placeholder="Designation (Optional)" value={employeeData.designation} onChange={handleChange} icon={User} required={false} />
                             <button type="submit" className="btn-primary w-full py-2 rounded-md font-semibold">Add Employee</button>
                         </form>
                         {feedback.message && (
