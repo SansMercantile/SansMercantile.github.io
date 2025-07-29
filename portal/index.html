@@ -105,15 +105,22 @@
             onSnapshot,
             where
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { 
+            getStorage, 
+            ref, 
+            uploadBytes, 
+            getDownloadURL 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
         const { useState, useEffect, useCallback, useRef } = React;
 
         // --- Initialize Firebase ---
-        let app, auth, db;
+        let app, auth, db, storage;
         try {
             app = initializeApp(window.firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
+            storage = getStorage(app);
         } catch (e) {
             console.error("Firebase initialization error:", e);
         }
@@ -281,32 +288,74 @@
         function IndividualFields() { /* Unchanged */ return ( <div className="space-y-4"> <InputField id="full-name" name="fullName" type="text" placeholder="Full Name" icon={User} /> <InputField id="email" name="email" type="email" placeholder="Email (@sansmercantile.com)" icon={Mail} /> <InputField id="password" name="password" type="password" placeholder="Password" icon={Lock} /> <InputField id="employee-id" name="employeeId" type="text" placeholder="Employee ID" icon={User} /> <InputField id="national-id" name="nationalId" type="text" placeholder="National ID / Passport" icon={User} /> <InputField id="designation" name="designation" type="text" placeholder="Designation" icon={User} /> </div> ); }
         function OrganizationFields() { /* Unchanged */ return ( <div className="space-y-4"> <InputField id="org-name" name="orgName" type="text" placeholder="Organization Name" icon={Building} /> <InputField id="org-email" name="email" type="email" placeholder="Official Email" icon={Mail} /> <InputField id="password" name="password" type="password" placeholder="Password" icon={Lock} /> <InputField id="org-registration" name="orgReg" type="text" placeholder="Company Registration Number" icon={Building} /> <InputField id="org-contact-person" name="contactPerson" type="text" placeholder="Contact Person Name" icon={User} /> </div> ); }
 
-        // --- NEW: Blog Components ---
+        // --- Blog Components ---
 
         function BlogEditor({ post, onSave, onCancel }) {
             const [title, setTitle] = useState(post?.title || '');
             const [content, setContent] = useState(post?.content || '');
             const quillRef = useRef();
 
+            // Image upload handler
+            const imageHandler = useCallback(() => {
+                const input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute('accept', 'image/*');
+                input.click();
+
+                input.onchange = async () => {
+                    const file = input.files[0];
+                    if (!file) return;
+
+                    const quill = quillRef.current;
+                    const range = quill.getSelection(true);
+                    quill.enable(false); // Disable editor during upload
+
+                    try {
+                        // Create a storage reference
+                        const storageRef = ref(storage, `blogs/${Date.now()}_${file.name}`);
+                        
+                        // Upload file
+                        const snapshot = await uploadBytes(storageRef, file);
+                        
+                        // Get download URL
+                        const url = await getDownloadURL(snapshot.ref);
+
+                        // Insert image into editor
+                        quill.enable(true);
+                        quill.insertEmbed(range.index, 'image', url);
+                        quill.setSelection(range.index + 1);
+
+                    } catch (error) {
+                        console.error("Image upload failed:", error);
+                        quill.enable(true);
+                    }
+                };
+            }, []);
+
             useEffect(() => {
                 if (quillRef.current) return;
                 const editor = new Quill('#editor', {
                     theme: 'snow',
                     modules: {
-                        toolbar: [
-                            [{ 'header': [1, 2, 3, false] }],
-                            ['bold', 'italic', 'underline', 'strike'],
-                            [{'list': 'ordered'}, {'list': 'bullet'}],
-                            ['link', 'image', 'video'],
-                            ['clean']
-                        ]
+                        toolbar: {
+                            container: [
+                                [{ 'header': [1, 2, 3, false] }],
+                                ['bold', 'italic', 'underline', 'strike'],
+                                [{'list': 'ordered'}, {'list': 'bullet'}],
+                                ['link', 'image', 'video'],
+                                ['clean']
+                            ],
+                            handlers: {
+                                image: imageHandler
+                            }
+                        }
                     }
                 });
                 quillRef.current = editor;
                 editor.on('text-change', () => {
                     setContent(editor.root.innerHTML);
                 });
-            }, []);
+            }, [imageHandler]);
             
             useEffect(() => {
                 if (quillRef.current && content !== quillRef.current.root.innerHTML) {
@@ -367,7 +416,6 @@
             const [approvedPosts, setApprovedPosts] = useState([]);
             const [userProfile, setUserProfile] = useState(null);
 
-            // Fetch user profile to get author name
             useEffect(() => {
                 const fetchUserProfile = async () => {
                     const userDocRef = doc(db, `artifacts/${window.appId}/users`, user.uid);
@@ -379,7 +427,6 @@
                 fetchUserProfile();
             }, [user.uid]);
 
-            // Listen for blog posts
             useEffect(() => {
                 const q = query(collection(db, `artifacts/${window.appId}/public/blogs`));
                 const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -403,18 +450,17 @@
                     content: postData.content,
                     authorId: user.uid,
                     authorName: userProfile.fullName,
-                    status: 'pending', // Always pending on initial save/submit
+                    status: 'pending',
                 };
 
-                if (postData.id) { // Editing existing post
+                if (postData.id) {
                     const postRef = doc(db, `artifacts/${window.appId}/public/blogs`, postData.id);
                     await updateDoc(postRef, { ...dataToSave, updatedAt: serverTimestamp() });
-                } else { // Creating new post
+                } else {
                     const collectionRef = collection(db, `artifacts/${window.appId}/public/blogs`);
                     await addDoc(collectionRef, { ...dataToSave, createdAt: serverTimestamp() });
                 }
                 
-                // Placeholder for email notification
                 console.log(`Email notification to hello@sansmercantile.com: Blog post '${postData.title}' is pending review.`);
                 
                 setView('list');
