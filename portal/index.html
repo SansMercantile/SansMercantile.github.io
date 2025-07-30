@@ -674,7 +674,7 @@
                             <InputField name="email" type="email" placeholder="Email (@sansmercantile.com)" value={employeeData.email} onChange={handleChange} icon={Mail} />
                             <InputField name="employeeId" type="text" placeholder="Employee ID" value={employeeData.employeeId} onChange={handleChange} icon={User} />
                             <InputField name="nationalId" type="text" placeholder="National ID / Passport" value={employeeData.nationalId} onChange={handleChange} icon={User} />
-                            <InputField name="designation" type="text" placeholder="Designation (Optional)" value={employeeData.designation} onChange={handleChange} icon={User} required={false} />
+                            <InputField name="designation" type="text" placeholder="Designation" value={employeeData.designation} onChange={handleChange} icon={User} required={true} />
                             <button type="submit" className="btn-primary w-full py-2 rounded-md font-semibold">Add Employee</button>
                         </form>
                         {feedback.message && (
