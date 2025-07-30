@@ -1,6 +1,9 @@
 # .github/workflows/build-for-github.yml
 
 name: Build and Test on GitHub
+permissions:
+  contents: write
+  packages: write
 
 on:
   push:
