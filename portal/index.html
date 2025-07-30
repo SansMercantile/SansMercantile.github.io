@@ -4,31 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sans Mercantile - Admin Portal</title>
-
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    {/* React and Babel for JSX compilation */}
+    <!-- React and Babel for JSX compilation -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    {/* Google Fonts: Inter & Playfair Display */}
+    <!-- Google Fonts: Inter & Playfair Display -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     
-    {/* Quill Rich Text Editor */}
+    <!-- Quill Rich Text Editor -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
-    {/* Firebase SDK */}
+    <!-- Firebase SDK -->
     <script type="module">
         // Your actual Firebase project configuration is now included.
         const firebaseConfig = {
             apiKey: "AIzaSyCOFO_bhkY-BvWimABJh-RWf0q084XHVdU",
             authDomain: "sans-mercantile.firebaseapp.com",
             projectId: "sans-mercantile",
-            storageBucket: "sans-mercantile.appspot.com",
+            storageBucket: "sans-mercantile.firebasestorage.app",
             messagingSenderId: "829965275751",
             appId: "1:829965275751:web:c53395cceb69f6ba5d7ac2",
             measurementId: "G-FVEEDYCZFH"
@@ -115,12 +113,14 @@
             firebaseError = e.message;
         }
 
+        // --- Icon Components ---
         const Lock = (props) => ( <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}> <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect> <path d="M7 11V7a5 5 0 0 1 10 0v4"></path> </svg> );
         const Mail = (props) => ( <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}> <rect width="20" height="16" x="2" y="4" rx="2"></rect> <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path> </svg> );
         const User = (props) => ( <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}> <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path> <circle cx="12" cy="7" r="4"></circle> </svg> );
         const Building = (props) => ( <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}> <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect> <path d="M9 22v-4h6v4"></path><path d="M8 6h.01"></path><path d="M16 6h.01"></path><path d="M12 6h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M16 10h.01"></path><path d="M16 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path> </svg> );
         const Sparkles = (props) => ( <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="m12 3-1.9 5.8-5.8 1.9 5.8 1.9 1.9 5.8 1.9-5.8 5.8-1.9-5.8-1.9z"/></svg>);
 
+        // --- Shared Components ---
         const WordLogo = ({ onDarkBg = false, className = '' }) => {
             const mercantileColor = onDarkBg ? 'var(--color-bg-main)' : 'var(--color-text-primary)';
             return (
@@ -133,15 +133,44 @@
             );
         };
 
+        const InputField = ({ id, name, type, placeholder, icon: Icon, value, onChange, required = true }) => (
+            <div className="relative">
+                {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />}
+                <input id={id} name={name} type={type} required={required} value={value} onChange={onChange} className="appearance-none rounded-md relative block w-full px-3 py-3 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none input-focus sm:text-sm" placeholder={placeholder} />
+            </div>
+        );
+
+        // --- Main App Component (Handles Routing) ---
         function App() {
             const [user, setUser] = useState(null);
             const [isLoading, setIsLoading] = useState(true);
-            const [view, setView] = useState('login');
-            const [userType, setUserType] = useState('individual');
+            const [view, setView] = useState('login'); // Default view
             const [error, setError] = useState('');
             const [success, setSuccess] = useState('');
             const PRIMARY_ADMIN_EMAIL = "hello@sansmercantile.com";
 
+            // Effect for handling URL hash-based routing
+            useEffect(() => {
+                const handleHashChange = () => {
+                    const hash = window.location.hash.replace('#', '');
+                    if (user) {
+                        // If user is logged in, allow navigation to dashboard pages
+                        const allowedViews = ['dashboard', 'blog', 'users'];
+                        setView(allowedViews.includes(hash) ? hash : 'dashboard');
+                    } else {
+                        // If not logged in, only allow login/signup views
+                        const publicViews = ['login', 'signup'];
+                        setView(publicViews.includes(hash) ? hash : 'login');
+                    }
+                };
+                
+                window.addEventListener('hashchange', handleHashChange);
+                handleHashChange(); // Set initial view based on current hash
+                
+                return () => window.removeEventListener('hashchange', handleHashChange);
+            }, [user]); // Rerun this effect when user auth state changes
+
+            // Effect for Firebase Auth state
             useEffect(() => {
                 if (!auth) {
                     setIsLoading(false);
@@ -149,6 +178,13 @@
                 };
                 const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
                     setUser(currentUser);
+                    if (!currentUser) {
+                        // If user logs out, redirect to login page
+                        window.location.hash = '#login';
+                    } else if (window.location.hash === '#login' || window.location.hash === '#signup') {
+                        // If user logs in, redirect to dashboard
+                        window.location.hash = '#dashboard';
+                    }
                     setIsLoading(false);
                 });
                 return () => unsubscribe();
@@ -165,6 +201,8 @@
                     if (userCredential.user.email !== PRIMARY_ADMIN_EMAIL && !userCredential.user.emailVerified) {
                         setError("Please verify your email address. Check your inbox for a verification link.");
                         await signOut(auth);
+                    } else {
+                        // On successful login, App's useEffect will handle the hash change
                     }
                 } catch (err) {
                     if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
@@ -182,9 +220,10 @@
                 const form = e.target;
                 const email = form.email.value;
                 const password = form.password.value;
+                const userType = form.dataset.userType;
 
                 if (userType === 'individual') {
-                    if (email === PRIMARY_ADMIN_EMAIL) {
+                     if (email === PRIMARY_ADMIN_EMAIL) {
                         try {
                             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                             const userDocRef = doc(db, `artifacts/${window.appId}/users`, userCredential.user.uid);
@@ -194,7 +233,7 @@
                             });
                             setSuccess("Primary admin account created successfully. You can now log in.");
                             await signOut(auth);
-                            setView('login');
+                            window.location.hash = '#login';
                         } catch (err) {
                             if (err.code === 'auth/email-already-in-use') {
                                 setError("It appears that you are already a member of the team. Why don't you try signing in?");
@@ -239,7 +278,7 @@
                         await updateDoc(employeeDoc.ref, { accountCreated: true });
                         setSuccess("Registration successful! A verification link has been sent to your email. Please verify before logging in.");
                         await signOut(auth);
-                        setView('login');
+                        window.location.hash = '#login';
                     } catch (err) {
                         if (err.code === 'auth/email-already-in-use') {
                             setError("It appears that you are already a member of the team. Why don't you try signing in?");
@@ -263,7 +302,7 @@
                         const pendingRef = collection(db, `artifacts/${window.appId}/public/data/pendingApprovals`);
                         await addDoc(pendingRef, orgData);
                         setSuccess('Application submitted successfully. We will contact you upon review.');
-                        setView('login');
+                        window.location.hash = '#login';
                     } catch (err) {
                         setError("An unexpected error occurred during registration. Please try again.");
                     }
@@ -271,8 +310,6 @@
             };
 
             const handleSignOut = async () => {
-                // Clear the hash on sign out to return to the main dashboard view on next login
-                window.location.hash = '';
                 await signOut(auth);
             }
             
@@ -286,27 +323,28 @@
 
             const isVerified = user && (user.email === PRIMARY_ADMIN_EMAIL || user.emailVerified);
             if (user && isVerified) {
-                return <Dashboard user={user} onSignOut={handleSignOut} />;
+                return <Dashboard user={user} onSignOut={handleSignOut} view={view} />;
             }
 
+            // Public / Logged-out views
             return (
                 <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
                     <div className="w-full max-w-md space-y-8">
                         <div className="text-center">
                             <WordLogo className="text-4xl justify-center flex" />
                              <h2 className="mt-6 text-center text-2xl font-display text-gray-700">
-                                {view === 'login' ? 'Portal Sign In' : 'Account Registration'}
+                                {view === 'signup' ? 'Account Registration' : 'Portal Sign In'}
                             </h2>
                         </div>
                         {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">{error}</div>}
                         {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">{success}</div>}
-                        {view === 'login' ? <LoginForm handleLogin={handleLogin} setView={setView} /> : <SignupForm handleSignup={handleSignup} setView={setView} userType={userType} setUserType={setUserType} />}
+                        {view === 'signup' ? <SignupForm handleSignup={handleSignup} /> : <LoginForm handleLogin={handleLogin} />}
                     </div>
                 </div>
             );
         }
 
-        function LoginForm({ handleLogin, setView }) {
+        function LoginForm({ handleLogin }) {
             return (
                 <form className="mt-8 space-y-6" onSubmit={handleLogin}>
                      <div className="rounded-md shadow-sm space-y-4">
@@ -314,31 +352,25 @@
                         <InputField id="password" name="password" type="password" placeholder="Password" icon={Lock} />
                     </div>
                     <div><button type="submit" className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md btn-primary transition-colors">Sign in</button></div>
-                    <p className="mt-2 text-center text-sm text-gray-600">Need an account?{' '}<a href="#" onClick={(e) => { e.preventDefault(); setView('signup'); }} className="font-medium text-accent hover:underline">Register</a></p>
+                    <p className="mt-2 text-center text-sm text-gray-600">Need an account?{' '}<a href="#signup" className="font-medium text-accent hover:underline">Register</a></p>
                 </form>
             );
         }
 
-        function SignupForm({ handleSignup, setView, userType, setUserType }) {
+        function SignupForm({ handleSignup }) {
+            const [userType, setUserType] = useState('individual');
             return (
-                <form className="mt-8 space-y-6" onSubmit={handleSignup}>
+                <form className="mt-8 space-y-6" onSubmit={handleSignup} data-user-type={userType}>
                     <div className="flex justify-center rounded-md border border-gray-300 p-1 bg-gray-200">
                         <button type="button" onClick={() => setUserType('individual')} className={`w-1/2 py-2 text-sm font-medium rounded-md ${userType === 'individual' ? 'bg-white text-accent shadow' : 'text-gray-600'}`}>Employee</button>
                         <button type="button" onClick={() => setUserType('organization')} className={`w-1/2 py-2 text-sm font-medium rounded-md ${userType === 'organization' ? 'bg-white text-accent shadow' : 'text-gray-600'}`}>Organization</button>
                     </div>
                     {userType === 'individual' ? <IndividualFields /> : <OrganizationFields />}
                     <div><button type="submit" className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md btn-primary transition-colors">Register</button></div>
-                    <p className="mt-2 text-center text-sm text-gray-600">Already have an account?{' '}<a href="#" onClick={(e) => { e.preventDefault(); setView('login'); }} className="font-medium text-accent hover:underline">Sign In</a></p>
+                    <p className="mt-2 text-center text-sm text-gray-600">Already have an account?{' '}<a href="#login" className="font-medium text-accent hover:underline">Sign In</a></p>
                 </form>
             );
         }
-
-        const InputField = ({ id, name, type, placeholder, icon: Icon, value, onChange, required = true }) => (
-            <div className="relative">
-                {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />}
-                <input id={id} name={name} type={type} required={required} value={value} onChange={onChange} className="appearance-none rounded-md relative block w-full px-3 py-3 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none input-focus sm:text-sm" placeholder={placeholder} />
-            </div>
-        );
 
         function IndividualFields() {
             return (
@@ -503,7 +535,7 @@
             );
         }
 
-        function BlogEditor({ post, onSave, onCancel }) {
+        function BlogEditor({ post, onSave }) {
             const [title, setTitle] = useState(post?.title || '');
             const [content, setContent] = useState(post?.content || '');
             const [isSaving, setIsSaving] = useState(false);
@@ -557,7 +589,7 @@
                     </div>
                     <AIAssistant quill={quillRef.current} onApplySuggestion={handleApplySuggestion} onInsertImage={handleInsertImage} />
                     <div className="w-full md:hidden flex justify-end space-x-4 pt-4">
-                        <button onClick={onCancel} className="btn-secondary px-6 py-2 rounded-md font-semibold">Cancel</button>
+                        <button onClick={() => window.location.hash = '#blog'} className="btn-secondary px-6 py-2 rounded-md font-semibold">Cancel</button>
                         <button onClick={handleSave} disabled={isSaving || title.trim() === ''} className="btn-primary px-6 py-2 rounded-md font-semibold">
                             {isSaving ? 'Saving...' : 'Submit for Review'}
                         </button>
@@ -565,10 +597,37 @@
                 </div>
             );
         }
-        
-        // --- Dashboard & Page Components ---
 
-        function BlogManager({ user, onBack }) {
+        // --- NEW COMPONENT ---
+        function BlogList({ title, posts, onEdit, onApprove }) {
+            return (
+                <div>
+                    <h3 className="text-xl font-display mb-4">{title}</h3>
+                    {posts.length === 0 ? (
+                        <p className="text-gray-500">No posts in this category.</p>
+                    ) : (
+                        <div className="space-y-4">
+                            {posts.map(post => (
+                                <div key={post.id} className="bg-white p-4 rounded-lg shadow-sm flex justify-between items-center">
+                                    <div>
+                                        <p className="font-bold text-lg">{post.title}</p>
+                                        <p className="text-sm text-gray-600">By {post.authorName}</p>
+                                    </div>
+                                    <div className="flex items-center space-x-3">
+                                        <button onClick={() => onEdit(post)} className="text-sm font-medium text-blue-600 hover:underline">Edit</button>
+                                        {onApprove && (
+                                            <button onClick={() => onApprove(post.id)} className="text-sm font-medium text-green-600 hover:underline">Approve</button>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function BlogManager({ user }) {
             const [view, setView] = useState('list');
             const [currentPost, setCurrentPost] = useState(null);
             const [pendingPosts, setPendingPosts] = useState([]);
@@ -606,14 +665,14 @@
                                <button onClick={() => document.querySelector('.btn-primary').click()} className="btn-primary px-6 py-2 rounded-md font-semibold">Submit for Review</button>
                             </div>
                         </div>
-                        <BlogEditor post={currentPost} onSave={handleSavePost} onCancel={() => { setView('list'); setCurrentPost(null); }} />
+                        <BlogEditor post={currentPost} onSave={handleSavePost} />
                     </div>
                 );
             }
-            return ( <div> <div className="flex justify-between items-center mb-6"> <h2 className="text-2xl font-display">Blog Management</h2> <div> <button onClick={onBack} className="btn-secondary px-4 py-2 mr-2 rounded-md font-semibold">Dashboard</button> <button onClick={() => { setView('create'); setCurrentPost(null); }} className="btn-primary px-4 py-2 rounded-md font-semibold">Create New Post</button> </div> </div> <div className="space-y-8"> <BlogList title="Pending Review" posts={pendingPosts} onEdit={handleEditPost} onApprove={handleApprovePost} /> <BlogList title="Approved Blogs" posts={approvedPosts} onEdit={handleEditPost} /> </div> </div> );
+            return ( <div> <div className="flex justify-between items-center mb-6"> <h2 className="text-2xl font-display">Blog Management</h2> <div> <a href="#dashboard" className="btn-secondary px-4 py-2 mr-2 rounded-md font-semibold">Dashboard</a> <button onClick={() => { setView('create'); setCurrentPost(null); }} className="btn-primary px-4 py-2 rounded-md font-semibold">Create New Post</button> </div> </div> <div className="space-y-8"> <BlogList title="Pending Review" posts={pendingPosts} onEdit={handleEditPost} onApprove={handleApprovePost} /> <BlogList title="Approved Blogs" posts={approvedPosts} onEdit={handleEditPost} /> </div> </div> );
         }
         
-        function UserManagement({ user, onBack }) {
+        function UserManagement({ user }) {
             const [employeeData, setEmployeeData] = useState({ fullName: '', email: '', employeeId: '', nationalId: '', designation: '' });
             const [feedback, setFeedback] = useState({ message: '', isError: false });
             const [allUsers, setAllUsers] = useState([]);
@@ -642,11 +701,11 @@
 
                 try {
                     const recordsRef = collection(db, `artifacts/${window.appId}/public/data/employee_records`);
-                    const newRecord = { ...employeeData, accountCreated: false, role: 'editor' }; // Default role
+                    const newRecord = { ...employeeData, accountCreated: false, role: 'editor' };
                     await addDoc(recordsRef, newRecord);
                     
                     setFeedback({ message: `Successfully added ${employeeData.fullName}. They can now register.`, isError: false });
-                    setEmployeeData({ fullName: '', email: '', employeeId: '', nationalId: '', designation: '' }); // Clear form
+                    setEmployeeData({ fullName: '', email: '', employeeId: '', nationalId: '', designation: '' });
                 } catch (error) {
                     console.error("Error adding employee record:", error);
                     setFeedback({ message: `Failed to add employee: ${error.message}`, isError: true });
@@ -667,7 +726,7 @@
                 <div>
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-2xl font-display">User Management</h2>
-                        <button onClick={onBack} className="btn-secondary px-4 py-2 rounded-md font-semibold">Dashboard</button>
+                        <a href="#dashboard" className="btn-secondary px-4 py-2 rounded-md font-semibold">Dashboard</a>
                     </div>
                     <div className="bg-white p-6 rounded-lg shadow-md mb-8">
                         <h3 className="text-xl font-display mb-4">Add New Employee Record</h3>
@@ -712,126 +771,96 @@
             );
         }
 
-        function Dashboard({ user, onSignOut }) {
-            // --- ROUTING FIX ---
-            // Get the initial view from the URL hash, defaulting to 'main'
-            const getInitialView = () => window.location.hash.substring(1) || 'main';
-            const [view, setView] = useState(getInitialView());
+        function Dashboard({ user, onSignOut, view }) {
             const [userProfile, setUserProfile] = useState(null);
             const PRIMARY_ADMIN_EMAIL = "hello@sansmercantile.com"; 
 
-            // This function now updates the URL hash as well as the state
-            const navigateTo = (newView) => {
-                window.location.hash = newView;
-                // The hashchange event listener below will handle setting the state
-            };
-
-            // Listen for changes to the URL hash (e.g., browser back/forward buttons)
             useEffect(() => {
-                const handleHashChange = () => {
-                    setView(getInitialView());
-                };
-                window.addEventListener('hashchange', handleHashChange);
-                // Clean up the listener when the component unmounts
-                return () => window.removeEventListener('hashchange', handleHashChange);
-            }, []);
-
-
-            useEffect(() => {
-                if (!db || !user) return;
                 const userDocRef = doc(db, `artifacts/${window.appId}/users`, user.uid);
                 const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
                     if (docSnap.exists()) {
                         setUserProfile(docSnap.data());
-                    } else {
-                        console.log("User profile document not found.");
                     }
-                }, (error) => {
-                    console.error("Error fetching user profile:", error);
                 });
                 return unsubscribe;
-            }, [user, db]);
+            }, [user.uid]);
 
             const isAdmin = userProfile?.role === 'admin' || user.email === PRIMARY_ADMIN_EMAIL;
 
-            const renderView = () => {
-                switch(view) {
+            const renderContent = () => {
+                switch (view) {
                     case 'blog':
-                        return <BlogManager user={user} onBack={() => navigateTo('main')} />;
+                        return <BlogManager user={user} />;
                     case 'users':
-                        if (isAdmin) {
-                            return <UserManagement user={user} onBack={() => navigateTo('main')} />;
-                        }
-                        // Fallthrough to default if not admin
+                        if (isAdmin) return <UserManagement user={user} />;
+                        return <DashboardMain isAdmin={isAdmin} />; // Fallback for non-admins trying to access #users
+                    case 'dashboard':
                     default:
-                        return (
-                             <main>
-                                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                                    <div className="px-4 py-8 sm:px-0">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                            <div onClick={() => navigateTo('blog')} className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer border-l-4 border-accent">
-                                                <h3 className="text-lg font-semibold font-display" style={{color: 'var(--color-text-primary)'}}>Blog Management</h3>
-                                                <p className="text-gray-600 mt-2">Create, review, and publish new blog posts.</p>
-                                            </div>
-                                             {isAdmin && (
-                                                <div onClick={() => navigateTo('users')} className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer border-l-4 border-accent">
-                                                    <h3 className="text-lg font-semibold font-display" style={{color: 'var(--color-text-primary)'}}>User Management</h3>
-                                                    <p className="text-gray-600 mt-2">Add employees and manage admin roles.</p>
-                                                </div>
-                                             )}
-                                             <div className="bg-gray-200 p-6 rounded-lg shadow-md cursor-not-allowed border-l-4 border-gray-400">
-                                                <h3 className="text-lg font-semibold text-gray-500 font-display">Platform Analytics</h3>
-                                                <p className="text-gray-400 mt-2">(Coming Soon)</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </main>
-                        );
+                        return <DashboardMain isAdmin={isAdmin} />;
                 }
-            }
+            };
 
-             return (
+            return (
                 <div className="min-h-screen bg-gray-100">
                     <DashboardNav user={user} onSignOut={onSignOut} />
-                    <div className="py-10">
-                        <header>
-                            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                                <h1 className="text-3xl font-bold leading-tight text-gray-900 font-display">Dashboard</h1>
-                            </div>
-                        </header>
-                        {renderView()}
-                    </div>
+                    <main className="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+                        {renderContent()}
+                    </main>
                 </div>
             );
         }
 
-        const DashboardNav = ({ user, onSignOut }) => { return ( <nav className="bg-white shadow-sm" style={{backgroundColor: 'var(--color-text-primary)'}}> <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> <div className="flex justify-between h-16"> <div className="flex"> <div className="flex-shrink-0 flex items-center"> <WordLogo onDarkBg={true} className="text-2xl" /> </div> </div> <div className="flex items-center space-x-4"> <span className="text-white text-sm">{user.email}</span> <button onClick={onSignOut} className="text-sm font-medium text-gray-300 hover:text-white">Sign out</button> </div> </div> </div> </nav> ); };
-        
-        const BlogList = ({ title, posts, onEdit, onApprove }) => (
+        const DashboardMain = ({ isAdmin }) => (
             <div>
-                <h3 className="text-xl font-display mb-4">{title}</h3>
-                <div className="bg-white rounded-lg shadow">
-                    <ul className="divide-y divide-gray-200">
-                        {posts.length > 0 ? posts.map(post => (
-                            <li key={post.id} className="p-4 flex justify-between items-center">
-                                <div>
-                                    <p className="font-semibold">{post.title}</p>
-                                    <p className="text-sm text-gray-500">By {post.authorName}</p>
-                                </div>
-                                <div className="flex space-x-2">
-                                    <button onClick={() => onEdit(post)} className="btn-secondary px-3 py-1 text-sm rounded-md">Edit</button>
-                                    {post.status === 'pending' && onApprove && (
-                                        <button onClick={() => onApprove(post.id)} className="bg-green-500 text-white px-3 py-1 text-sm rounded-md hover:bg-green-600">Approve</button>
-                                    )}
-                                </div>
-                            </li>
-                        )) : <li className="p-4 text-gray-500">No posts to display.</li>}
-                    </ul>
-                </div>
+                <header>
+                    <div className="px-4 sm:px-0">
+                        <h1 className="text-3xl font-bold leading-tight text-gray-900 font-display">Dashboard</h1>
+                    </div>
+                </header>
+                <main>
+                    <div className="py-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <a href="#blog" className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer border-l-4 border-accent">
+                                <h3 className="text-lg font-semibold font-display" style={{color: 'var(--color-text-primary)'}}>Blog Management</h3>
+                                <p className="text-gray-600 mt-2">Create, review, and publish new blog posts.</p>
+                            </a>
+                            {isAdmin && (
+                                <a href="#users" className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer border-l-4 border-accent">
+                                    <h3 className="text-lg font-semibold font-display" style={{color: 'var(--color-text-primary)'}}>User Management</h3>
+                                    <p className="text-gray-600 mt-2">Add employees and manage admin roles.</p>
+                                </a>
+                            )}
+                            <div className="bg-gray-200 p-6 rounded-lg shadow-md cursor-not-allowed border-l-4 border-gray-400">
+                                <h3 className="text-lg font-semibold text-gray-500 font-display">Platform Analytics</h3>
+                                <p className="text-gray-400 mt-2">(Coming Soon)</p>
+                            </div>
+                        </div>
+                    </div>
+                </main>
             </div>
         );
 
+        const DashboardNav = ({ user, onSignOut }) => {
+            return (
+                <nav className="bg-white shadow-sm" style={{backgroundColor: 'var(--color-text-primary)'}}>
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex justify-between h-16">
+                            <div className="flex">
+                                <div className="flex-shrink-0 flex items-center">
+                                    <a href="#dashboard">
+                                        <WordLogo onDarkBg={true} className="text-2xl" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div className="flex items-center space-x-4">
+                                <span className="text-white text-sm">{user.email}</span>
+                                <button onClick={onSignOut} className="text-sm font-medium text-gray-300 hover:text-white">Sign out</button>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            );
+        };
 
         const container = document.getElementById('root');
         const root = ReactDOM.createRoot(container);
