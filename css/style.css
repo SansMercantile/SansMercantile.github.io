@@ -1884,20 +1884,20 @@ nav a:hover {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 1rem;
-  max-width: 600px;
+  gap: 0.5rem;
+  max-width: 420px;
   margin: 0 auto;
 }
 
 .subscribe input {
-  padding: 0.8rem 1.2rem;
+  padding: 0.6rem 1rem;
   border: 1px solid var(--color-velvet-red-black);
   border-radius: 6px;
   width: 100%;
-  max-width: 280px;
+  max-width: 240px;
   background-color: rgba(255, 255, 255, 0.1);
   color: var(--color-white);
-  font-size: 1rem;
+  font-size: 0.95rem;
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
@@ -1912,7 +1912,7 @@ nav a:hover {
 }
 
 .subscribe button {
-  padding: 0.8rem 1.5rem;
+  padding: 0.6rem 1.2rem;
   border: none;
   background-color: var(--color-orange);
   color: var(--color-black);
