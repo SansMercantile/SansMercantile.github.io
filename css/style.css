@@ -1884,7 +1884,7 @@ nav a:hover {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 1rem;
   max-width: 420px;
   margin: 0 auto;
 }
