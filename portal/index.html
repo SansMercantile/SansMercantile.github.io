@@ -153,12 +153,48 @@
                 return () => unsubscribe();
             }, []);
 
-            // ...existing handleLogin, handleSignup, handleSignOut code...
-            // (unchanged, omitted for brevity)
-            // ...existing code...
+            const handleLogin = async (e) => {
+                e.preventDefault();
+                setError('');
+                const email = e.target.email.value;
+                const password = e.target.password.value;
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                } catch (err) {
+                    setError(err.message);
+                }
+            };
 
-            // Place the original handleLogin, handleSignup, handleSignOut, and auth logic here (unchanged)
-            // ...existing code...
+            const handleSignup = async (e) => {
+                e.preventDefault();
+                setError('');
+                setSuccess('');
+                const email = e.target.email.value;
+                const password = e.target.password.value;
+                const isOrg = userType === 'organization';
+                const userData = {
+                    email,
+                    role: 'editor', // default role
+                    type: userType,
+                    createdAt: serverTimestamp(),
+                };
+                if (isOrg) {
+                    userData.orgName = e.target.orgName.value;
+                    userData.orgReg = e.target.orgReg.value;
+                    userData.contactPerson = e.target.contactPerson.value;
+                }
+
+                try {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const userRef = doc(db, `artifacts/${window.appId}/users`, userCredential.user.uid);
+                    await setDoc(userRef, userData);
+                    await sendEmailVerification(userCredential.user);
+                    setSuccess('Verification email sent! Please check your inbox.');
+                    setView('login');
+                } catch (err) {
+                    setError(err.message);
+                }
+            };
 
             if (firebaseError) {
                 return <div className="min-h-screen flex items-center justify-center text-red-500 font-bold p-8 text-center">{firebaseError}</div>;
@@ -457,6 +493,18 @@
         }
         
         // --- Main Layout and Virtual Office Pages ---
+        const PlaceholderDepartment = ({ name }) => (
+            <div>
+                <h1 className="text-2xl font-display mb-4">{name}</h1>
+                <p>This department's content is not yet implemented.</p>
+            </div>
+        );
+        const SalesDepartment = () => <PlaceholderDepartment name="Sales Department" />;
+        const LegalDepartment = () => <PlaceholderDepartment name="Legal Department" />;
+        const SocialMediaDepartment = () => <PlaceholderDepartment name="Social Media Department" />;
+        const CustomerSupportDepartment = () => <PlaceholderDepartment name="Customer Support Department" />;
+        const ITDepartment = () => <PlaceholderDepartment name="IT Department" />;
+
         function MainLayout({ user, onSignOut }) {
             const [page, setPage] = useState('dashboard');
             return (
@@ -498,90 +546,81 @@
                             <li><button onClick={() => setPage('it')} className={"w-full text-left py-2 px-3 rounded " + (page==='it'?'text-accent font-bold bg-gray-100':'')}>IT Department</button></li>
                             <li><button onClick={() => setPage('training')} className={"w-full text-left py-2 px-3 rounded " + (page==='training'?'text-accent font-bold bg-gray-100':'')}>Training Department</button></li>
                             <li><button onClick={() => setPage('office')} className={"w-full text-left py-2 px-3 rounded " + (page==='office'?'text-accent font-bold bg-gray-100':'')}>Virtual Office</button></li>
-        </ul>
-    </div>
-    <button onClick={onSignOut} className="mt-8 btn-secondary w-full">Sign Out</button>
-    </nav>
-);
-// Place this in a <script type="text/babel"> block at the end of the file or with other React components
-// --- Training Department ---
-// <script type="text/babel">
-function TrainingDepartment() {
-    const [modules, setModules] = React.useState([]);
-    const [search, setSearch] = React.useState('');
-    const [loading, setLoading] = React.useState(false);
-    const [assigned, setAssigned] = React.useState([]);
-    const [aiSuggestion, setAiSuggestion] = React.useState('');
-
-    // Fetch assigned trainings from Firestore
-    React.useEffect(() => {
-        const unsub = onSnapshot(
-            collection(db, `artifacts/${window.appId}/public/data/training_assignments`),
-            (snapshot) => setAssigned(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
-        );
-        return () => unsub();
-    }, []);
-
-    // AI-powered fetch from external sources (mocked for now)
-    const fetchAIModules = async (query) => {
-        setLoading(true);
-        setAiSuggestion('');
-        setTimeout(() => {
-            setModules([
-                { title: 'AI for Everyone', provider: 'Coursera', url: 'https://www.coursera.org/learn/ai-for-everyone' },
-                { title: 'Harvard CS50', provider: 'Harvard', url: 'https://cs50.harvard.edu/x/' },
-                { title: 'Data Annotation Best Practices', provider: 'Appen', url: 'https://appen.com/resources/' },
-                { title: 'Project Management', provider: 'Alison', url: 'https://alison.com/course/project-management' },
-            ].filter(m => m.title.toLowerCase().includes(query.toLowerCase())));
-            setAiSuggestion('Results powered by AI.');
-            setLoading(false);
-        }, 1200);
-    };
-
-    // Assign training
-    const assignTraining = async (mod) => {
-        await addDoc(collection(db, `artifacts/${window.appId}/public/data/training_assignments`), {
-            ...mod,
-            assignedAt: serverTimestamp(),
-            status: 'assigned'
-        });
-    };
-
-    return (
-        <div>
-            <h1 className="text-2xl font-display mb-4">Training Department</h1>
-            <p className="mb-2">Keep employees updated with the latest skills and best practices. Search and assign trainings below.</p>
-            <div className="flex gap-2 mb-4">
-                <input type="text" className="input-focus border rounded p-2 flex-1" placeholder="Search skills or topics (e.g. AI, compliance, leadership)" value={search} onChange={e=>setSearch(e.target.value)} />
-                <button className="btn-primary px-4 py-2 rounded" onClick={()=>fetchAIModules(search)} disabled={loading}>{loading ? 'Searching...' : 'AI Lookup'}</button>
-            </div>
-            {aiSuggestion && <div className="text-xs text-accent mb-2">{aiSuggestion}</div>}
-            <ul className="mb-4">
-                {modules.map((m,i)=>(
-                    <li key={i} className="border-b py-2 flex justify-between items-center">
-                        <span><a href={m.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{m.title}</a> <span className="text-xs text-gray-500">({m.provider})</span></span>
-                        <button className="btn-secondary px-2 py-1 rounded" onClick={()=>assignTraining(m)}>Assign</button>
-                    </li>
-                ))}
-            </ul>
-            <h2 className="font-bold mb-2">Assigned Trainings</h2>
-            <ul className="mb-4">
-                {assigned.map(a=>(
-                    <li key={a.id} className="border-b py-2 flex justify-between items-center">
-                        <span>{a.title} <span className="text-xs text-gray-500">({a.provider})</span> [{a.status}]</span>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-}
-// </script>
                         </ul>
                     </div>
-                    <button onClick={onSignOut} className="mt-8 btn-secondary w-full">Sign Out</button>
+                    <button onClick={onSignOut} className="mt-8 btn-secondary w-full py-2 px-3 rounded">Sign Out</button>
                 </nav>
             );
+        }
 
+        function TrainingDepartment() {
+            const [modules, setModules] = React.useState([]);
+            const [search, setSearch] = React.useState('');
+            const [loading, setLoading] = React.useState(false);
+            const [assigned, setAssigned] = React.useState([]);
+            const [aiSuggestion, setAiSuggestion] = React.useState('');
+
+            // Fetch assigned trainings from Firestore
+            React.useEffect(() => {
+                const unsub = onSnapshot(
+                    collection(db, `artifacts/${window.appId}/public/data/training_assignments`),
+                    (snapshot) => setAssigned(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
+                );
+                return () => unsub();
+            }, []);
+
+            // AI-powered fetch from external sources (mocked for now)
+            const fetchAIModules = async (query) => {
+                setLoading(true);
+                setAiSuggestion('');
+                setTimeout(() => {
+                    setModules([
+                        { title: 'AI for Everyone', provider: 'Coursera', url: 'https://www.coursera.org/learn/ai-for-everyone' },
+                        { title: 'Harvard CS50', provider: 'Harvard', url: 'https://cs50.harvard.edu/x/' },
+                        { title: 'Data Annotation Best Practices', provider: 'Appen', url: 'https://appen.com/resources/' },
+                        { title: 'Project Management', provider: 'Alison', url: 'https://alison.com/course/project-management' },
+                    ].filter(m => m.title.toLowerCase().includes(query.toLowerCase())));
+                    setAiSuggestion('Results powered by AI.');
+                    setLoading(false);
+                }, 1200);
+            };
+
+            // Assign training
+            const assignTraining = async (mod) => {
+                await addDoc(collection(db, `artifacts/${window.appId}/public/data/training_assignments`), {
+                    ...mod,
+                    assignedAt: serverTimestamp(),
+                    status: 'assigned'
+                });
+            };
+
+            return (
+                <div>
+                    <h1 className="text-2xl font-display mb-4">Training Department</h1>
+                    <p className="mb-2">Keep employees updated with the latest skills and best practices. Search and assign trainings below.</p>
+                    <div className="flex gap-2 mb-4">
+                        <input type="text" className="input-focus border rounded p-2 flex-1" placeholder="Search skills or topics (e.g. AI, compliance, leadership)" value={search} onChange={e=>setSearch(e.target.value)} />
+                        <button className="btn-primary px-4 py-2 rounded" onClick={()=>fetchAIModules(search)} disabled={loading}>{loading ? 'Searching...' : 'AI Lookup'}</button>
+                    </div>
+                    {aiSuggestion && <div className="text-xs text-accent mb-2">{aiSuggestion}</div>}
+                    <ul className="mb-4">
+                        {modules.map((m,i)=>(
+                            <li key={i} className="border-b py-2 flex justify-between items-center">
+                                <span><a href={m.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{m.title}</a> <span className="text-xs text-gray-500">({m.provider})</span></span>
+                                <button className="btn-secondary px-2 py-1 rounded" onClick={()=>assignTraining(m)}>Assign</button>
+                            </li>
+                        ))}
+                    </ul>
+                    <h2 className="font-bold mb-2">Assigned Trainings</h2>
+                    <ul className="mb-4">
+                        {assigned.map(a=>(
+                            <li key={a.id} className="border-b py-2 flex justify-between items-center">
+                                <span>{a.title} <span className="text-xs text-gray-500">({a.provider})</span> [{a.status}]</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
         }
 
         // --- Placeholder Pages for Each Department ---
@@ -755,230 +794,228 @@ function TrainingDepartment() {
             );
         }
 
+        // --- Enhanced HR Management: Applicants, Assessments, Anti-Cheating ---
         function HRManagement() {
+            const [tab, setTab] = useState('applicants');
+            const [applicants, setApplicants] = useState([]);
+            const [newApplicant, setNewApplicant] = useState({ name: '', email: '', status: 'Applied' });
+            const [assessments, setAssessments] = useState([]);
+            const [selectedApplicant, setSelectedApplicant] = useState(null);
+            const [showAssessment, setShowAssessment] = useState(false);
+            const [assessmentData, setAssessmentData] = useState(null);
+            const [assessmentLog, setAssessmentLog] = useState([]);
+            const [assessmentStatus, setAssessmentStatus] = useState('not_started');
+            const [assessmentStart, setAssessmentStart] = useState(null);
+            const [assessmentAnswers, setAssessmentAnswers] = useState({});
+            const [assessmentTimeLeft, setAssessmentTimeLeft] = useState(0);
+            const [cheatDetected, setCheatDetected] = useState(false);
+            const [cheatReason, setCheatReason] = useState('');
 
-// --- Enhanced HR Management: Applicants, Assessments, Anti-Cheating ---
-function HRManagement() {
-    const [tab, setTab] = useState('applicants');
-    const [applicants, setApplicants] = useState([]);
-    const [newApplicant, setNewApplicant] = useState({ name: '', email: '', status: 'Applied' });
-    const [assessments, setAssessments] = useState([]);
-    const [selectedApplicant, setSelectedApplicant] = useState(null);
-    const [showAssessment, setShowAssessment] = useState(false);
-    const [assessmentData, setAssessmentData] = useState(null);
-    const [assessmentLog, setAssessmentLog] = useState([]);
-    const [assessmentStatus, setAssessmentStatus] = useState('not_started');
-    const [assessmentStart, setAssessmentStart] = useState(null);
-    const [assessmentAnswers, setAssessmentAnswers] = useState({});
-    const [assessmentTimeLeft, setAssessmentTimeLeft] = useState(0);
-    const [cheatDetected, setCheatDetected] = useState(false);
-    const [cheatReason, setCheatReason] = useState('');
+            // Fetch applicants
+            useEffect(() => {
+                const unsub = onSnapshot(
+                    collection(db, `artifacts/${window.appId}/public/data/applicants`),
+                    (snapshot) => setApplicants(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
+                );
+                return () => unsub();
+            }, []);
 
-    // Fetch applicants
-    useEffect(() => {
-        const unsub = onSnapshot(
-            collection(db, `artifacts/${window.appId}/public/data/applicants`),
-            (snapshot) => setApplicants(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
-        );
-        return () => unsub();
-    }, []);
+            // Fetch assessments
+            useEffect(() => {
+                const unsub = onSnapshot(
+                    collection(db, `artifacts/${window.appId}/public/data/assessments`),
+                    (snapshot) => setAssessments(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
+                );
+                return () => unsub();
+            }, []);
 
-    // Fetch assessments
-    useEffect(() => {
-        const unsub = onSnapshot(
-            collection(db, `artifacts/${window.appId}/public/data/assessments`),
-            (snapshot) => setAssessments(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
-        );
-        return () => unsub();
-    }, []);
+            // Add applicant
+            const handleAddApplicant = async (e) => {
+                e.preventDefault();
+                await addDoc(collection(db, `artifacts/${window.appId}/public/data/applicants`), {
+                    ...newApplicant,
+                    createdAt: serverTimestamp(),
+                });
+                setNewApplicant({ name: '', email: '', status: 'Applied' });
+            };
 
-    // Add applicant
-    const handleAddApplicant = async (e) => {
-        e.preventDefault();
-        await addDoc(collection(db, `artifacts/${window.appId}/public/data/applicants`), {
-            ...newApplicant,
-            createdAt: serverTimestamp(),
-        });
-        setNewApplicant({ name: '', email: '', status: 'Applied' });
-    };
+            // Assign assessment
+            const handleAssignAssessment = async (applicant, assessment) => {
+                await addDoc(collection(db, `artifacts/${window.appId}/public/data/assessment_assignments`), {
+                    applicantId: applicant.id,
+                    assessmentId: assessment.id,
+                    assignedAt: serverTimestamp(),
+                    status: 'assigned',
+                });
+            };
 
-    // Assign assessment
-    const handleAssignAssessment = async (applicant, assessment) => {
-        await addDoc(collection(db, `artifacts/${window.appId}/public/data/assessment_assignments`), {
-            applicantId: applicant.id,
-            assessmentId: assessment.id,
-            assignedAt: serverTimestamp(),
-            status: 'assigned',
-        });
-    };
+            // Start assessment: open robust anti-cheating test in new window
+            const handleStartAssessment = (assessment) => {
+                // Assume assessment.html is the filename for the test (e.g., cognitive-aptitude-test.html)
+                // You may want to map assessment.id or title to the correct file
+                let testFile = 'jobs/assessments/' + (assessment.file || 'cognitive-aptitude-test.html');
+                window.open('/' + testFile + '?applicant=' + encodeURIComponent(selectedApplicant?.email || ''), '_blank', 'noopener,width=1024,height=768');
+            };
 
-    // Start assessment: open robust anti-cheating test in new window
-    const handleStartAssessment = (assessment) => {
-        // Assume assessment.html is the filename for the test (e.g., cognitive-aptitude-test.html)
-        // You may want to map assessment.id or title to the correct file
-        let testFile = 'jobs/assessments/' + (assessment.file || 'cognitive-aptitude-test.html');
-        window.open('/' + testFile + '?applicant=' + encodeURIComponent(selectedApplicant?.email || ''), '_blank', 'noopener,width=1024,height=768');
-    };
+            // Timer for assessment
+            useEffect(() => {
+                if (assessmentStatus !== 'in_progress' || assessmentTimeLeft <= 0) return;
+                const timer = setInterval(() => {
+                    setAssessmentTimeLeft(t => {
+                        if (t <= 1) {
+                            setAssessmentStatus('finished');
+                            return 0;
+                        }
+                        return t - 1;
+                    });
+                }, 1000);
+                return () => clearInterval(timer);
+            }, [assessmentStatus, assessmentTimeLeft]);
 
-    // Timer for assessment
-    useEffect(() => {
-        if (assessmentStatus !== 'in_progress' || assessmentTimeLeft <= 0) return;
-        const timer = setInterval(() => {
-            setAssessmentTimeLeft(t => {
-                if (t <= 1) {
-                    setAssessmentStatus('finished');
-                    return 0;
-                }
-                return t - 1;
-            });
-        }, 1000);
-        return () => clearInterval(timer);
-    }, [assessmentStatus, assessmentTimeLeft]);
+            // Anti-cheating: focus/tab change detection
+            useEffect(() => {
+                if (assessmentStatus !== 'in_progress') return;
+                const onBlur = () => {
+                    setCheatDetected(true);
+                    setCheatReason('Tab or window focus lost during assessment.');
+                    setAssessmentLog(log => [...log, { type: 'focus_lost', time: Date.now() }]);
+                };
+                window.addEventListener('blur', onBlur);
+                return () => window.removeEventListener('blur', onBlur);
+            }, [assessmentStatus]);
 
-    // Anti-cheating: focus/tab change detection
-    useEffect(() => {
-        if (assessmentStatus !== 'in_progress') return;
-        const onBlur = () => {
-            setCheatDetected(true);
-            setCheatReason('Tab or window focus lost during assessment.');
-            setAssessmentLog(log => [...log, { type: 'focus_lost', time: Date.now() }]);
-        };
-        window.addEventListener('blur', onBlur);
-        return () => window.removeEventListener('blur', onBlur);
-    }, [assessmentStatus]);
+            // Anti-cheating: copy/paste prevention
+            useEffect(() => {
+                if (assessmentStatus !== 'in_progress') return;
+                const prevent = (e) => {
+                    setCheatDetected(true);
+                    setCheatReason('Copy or paste detected during assessment.');
+                    setAssessmentLog(log => [...log, { type: 'copy_paste', time: Date.now() }]);
+                    e.preventDefault();
+                };
+                window.addEventListener('copy', prevent);
+                window.addEventListener('paste', prevent);
+                return () => {
+                    window.removeEventListener('copy', prevent);
+                    window.removeEventListener('paste', prevent);
+                };
+            }, [assessmentStatus]);
 
-    // Anti-cheating: copy/paste prevention
-    useEffect(() => {
-        if (assessmentStatus !== 'in_progress') return;
-        const prevent = (e) => {
-            setCheatDetected(true);
-            setCheatReason('Copy or paste detected during assessment.');
-            setAssessmentLog(log => [...log, { type: 'copy_paste', time: Date.now() }]);
-            e.preventDefault();
-        };
-        window.addEventListener('copy', prevent);
-        window.addEventListener('paste', prevent);
-        return () => {
-            window.removeEventListener('copy', prevent);
-            window.removeEventListener('paste', prevent);
-        };
-    }, [assessmentStatus]);
+            // Submit assessment
+            const handleSubmitAssessment = async () => {
+                setAssessmentStatus('finished');
+                await addDoc(collection(db, `artifacts/${window.appId}/public/data/assessment_results`), {
+                    applicantId: selectedApplicant?.id,
+                    assessmentId: assessmentData.id,
+                    answers: assessmentAnswers,
+                    submittedAt: serverTimestamp(),
+                    log: assessmentLog,
+                    cheatDetected,
+                    cheatReason,
+                });
+                setShowAssessment(false);
+            };
 
-    // Submit assessment
-    const handleSubmitAssessment = async () => {
-        setAssessmentStatus('finished');
-        await addDoc(collection(db, `artifacts/${window.appId}/public/data/assessment_results`), {
-            applicantId: selectedApplicant?.id,
-            assessmentId: assessmentData.id,
-            answers: assessmentAnswers,
-            submittedAt: serverTimestamp(),
-            log: assessmentLog,
-            cheatDetected,
-            cheatReason,
-        });
-        setShowAssessment(false);
-    };
-
-    // Render assessment UI
-    const renderAssessment = () => {
-        if (!assessmentData) return null;
-        return (
-            <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-                <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-2xl relative">
-                    <h2 className="text-xl font-bold mb-2">Assessment: {assessmentData.title}</h2>
-                    <div className="mb-2">Time left: <span className="font-mono">{Math.floor(assessmentTimeLeft/60)}:{(assessmentTimeLeft%60).toString().padStart(2,'0')}</span></div>
-                    {cheatDetected && <div className="text-red-600 font-bold mb-2">Cheating detected: {cheatReason}</div>}
-                    <form onSubmit={e => { e.preventDefault(); handleSubmitAssessment(); }}>
-                        <ol className="space-y-4">
-                            {assessmentData.questions.map((q, i) => (
-                                <li key={i} className="border-b pb-2">
-                                    <div className="font-semibold mb-1">Q{i+1}: {q.question}</div>
-                                    {q.type === 'mcq' ? (
-                                        <div className="space-y-1">
-                                            {q.options.map((opt, j) => (
-                                                <label key={j} className="block">
-                                                    <input type="radio" name={`q${i}`} value={opt} checked={assessmentAnswers[i]===opt} onChange={() => setAssessmentAnswers(a => ({ ...a, [i]: opt }))} disabled={cheatDetected || assessmentStatus === 'finished'} /> {opt}
-                                                </label>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <textarea className="border rounded p-2 w-full" rows="2" value={assessmentAnswers[i]||''} onChange={e=>setAssessmentAnswers(a=>({...a,[i]:e.target.value}))} disabled={cheatDetected || assessmentStatus==='finished'} />
-                                    )}
-                                </li>
-                            ))}
-                        </ol>
-                        <div className="flex justify-end mt-4 gap-2">
-                            <button type="button" className="btn-secondary px-4 py-2 rounded" onClick={() => setShowAssessment(false)}>Cancel</button>
-                            <button type="submit" className="btn-primary px-4 py-2 rounded" disabled={cheatDetected || assessmentStatus==='finished'}>Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        );
-    };
-
-    return (
-        <div>
-            <h1 className="text-2xl font-display mb-4">HR Management</h1>
-            <div className="flex gap-2 mb-4">
-                <button className={tab === 'applicants' ? "btn-secondary px-4 py-2 rounded bg-accent text-white" : "btn-secondary px-4 py-2 rounded"} onClick={() => setTab('applicants')}>Applicants</button>
-                <button className={tab === 'assessments' ? "btn-secondary px-4 py-2 rounded bg-accent text-white" : "btn-secondary px-4 py-2 rounded"} onClick={() => setTab('assessments')}>Assessments</button>
-            </div>
-            {tab==='applicants' && (
-                <div>
-                    <h2 className="font-bold mb-2">Add Applicant</h2>
-                    <form className="flex gap-2 mb-4" onSubmit={handleAddApplicant}>
-                        <input type="text" className="input-focus border rounded p-2" placeholder="Name" value={newApplicant.name} onChange={e=>setNewApplicant({...newApplicant, name:e.target.value})} required />
-                        <input type="email" className="input-focus border rounded p-2" placeholder="Email" value={newApplicant.email} onChange={e=>setNewApplicant({...newApplicant, email:e.target.value})} required />
-                        <button type="submit" className="btn-primary px-4 py-2 rounded">Add</button>
-                    </form>
-                    <h2 className="font-bold mb-2">Applicants</h2>
-                    <ul className="mb-4">
-                        {applicants.map(a=>(
-                            <li key={a.id} className="border-b py-2 flex justify-between items-center">
-                                <span>{a.name} ({a.email}) - {a.status}</span>
-                                <div className="flex gap-2">
-                                    <button className="btn-secondary px-2 py-1 rounded" onClick={() => setSelectedApplicant(a)}>Assign Assessment</button>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                    {selectedApplicant && (
-                        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-                            <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
-                                <h3 className="font-bold mb-2">Assign Assessment to {selectedApplicant.name}</h3>
-                                <ul className="mb-4">
-                                    {assessments.map(asmt=>(
-                                        <li key={asmt.id} className="flex justify-between items-center border-b py-2">
-                                            <span>{asmt.title}</span>
-                                            <button className="btn-primary px-2 py-1 rounded" onClick={() => { handleAssignAssessment(selectedApplicant, asmt); setSelectedApplicant(null); }}>Assign</button>
-                                            <button className="btn-secondary px-2 py-1 rounded" onClick={() => { handleStartAssessment(asmt); setSelectedApplicant(null); }}>Simulate Test</button>
+            // Render assessment UI
+            const renderAssessment = () => {
+                if (!assessmentData) return null;
+                return (
+                    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-2xl relative">
+                            <h2 className="text-xl font-bold mb-2">Assessment: {assessmentData.title}</h2>
+                            <div className="mb-2">Time left: <span className="font-mono">{Math.floor(assessmentTimeLeft/60)}:{(assessmentTimeLeft%60).toString().padStart(2,'0')}</span></div>
+                            {cheatDetected && <div className="text-red-600 font-bold mb-2">Cheating detected: {cheatReason}</div>}
+                            <form onSubmit={e => { e.preventDefault(); handleSubmitAssessment(); }}>
+                                <ol className="space-y-4">
+                                    {assessmentData.questions.map((q, i) => (
+                                        <li key={i} className="border-b pb-2">
+                                            <div className="font-semibold mb-1">Q{i+1}: {q.question}</div>
+                                            {q.type === 'mcq' ? (
+                                                <div className="space-y-1">
+                                                    {q.options.map((opt, j) => (
+                                                        <label key={j} className="block">
+                                                            <input type="radio" name={`q${i}`} value={opt} checked={assessmentAnswers[i]===opt} onChange={() => setAssessmentAnswers(a => ({ ...a, [i]: opt }))} disabled={cheatDetected || assessmentStatus === 'finished'} /> {opt}
+                                                        </label>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <textarea className="border rounded p-2 w-full" rows="2" value={assessmentAnswers[i]||''} onChange={e=>setAssessmentAnswers(a=>({...a,[i]:e.target.value}))} disabled={cheatDetected || assessmentStatus==='finished'} />
+                                            )}
                                         </li>
                                     ))}
-                                </ul>
-                                <button className="btn-secondary px-2 py-1 rounded absolute top-2 right-2" onClick={() => setSelectedApplicant(null)}>Close</button>
-                            </div>
+                                </ol>
+                                <div className="flex justify-end mt-4 gap-2">
+                                    <button type="button" className="btn-secondary px-4 py-2 rounded" onClick={() => setShowAssessment(false)}>Cancel</button>
+                                    <button type="submit" className="btn-primary px-4 py-2 rounded" disabled={cheatDetected || assessmentStatus==='finished'}>Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                );
+            };
+
+            return (
+                <div>
+                    <h1 className="text-2xl font-display mb-4">HR Management</h1>
+                    <div className="flex gap-2 mb-4">
+                        <button className={tab === 'applicants' ? "btn-secondary px-4 py-2 rounded bg-accent text-white" : "btn-secondary px-4 py-2 rounded"} onClick={() => setTab('applicants')}>Applicants</button>
+                        <button className={tab === 'assessments' ? "btn-secondary px-4 py-2 rounded bg-accent text-white" : "btn-secondary px-4 py-2 rounded"} onClick={() => setTab('assessments')}>Assessments</button>
+                    </div>
+                    {tab==='applicants' && (
+                        <div>
+                            <h2 className="font-bold mb-2">Add Applicant</h2>
+                            <form className="flex gap-2 mb-4" onSubmit={handleAddApplicant}>
+                                <input type="text" className="input-focus border rounded p-2" placeholder="Name" value={newApplicant.name} onChange={e=>setNewApplicant({...newApplicant, name:e.target.value})} required />
+                                <input type="email" className="input-focus border rounded p-2" placeholder="Email" value={newApplicant.email} onChange={e=>setNewApplicant({...newApplicant, email:e.target.value})} required />
+                                <button type="submit" className="btn-primary px-4 py-2 rounded">Add</button>
+                            </form>
+                            <h2 className="font-bold mb-2">Applicants</h2>
+                            <ul className="mb-4">
+                                {applicants.map(a=>(
+                                    <li key={a.id} className="border-b py-2 flex justify-between items-center">
+                                        <span>{a.name} ({a.email}) - {a.status}</span>
+                                        <div className="flex gap-2">
+                                            <button className="btn-secondary px-2 py-1 rounded" onClick={() => setSelectedApplicant(a)}>Assign Assessment</button>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                            {selectedApplicant && (
+                                <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                                    <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
+                                        <h3 className="font-bold mb-2">Assign Assessment to {selectedApplicant.name}</h3>
+                                        <ul className="mb-4">
+                                            {assessments.map(asmt=>(
+                                                <li key={asmt.id} className="flex justify-between items-center border-b py-2">
+                                                    <span>{asmt.title}</span>
+                                                    <button className="btn-primary px-2 py-1 rounded" onClick={() => { handleAssignAssessment(selectedApplicant, asmt); setSelectedApplicant(null); }}>Assign</button>
+                                                    <button className="btn-secondary px-2 py-1 rounded" onClick={() => { handleStartAssessment(asmt); setSelectedApplicant(null); }}>Simulate Test</button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        <button className="btn-secondary px-2 py-1 rounded absolute top-2 right-2" onClick={() => setSelectedApplicant(null)}>Close</button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
+                    {tab==='assessments' && (
+                        <div>
+                            <h2 className="font-bold mb-2">Assessments</h2>
+                            <ul className="mb-4">
+                                {assessments.map(a=>(
+                                    <li key={a.id} className="border-b py-2 flex justify-between items-center">
+                                        <span>{a.title} ({a.questions.length} questions, {a.timeLimit||15} min)</span>
+                                        <button className="btn-secondary px-2 py-1 rounded" onClick={() => { setAssessmentData(a); setShowAssessment(true); setAssessmentStatus('not_started'); }}>Preview</button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                    {showAssessment && renderAssessment()}
                 </div>
-            )}
-            {tab==='assessments' && (
-                <div>
-                    <h2 className="font-bold mb-2">Assessments</h2>
-                    <ul className="mb-4">
-                        {assessments.map(a=>(
-                            <li key={a.id} className="border-b py-2 flex justify-between items-center">
-                                <span>{a.title} ({a.questions.length} questions, {a.timeLimit||15} min)</span>
-                                <button className="btn-secondary px-2 py-1 rounded" onClick={() => { setAssessmentData(a); setShowAssessment(true); setAssessmentStatus('not_started'); }}>Preview</button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-            {showAssessment && renderAssessment()}
-        </div>
-    );
-}
+            );
+        }
 
         function PayrollFinance() {
             const [tab, setTab] = useState('payslips');
@@ -1373,7 +1410,7 @@ function HRManagement() {
                 if (!selectedGroup) return;
                 if (chatUnsub) chatUnsub();
                 const unsub = onSnapshot(
-                    collection(db, `artifacts/${window.appId}/public/data/groups/${selectedGroup.id}/chat`),
+                    query(collection(db, `artifacts/${window.appId}/public/data/groups/${selectedGroup.id}/chat`)),
                     (snapshot) => setChat(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
                 );
                 setChatUnsub(() => unsub);
