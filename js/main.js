@@ -84,7 +84,22 @@ document.addEventListener("DOMContentLoaded", function() {
       }
       languageSelect.addEventListener('change', (event) => {
           const selectedLanguage = event.target.value;
-          alert(`Page would now translate to ${selectedLanguage}. You need to implement the translation logic.`);
+          // Map language code to landing page
+          const langToPage = {
+              'en': 'index.html',
+              'fr': 'fr.html',
+              'ja': 'ja.html',
+              'zh': 'zh.html',
+              'sw': 'sw.html',
+              'zu': 'zu.html'
+              // Add more mappings as you add more landing pages
+          };
+          const targetPage = langToPage[selectedLanguage] || 'index.html';
+          if (window.location.pathname.endsWith(targetPage)) {
+              // Already on the correct page, do nothing
+              return;
+          }
+          window.location.href = '/' + targetPage;
       });
     }
 

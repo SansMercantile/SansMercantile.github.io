@@ -25,7 +25,8 @@
             <p>Dive into Sans Mercantile’s™ research, expert analysis, and thought leadership on AI-powered trading, compliance, and inclusive market development. </p>
         </section>
 
-        <section id="blog-posts-container" class="blog-articles-grid" data-aos="fade-up" data-aos-delay="100">
+
+        <section id="blog-posts-container" class="blog-articles-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-4" data-aos="fade-up" data-aos-delay="100">
             <!-- Blog posts will be dynamically inserted here -->
             <div id="loading-indicator" class="loading-spinner"></div>
         </section>
@@ -53,21 +54,36 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Helper function to escape HTML special characters
-        function escapeHtml(str) {
-            return str.replace(/[&<>"'`]/g, function (match) {
-                switch (match) {
-                    case "&": return "&amp;";
-                    case "<": return "&lt;";
-                    case ">": return "&gt;";
-                    case '"': return "&quot;";
-                    case "'": return "&#39;";
-                    case "`": return "&#96;";
-                    default: return match;
-                }
-            });
-        }
-
+        // Helper function to escape HTML special characters
+
+        function escapeHtml(str) {
+
+            return str.replace(/[&<>"'`]/g, function (match) {
+
+                switch (match) {
+
+                    case "&": return "&amp;";
+
+                    case "<": return "&lt;";
+
+                    case ">": return "&gt;";
+
+                    case '"': return "&quot;";
+
+                    case "'": return "&#39;";
+
+                    case "`": return "&#96;";
+
+                    default: return match;
+
+                }
+
+            });
+
+        }
+
+
+
         document.addEventListener('DOMContentLoaded', async () => {
             const postsContainer = document.getElementById('blog-posts-container');
             const loadingIndicator = document.getElementById('loading-indicator');
@@ -95,25 +111,42 @@
                     let articlesHtml = '';
                     querySnapshot.forEach((doc) => {
                         const post = { id: doc.id, ...doc.data() };
-                        
                         // Create a summary from the content
                         const tempDiv = document.createElement('div');
                         tempDiv.innerHTML = post.content;
-                        const summary = tempDiv.textContent.substring(0, 120) + '...';
-
-                        // Use the original article structure
+                        const summary = tempDiv.textContent.substring(0, 140) + '...';
+                        // Format date
+                        let dateStr = '';
+                        if (post.approvedAt && post.approvedAt.toDate) {
+                            dateStr = new Date(post.approvedAt.toDate()).toLocaleDateString();
+                        } else if (post.approvedAt && post.approvedAt.seconds) {
+                            dateStr = new Date(post.approvedAt.seconds * 1000).toLocaleDateString();
+                        }
+                        // Tags
+                        let tagsHtml = '';
+                        if (Array.isArray(post.tags)) {
+                            tagsHtml = post.tags.map(tag => `<span class="tag">#${escapeHtml(tag)}</span>`).join(' ');
+                        }
+                        // Featured image
+                        let imgHtml = '';
+                        if (post.metaImage) {
+                            imgHtml = `<img src="${post.metaImage}" alt="${escapeHtml(post.title)}" class="rounded-lg mb-3 w-full h-48 object-cover" loading="lazy" />`;
+                        }
                         articlesHtml += `
-                            <article class="blog-card">
-                                <h3>${post.title}</h3>
-                                <p>${escapeHtml(summary)}</p>
-                                <a href="/blogs/post.html?id=${post.id}">Read More &rarr;</a>
+                            <article class="blog-card bg-white rounded-lg shadow p-6 flex flex-col h-full">
+                                ${imgHtml}
+                                <h3 class="text-xl font-bold mb-2">${escapeHtml(post.title)}</h3>
+                                <div class="text-sm text-gray-500 mb-2 flex flex-wrap gap-2">
+                                    <span>By ${escapeHtml(post.authorName || 'Sans Mercantile')}</span>
+                                    ${dateStr ? `<span>| ${dateStr}</span>` : ''}
+                                </div>
+                                <div class="mb-2">${tagsHtml}</div>
+                                <p class="mb-4 text-gray-700">${escapeHtml(summary)}</p>
+                                <a href="/blogs/post.html?id=${post.id}" class="mt-auto text-accent font-semibold hover:underline">Read More &rarr;</a>
                             </article>
                         `;
                     });
                     postsContainer.innerHTML = articlesHtml;
-                    
-                    // Re-initialize animations after adding new content
-                    // This needs to be done after main.js has already initialized it
                     if (window.AOS) {
                         AOS.refresh();
                     }
