@@ -53,6 +53,21 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // Helper function to escape HTML special characters
+        function escapeHtml(str) {
+            return str.replace(/[&<>"'`]/g, function (match) {
+                switch (match) {
+                    case "&": return "&amp;";
+                    case "<": return "&lt;";
+                    case ">": return "&gt;";
+                    case '"': return "&quot;";
+                    case "'": return "&#39;";
+                    case "`": return "&#96;";
+                    default: return match;
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             const postsContainer = document.getElementById('blog-posts-container');
             const loadingIndicator = document.getElementById('loading-indicator');
@@ -90,7 +105,7 @@
                         articlesHtml += `
                             <article class="blog-card">
                                 <h3>${post.title}</h3>
-                                <p>${summary}</p>
+                                <p>${escapeHtml(summary)}</p>
                                 <a href="/blogs/post.html?id=${post.id}">Read More &rarr;</a>
                             </article>
                         `;
