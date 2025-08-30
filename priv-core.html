@@ -1,22 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!DOCTYPE html>
-<html lang="en">
-  <head>
     <link rel="icon" type="image/svg+xml" href="img/logo.svg" />
-    <meta name="facebook-domain-verification" content="nsy80qvhm4k0ktfnju62qvyb41dbe6" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PRIV - The Future of AI Trading</title>
-    <link rel="stylesheet" href="css/style.css" />
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <title>Sans Mercantile™ | Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <meta name="description" content="Sans Mercantile™ is an AI-native fintech platform transforming CFD trading and township economies with predictive, transparent, and institution-grade intelligence." />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css" /> <!-- Note: For preview, styles are included below. Link this to your actual CSS file. -->
+    <meta name="description" content="Discover the Sans Mercantile™ Platform, a next-generation AI-driven execution engine with real-time compliance, predictive confidence scoring, and more." />
     <style>
+        /* Styles from previous version for preview purposes. Move to your style.css */
         :root {
             --color-main-bg: #110000;
             --color-text-primary: #f0f0f0;
@@ -36,231 +30,145 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .feature-card {
-            background-color: var(--color-card-bg);
-            border: 1px solid var(--color-border-color);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-        }
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            border-color: var(--color-accent-primary);
-        }
-        .device-mockup {
-            border: 8px solid #333;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            background: #111;
-            padding: 12px;
-            transition: transform 0.3s ease;
-        }
-        .device-mockup:hover {
-            transform: translateY(-10px) scale(1.02);
-        }
-        .device-mockup iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: #fff;
-            border-radius: 16px;
-        }
+        .main-wrap { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .platform-hero { text-align: center; padding: 4rem 0; }
+        .platform-hero h2 { font-size: 3.5rem; font-weight: bold; font-family: 'Playfair Display', serif; margin-bottom: 1rem; }
+        .platform-hero p { font-size: 1.25rem; color: var(--color-text-secondary); max-width: 800px; margin: 0 auto; }
+        
+        .platform-highlights, .how-it-works, .live-demo { padding: 4rem 0; }
+        .platform-highlights h3, .how-it-works h3, .live-demo h3 { font-size: 2.5rem; text-align: center; font-family: 'Playfair Display', serif; margin-bottom: 3rem; }
+        
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .feature-card { background-color: var(--color-card-bg); border: 1px solid var(--color-border-color); border-radius: 0.75rem; padding: 1.5rem; transition: all 0.3s ease; }
+        .feature-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); border-color: var(--color-accent-primary); }
+        .feature-card h4 { font-size: 1.25rem; font-weight: bold; color: var(--color-accent-primary); margin-bottom: 0.5rem; }
+        .feature-card p { color: var(--color-text-secondary); }
+
+        .workflow-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+        .step-card { text-align: center; }
+        .step-number { width: 50px; height: 50px; border-radius: 50%; background-color: var(--color-accent-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; margin: 0 auto 1rem; }
+        .step-card h4 { font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem; }
+        .step-card p { color: var(--color-text-secondary); }
+
+        .platform-actions { text-align: center; margin-top: 3rem; }
+        .cta { display: inline-block; background-color: var(--color-accent-primary); color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: bold; text-decoration: none; margin: 0 0.5rem; transition: opacity 0.3s; }
+        .cta:hover { opacity: 0.9; }
+        
+        .device-mockup { border: 8px solid #333; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); background: #111; padding: 12px; transition: transform 0.3s ease; }
+        .device-mockup:hover { transform: translateY(-10px) scale(1.02); }
+        .device-mockup iframe { width: 100%; height: 100%; border: none; background: #fff; border-radius: 16px; }
         .phone { width: 375px; height: 812px; border-radius: 40px; padding: 15px; border-width: 12px; }
         .tablet { width: 1024px; height: 768px; border-radius: 20px; }
         .laptop { width: 1280px; height: 800px; border-radius: 16px; background: #222; padding: 20px; padding-top: 20px; }
-        .laptop-top {
-             background: #333;
-             border-radius: 12px;
-             position: relative;
-             padding-top: 25px;
-        }
-        .laptop-camera {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 8px;
-            height: 8px;
-            background: #111;
-            border-radius: 50%;
-        }
+        .laptop-top { background: #333; border-radius: 12px; position: relative; padding-top: 25px; }
+        .laptop-camera { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 8px; height: 8px; background: #111; border-radius: 50%; }
     </style>
 </head>
-<body class="antialiased">
+<body>
+    <!-- Header will be loaded here -->
+    <div id="header-placeholder"></div>
 
-    <!-- Header -->
-    <header class="py-6 px-8 flex justify-between items-center border-b border-border-color sticky top-0 bg-main-bg/80 backdrop-blur-sm z-50">
-        <div class="flex items-center">
-             <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 0L100 28.87V86.6L50 115.47L0 86.6V28.87L50 0Z" fill="#1f0000"/><path d="M50 12L90 35.77V80.23L50 104L10 80.23V35.77L50 12Z" fill="#FC7642"/><path d="M50 24.5L80 42.6V71.4L50 89.5L20 71.4V42.6L50 24.5Z" fill="#f0f0f0"/><path d="M50 34L70 46V64L50 76L30 64V46L50 34Z" fill="#1f0000"/></svg>
-            <span class="font-display text-2xl ml-3">Sans Mercantile</span>
-        </div>
-        <nav class="space-x-8 text-text-secondary">
-            <a href="#features" class="hover:text-text-primary">Features</a>
-            <a href="#demo" class="hover:text-text-primary">Live Demo</a>
-            <a href="#" class="bg-accent-primary text-white py-2 px-5 rounded-lg font-bold hover:opacity-90">Request Access</a>
-        </nav>
-    </header>
+    <main role="main" class="main-wrap">
+        <section class="platform-hero" data-aos="fade-up">
+            <h2>Trade With Precision. Govern With Integrity.</h2>
+            <p>The Sans Mercantile™ Platform is a next-generation AI-driven execution engine, featuring real-time compliance, predictive confidence scoring, and an emotionally intelligent AGI core designed for institutional and multi-tier investors.</p>
+        </section>
 
-    <!-- Hero Section -->
-    <main class="container mx-auto px-8 py-20 text-center">
-        <h1 class="font-display text-5xl md:text-7xl font-bold mb-4">
-            The Convergence of <span class="gradient-text">AGI and Finance</span>
-        </h1>
-        <p class="text-xl text-text-secondary max-w-3xl mx-auto">
-            Sans Mercantile's PRIV Core is a decentralized, multi-agent AI system designed to navigate and master complex financial markets with unparalleled intelligence, autonomy, and security.
-        </p>
-    </main>
-
-    <!-- Features Section -->
-    <section id="features" class="py-20 bg-main-bg">
-        <div class="container mx-auto px-8">
-            <h2 class="font-display text-4xl text-center mb-12">A Comprehensive, End-to-End Trading Ecosystem</h2>
+        <section class="platform-highlights" data-aos="fade-up" data-aos-delay="100">
+            <h3>Platform Features: A Detailed Look</h3>
             
-            <!-- Core Intelligence -->
-            <div class="mb-16">
-                <h3 class="font-display text-3xl text-center mb-8 border-b-2 border-accent-primary pb-2">Core Intelligence: AGI & AI</h3>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="feature-card">
-                        <h4 class="font-display text-xl text-accent-primary mb-2">AGI Core</h4>
-                        <p class="text-text-secondary">The central nervous system, orchestrating agents and making high-level strategic decisions based on a unified understanding of the market.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4 class="font-display text-xl text-accent-primary mb-2">Emotional Intelligence</h4>
-                        <p class="text-text-secondary">Features a unique `Empathy Engine` and `Unified Consciousness` module, allowing the primary agent (PRIV) to interpret market fear, greed, and hype for unparalleled intuitive insight.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4 class="font-display text-xl text-accent-primary mb-2">Neurosymbolic Engine</h4>
-                        <p class="text-text-secondary">Combines the pattern-recognition power of neural networks with the logical reasoning of symbolic AI, enabling a deeper, more contextual understanding of market dynamics.</p>
-                    </div>
+            <div class="mb-12">
+                <h4 class="font-display text-2xl text-center mb-6">Core Intelligence: AGI & AI</h4>
+                <div class="feature-grid">
+                    <div class="feature-card"><h4>AGI Core</h4><p>The central nervous system, orchestrating agents and making high-level strategic decisions based on a unified understanding of the market.</p></div>
+                    <div class="feature-card"><h4>Emotional Intelligence</h4><p>Features a unique `Empathy Engine` and `Unified Consciousness` module, allowing the primary agent (PRIV) to interpret market fear, greed, and hype for unparalleled intuitive insight.</p></div>
+                    <div class="feature-card"><h4>Neurosymbolic Engine</h4><p>Combines the pattern-recognition power of neural networks with the logical reasoning of symbolic AI for a deeper, more contextual understanding of market dynamics.</p></div>
                 </div>
             </div>
 
-            <!-- Multi-Agent System -->
-            <div class="mb-16">
-                <h3 class="font-display text-3xl text-center mb-8 border-b-2 border-accent-primary pb-2">The Multi-Agent System</h3>
-                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <div class="feature-card">
-                        <h4 class="font-display text-xl text-accent-primary mb-2">Specialized Agent Fleet</h4>
-                        <p class="text-text-secondary">An ecosystem of dozens of agents, each an expert in its domain: Quantitative, Technical, Fundamental, Economic, Political, Sentiment, Arbitrage, Risk, Compliance, and more.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4 class="font-display text-xl text-accent-primary mb-2">Arbitration & Escalation Engine</h4>
-                        <p class="text-text-secondary">When agents disagree, a sophisticated `Arbitration Engine` finds consensus. Critical issues are escalated to a simulated C-Suite of agents for executive-level decisions.</p>
-                    </div>
-                     <div class="feature-card">
-                        <h4 class="font-display text-xl text-accent-primary mb-2">Decentralized Trust</h4>
-                        <p class="text-text-secondary">An immutable `Agent Reputation Ledger` tracks the performance and reliability of each agent, ensuring that the system learns to trust its most successful components over time.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4 class="font-display text-xl text-accent-primary mb-2">Corporate Memory Graph</h4>
-                        <p class="text-text-secondary">All agent interactions, decisions, and market outcomes are stored in a vast knowledge graph, creating an ever-expanding "corporate memory" for continuous learning.</p>
-                    </div>
+            <div class="mb-12">
+                <h4 class="font-display text-2xl text-center mb-6">The Multi-Agent System</h4>
+                <div class="feature-grid">
+                    <div class="feature-card"><h4>Specialized Agent Fleet</h4><p>An ecosystem of dozens of agents, each an expert in its domain: Quantitative, Technical, Fundamental, Economic, Political, Sentiment, Arbitrage, Risk, and Compliance.</p></div>
+                    <div class="feature-card"><h4>Arbitration & Escalation Engine</h4><p>When agents disagree, a sophisticated `Arbitration Engine` finds consensus. Critical issues are escalated to a simulated C-Suite of agents for executive-level decisions.</p></div>
+                    <div class="feature-card"><h4>Decentralized Trust</h4><p>An immutable `Agent Reputation Ledger` tracks the performance and reliability of each agent, ensuring the system learns to trust its most successful components over time.</p></div>
+                    <div class="feature-card"><h4>Corporate Memory Graph</h4><p>All agent interactions, decisions, and outcomes are stored in a vast knowledge graph, creating an ever-expanding "corporate memory" for continuous learning.</p></div>
                 </div>
             </div>
 
-             <!-- Data & Analysis -->
-            <div class="mb-16">
-                <h3 class="font-display text-3xl text-center mb-8 border-b-2 border-accent-primary pb-2">Data Ingestion & Advanced Analysis</h3>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="feature-card">
-                        <h4 class="font-display text-xl text-accent-primary mb-2">Multi-Source Data Ingestion</h4>
-                        <p class="text-text-secondary">A powerful framework that sources data from global news APIs, RSS feeds, social media, economic calendars, and direct market data streams via WebSocket.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4 class="font-display text-xl text-accent-primary mb-2">Alternative Data Integration</h4>
-                        <p class="text-text-secondary">Unlocks unique alpha by integrating non-traditional data via the `IoT Sensory Ingestor`, providing insights that are invisible to the rest of the market.</p>
-                    </div>
-                     <div class="feature-card">
-                        <h4 class="font-display text-xl text-accent-primary mb-2">Polyglot Computing Engine</h4>
-                        <p class="text-text-secondary">Leverages the best of multiple programming languages, with dedicated microservices in C++, Rust, Go, Java, and Julia for high-performance computing, security, and specialized statistical analysis.</p>
-                    </div>
+            <div class="mb-12">
+                <h4 class="font-display text-2xl text-center mb-6">Data Ingestion & Advanced Analysis</h4>
+                <div class="feature-grid">
+                    <div class="feature-card"><h4>Multi-Source Data Ingestion</h4><p>Sources data from global news APIs, RSS feeds, social media, economic calendars, and direct market data streams via WebSocket.</p></div>
+                    <div class="feature-card"><h4>Alternative Data Integration</h4><p>Unlocks unique alpha by integrating non-traditional data via the `IoT Sensory Ingestor`, providing insights invisible to the rest of the market.</p></div>
+                    <div class="feature-card"><h4>Polyglot Computing Engine</h4><p>Leverages dedicated microservices in C++, Rust, Go, Java, and Julia for high-performance computing, security, and specialized statistical analysis.</p></div>
+                </div>
+            </div>
+
+             <div class="mb-12">
+                <h4 class="font-display text-2xl text-center mb-6">Governance & Security</h4>
+                <div class="feature-grid">
+                    <div class="feature-card"><h4>Zero-Knowledge Proofs</h4><p>Utilizes a Rust-based ZKP verifier to cryptographically prove the integrity of actions without revealing proprietary logic—a new frontier in algorithmic transparency.</p></div>
+                    <div class="feature-card"><h4>Ethical & Regulatory Framework</h4><p>An integrated `Ethical Framework` and `Regulatory Compliance` engine ensures all actions align with pre-defined ethical principles and global financial regulations.</p></div>
+                    <div class="feature-card"><h4>Post-Quantum Cryptography</h4><p>Secures sensitive data with PQC, ensuring the system is protected against future threats from quantum computing.</p></div>
                 </div>
             </div>
             
-            <!-- Governance & Security -->
-            <div class="mb-16">
-                <h3 class="font-display text-3xl text-center mb-8 border-b-2 border-accent-primary pb-2">Governance & Security</h3>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="feature-card">
-                        <h4 class="font-display text-xl text-accent-primary mb-2">Zero-Knowledge Proofs</h4>
-                        <p class="text-text-secondary">Utilizes a Rust-based ZKP verifier to cryptographically prove the integrity of actions and data without revealing the underlying proprietary logic—a new frontier in algorithmic transparency.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4 class="font-display text-xl text-accent-primary mb-2">Ethical & Regulatory Framework</h4>
-                        <p class="text-text-secondary">An integrated `Ethical Framework` and `Regulatory Compliance` engine ensures all actions align with pre-defined ethical principles and global financial regulations.</p>
-                    </div>
-                     <div class="feature-card">
-                        <h4 class="font-display text-xl text-accent-primary mb-2">Post-Quantum Cryptography</h4>
-                        <p class="text-text-secondary">Secures sensitive communications and data with PQC (Post-Quantum Cryptography), ensuring the system is protected against future threats from quantum computing.</p>
-                    </div>
+            <div class="mb-12">
+                <h4 class="font-display text-2xl text-center mb-6">Automation & Autonomy</h4>
+                <div class="feature-grid">
+                    <div class="feature-card"><h4>Full Financial Automation</h4><p>Automates complex financial operations from accounts payable to FP&A, including automated SARS tax reporting for South African compliance.</p></div>
+                    <div class="feature-card"><h4>Autonomous Self-Healing</h4><p>A dedicated `self_update` module allows the PRIV Core to autonomously deploy updates and fix issues, ensuring constant operational readiness.</p></div>
+                    <div class="feature-card"><h4>Customer Support AI</h4><p>An integrated support AI handles user queries, provides strategic advice, and synthesizes market insights for an intelligent user experience.</p></div>
                 </div>
             </div>
 
-            <!-- Automation & Autonomy -->
-            <div class="mb-16">
-                <h3 class="font-display text-3xl text-center mb-8 border-b-2 border-accent-primary pb-2">Automation & Autonomy</h3>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="feature-card">
-                        <h4 class="font-display text-xl text-accent-primary mb-2">Full Financial Automation</h4>
-                        <p class="text-text-secondary">Automates complex financial operations from accounts payable and expense management to FP&A, including automated SARS tax reporting for South African compliance.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4 class="font-display text-xl text-accent-primary mb-2">Autonomous Self-Healing</h4>
-                        <p class="text-text-secondary">A dedicated `self_update` module and system watchdog allows the PRIV Core to autonomously deploy updates, fix issues, and maintain peak operational performance without human intervention.</p>
-                    </div>
-                     <div class="feature-card">
-                        <h4 class="font-display text-xl text-accent-primary mb-2">Customer Support AI</h4>
-                        <p class="text-text-secondary">An integrated support AI handles user queries, provides strategic advice, and synthesizes market insights, offering a fully interactive and intelligent user experience.</p>
-                    </div>
-                </div>
+            <div class="platform-actions">
+                <a class="cta" href="#">Request Platform Access</a>
+                <a class="cta" href="#">View Technical Whitepaper</a>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Live Demo Section -->
-    <section id="demo" class="py-20">
-        <div class="container mx-auto px-8">
-            <h2 class="font-display text-4xl text-center mb-12">Experience the Live Demo</h2>
-            <p class="text-center text-text-secondary mb-12 max-w-2xl mx-auto">Interact with a live, fully-featured demo of the PRIV Core application. The data is simulated, but the application is real. See how it looks and feels across different devices.</p>
-
-            <div class="flex flex-wrap justify-center items-center gap-12">
-                <!-- Phone -->
+        <section class="how-it-works" data-aos="fade-up" data-aos-delay="200">
+            <h3>How It Works: Our Intelligent Workflow</h3>
+            <div class="workflow-steps">
+                <div class="step-card"><div class="step-number">1</div><h4>AI-Powered Data Ingestion & Analysis</h4><p>Our deep-learning algorithms process vast financial and alternative datasets in real-time, identifying complex patterns and anomalies.</p></div>
+                <div class="step-card"><div class="step-number">2</div><h4>Predictive Signal Generation</h4><p>Advanced AI generates high-confidence trading signals and actionable market intelligence for optimized decision-making.</p></div>
+                <div class="step-card"><div class="step-number">3</div><h4>Automated & Compliant Execution</h4><p>Algorithms execute trades with precision and speed, all while maintaining strict adherence to global regulatory frameworks.</p></div>
+                <div class="step-card"><div class="step-number">4</div><h4>Continuous Learning & Adaptation</h4><p>The system continuously refines its models based on real-time market feedback, ensuring adaptive intelligence and sustained performance.</p></div>
+            </div>
+        </section>
+        
+        <section class="live-demo" id="demo" data-aos="fade-up">
+             <h3 class="font-display text-2xl text-center mb-12">Experience the Live Platform</h3>
+             <div class="flex flex-wrap justify-center items-center gap-12">
                 <div class="flex flex-col items-center">
-                    <h3 class="font-display text-2xl mb-4">Mobile</h3>
-                    <div class="device-mockup phone">
-                        <iframe src="./mpeti-core-demo"></iframe>
-                    </div>
+                    <h4 class="text-xl mb-4">Mobile</h4>
+                    <div class="device-mockup phone"><iframe src="./mpeti-core-demo"></iframe></div>
                 </div>
-
-                <!-- Tablet -->
                 <div class="hidden lg:flex flex-col items-center">
-                     <h3 class="font-display text-2xl mb-4">Tablet</h3>
-                    <div class="device-mockup tablet">
-                         <iframe src="./mpeti-core-demo"></iframe>
-                    </div>
+                     <h4 class="text-xl mb-4">Tablet</h4>
+                    <div class="device-mockup tablet"><iframe src="./mpeti-core-demo"></iframe></div>
                 </div>
             </div>
-            
-            <!-- Laptop -->
             <div class="flex flex-col items-center mt-16">
-                 <h3 class="font-display text-2xl mb-4">Desktop</h3>
+                 <h4 class="text-xl mb-4">Desktop</h4>
                 <div class="device-mockup laptop">
                     <div class="laptop-top">
                         <div class="laptop-camera"></div>
-                        <iframe src="./mpeti-core-demo" class="w-full h-[720px]"></iframe>
+                        <iframe src="./priv-core-demo" class="w-full h-[720px]"></iframe>
                     </div>
-                   
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Footer -->
-    <footer class="py-8 px-8 text-center border-t border-border-color text-text-secondary">
-        <p>&copy; 2025 Sans Mercantile. All rights reserved.</p>
-    </footer>
+    </main>
 
+    <!-- Footer will be loaded here -->
+    <div id="footer-placeholder"></div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/main.js"></script> <!-- Assumes main.js initializes AOS -->
 </body>
 </html>
 
