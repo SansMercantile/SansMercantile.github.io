@@ -1,3 +1,4 @@
+[Immersive content redacted for brevity.]
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,24 +56,14 @@
         .platform-actions { text-align: center; margin-top: 3rem; }
         
         /* Feature Hero Section */
-        .feature-hero {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 4rem;
-            align-items: center;
-            padding: 6rem 4rem;
-            text-align: left;
-            min-height: 90vh;
-        }
-        .feature-hero:nth-child(odd) {
-            background-color: var(--color-black-cherry);
-        }
+        .feature-hero { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 4rem; align-items: center; padding: 6rem 4rem; text-align: left; min-height: 90vh; }
+        .feature-hero:nth-child(odd) { background-color: var(--color-black-cherry); }
         .feature-hero .content { max-width: 600px; }
         .feature-hero:nth-child(even) .content { order: 2; }
         .feature-hero h3 { font-size: 3rem; color: var(--color-accent-primary); margin-bottom: 1.5rem; }
         .feature-hero p.intro { margin: 0 0 2rem 0; max-width: 100%; font-size: 1.2rem; }
         .feature-hero ul { list-style: none; padding: 0; }
-         .feature-hero li { position: relative; padding-left: 2rem; margin-bottom: 1rem; color: var(--color-text-secondary); }
+        .feature-hero li { position: relative; padding-left: 2rem; margin-bottom: 1rem; color: var(--color-text-secondary); }
         .feature-hero li::before { content: '✓'; position: absolute; left: 0; color: var(--color-accent-primary); font-weight: bold; }
         .feature-hero .visual { display: flex; align-items: center; justify-content: center; }
         .feature-hero .visual img { max-width: 100%; border-radius: 1rem; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
@@ -82,6 +73,14 @@
         .feature-card h4 { font-size: 1.25rem; font-weight: bold; color: var(--color-accent-primary); margin-bottom: 0.5rem; }
         .feature-card p { color: var(--color-text-secondary); font-size: 1rem; margin: 0; line-height: 1.6;}
 
+        /* --- NEW STYLES FOR DEMO TOGGLE --- */
+        .device-toggles { display: flex; justify-content: center; gap: 1rem; margin-bottom: 3rem; }
+        .toggle-btn { background-color: var(--color-crimson-noir); color: var(--color-text-secondary); border: 1px solid var(--color-border-color); padding: 0.75rem 1.5rem; border-radius: 50px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; }
+        .toggle-btn:hover { background-color: var(--color-dark-scarlet); color: var(--color-white); }
+        .toggle-btn.active { background-color: var(--color-accent-primary); color: var(--color-white); border-color: var(--color-accent-primary); box-shadow: 0 0 15px rgba(252, 118, 66, 0.4); }
+        .mockup-container { display: flex; justify-content: center; align-items: center; min-height: 850px; }
+        .device-wrapper { display: none; flex-direction: column; align-items: center; }
+        .device-wrapper.active { display: flex; }
 
         /* Device Mockups */
         .device-mockup { border: 8px solid #333; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); background: #111; padding: 12px; transition: transform 0.3s ease; }
@@ -195,23 +194,27 @@
         </section>
 
         <section class="live-demo" id="demo" data-aos="fade-up">
-             <h3 class="font-display text-2xl text-center mb-12">Experience the Live Platform</h3>
-             <div class="flex flex-wrap justify-center items-center gap-12">
-                <div class="flex flex-col items-center">
-                    <h4 class="text-xl mb-4">Mobile</h4>
+            <h3 class="font-display text-2xl text-center mb-6">Experience the Live Platform</h3>
+            
+            <div class="device-toggles" id="device-toggles">
+                <button class="toggle-btn" data-device="mobile">Mobile</button>
+                <button class="toggle-btn active" data-device="tablet">Tablet</button>
+                <button class="toggle-btn" data-device="desktop">Desktop</button>
+            </div>
+
+            <div class="mockup-container">
+                <div id="demo-mobile" class="device-wrapper">
                     <div class="device-mockup phone"><iframe src="./priv-core-demo.html"></iframe></div>
                 </div>
-                <div class="hidden lg:flex flex-col items-center">
-                     <h4 class="text-xl mb-4">Tablet</h4>
+                <div id="demo-tablet" class="device-wrapper active">
                     <div class="device-mockup tablet"><iframe src="./priv-core-demo.html"></iframe></div>
                 </div>
-            </div>
-            <div class="flex flex-col items-center mt-16">
-                 <h4 class="text-xl mb-4">Desktop</h4>
-                <div class="device-mockup laptop">
-                    <div class="laptop-top">
-                        <div class="laptop-camera"></div>
-                        <iframe src="./priv-core-demo.html" class="w-full h-[720px]"></iframe>
+                <div id="demo-desktop" class="device-wrapper">
+                    <div class="device-mockup laptop">
+                        <div class="laptop-top">
+                            <div class="laptop-camera"></div>
+                            <iframe src="./priv-core-demo.html" class="w-full h-[720px]"></iframe>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -224,10 +227,38 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-      AOS.init({
-          duration: 1000,
-          once: true,
-      });
+        document.addEventListener('DOMContentLoaded', () => {
+            AOS.init({
+                duration: 1000,
+                once: true,
+            });
+
+            const toggleContainer = document.getElementById('device-toggles');
+            if (toggleContainer) {
+                const toggleButtons = toggleContainer.querySelectorAll('.toggle-btn');
+                const deviceWrappers = document.querySelectorAll('.device-wrapper');
+
+                toggleContainer.addEventListener('click', (e) => {
+                    const clickedButton = e.target.closest('.toggle-btn');
+                    if (!clickedButton) return;
+
+                    const deviceToShow = clickedButton.dataset.device;
+
+                    toggleButtons.forEach(btn => btn.classList.remove('active'));
+                    clickedButton.classList.add('active');
+
+                    deviceWrappers.forEach(wrapper => {
+                        if (wrapper.id === `demo-${deviceToShow}`) {
+                            wrapper.classList.add('active');
+                        } else {
+                            wrapper.classList.remove('active');
+                        }
+                    });
+                });
+            }
+        });
     </script>
 </body>
 </html>
+
+```
