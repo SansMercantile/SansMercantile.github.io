@@ -86,12 +86,10 @@ const mockApi = {
 // -- SVG ICONS & ASSETS -- //
 
 const Logo = () => (
-    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M50 0L100 28.87V86.6L50 115.47L0 86.6V28.87L50 0Z" fill="#1f0000"/>
-        <path d="M50 12L90 35.77V80.23L50 104L10 80.23V35.77L50 12Z" fill="#FC7642"/>
-        <path d="M50 24.5L80 42.6V71.4L50 89.5L20 71.4V42.6L50 24.5Z" fill="#f0f0f0"/>
-        <path d="M50 34L70 46V64L50 76L30 64V46L50 34Z" fill="#1f0000"/>
-    </svg>
+    <div class="logo">
+        <span class="sans">Sans</span><span class="mercantile">Mercantile<sup>&trade;</sup></span>
+        <img id="icon-logo" src="logo.svg" alt="Logo Icon" onclick="toggleLogo()" style="display: none;">
+    </div>
 );
 
 const PrivAvatarSvg = () => (
