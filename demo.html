@@ -1,517 +1,532 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
-import { Home, Link2, Cpu, Shield, DollarSign, Zap, Settings, LogOut, Search, Bell, ChevronDown, ChevronUp, CheckCircle, XCircle, Clock, AlertTriangle, Info, PlusCircle, Trash2, Unlink, Link as LinkIcon, Server, Database, BrainCircuit, Bot, BarChart2, Send, FileText } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sans Mercantile - Demo</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-// -- MOCK API CLIENT -- //
-// This simulates the apiClient.js file, providing mock data with a delay.
+    <!-- React Libraries -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-const mockApi = {
-    getRealTimeData: () => new Promise(resolve => setTimeout(() => resolve({
-        pnl: 50123.45 + (Math.random() - 0.5) * 1000,
-        volume: 1234567 + Math.floor(Math.random() * 50000),
-        drawdown: 0.12 + (Math.random() - 0.5) * 0.01,
-        sharpe: 1.8 + (Math.random() - 0.5) * 0.1,
-        portfolioHistory: [
-            { name: 'Jan', value: 100000 }, { name: 'Feb', value: 105000 },
-            { name: 'Mar', value: 102000 }, { name: 'Apr', value: 110000 },
-            { name: 'May', value: 115000 }, { name: 'Jun', value: 122000 },
-            { name: 'Jul', value: 120000 }, { name: 'Aug', value: 128000 },
-            { name: 'Sep', value: 135000 }, { name: 'Oct', value: 130000 },
-            { name: 'Nov', value: 140000 }, { name: 'Dec', value: 150000 + (Math.random() * 5000) },
-        ],
-    }), 500)),
-    getAnalyticsData: () => new Promise(resolve => setTimeout(() => resolve({
-        strategyPerformance: [
-            { name: 'Momentum', pnl: 15000, winRate: 65 },
-            { name: 'Mean Reversion', pnl: 22000, winRate: 72 },
-            { name: 'Arbitrage', pnl: 8500, winRate: 85 },
-            { name: 'Sentiment', pnl: 4623, winRate: 58 },
-        ],
-        assetAllocation: [
-            { name: 'Equities', value: 40 }, { name: 'Forex', value: 30 },
-            { name: 'Crypto', value: 20 }, { name: 'Commodities', value: 10 },
-        ],
-    }), 800)),
-    getRiskData: () => new Promise(resolve => setTimeout(() => resolve({
-        var: 0.025,
-        esgScore: 85,
-        stressTests: [
-            { name: 'Market Crash (-20%)', loss: 18.5 },
-            { name: 'Interest Rate Hike', loss: 5.2 },
-            { name: 'Flash Crash', loss: 11.8 },
-            { name: 'Geopolitical Event', loss: 9.1 },
-        ]
-    }), 1000)),
-    getSystemIntegrityData: () => new Promise(resolve => setTimeout(() => resolve({
-        apiLatency: [
-            { name: 'Alpaca', latency: 80 + Math.random() * 20 },
-            { name: 'Binance', latency: 120 + Math.random() * 30 },
-            { name: 'MT5', latency: 50 + Math.random() * 10 },
-        ],
-        databaseHealth: { status: 'Optimal', queriesPerSecond: 1450 + Math.floor((Math.random() - 0.5) * 100), uptime: '99.99%' },
-        agentHealth: { active: 9, idle: 1, total: 10 }
-    }), 700)),
-    getFinancialsData: () => new Promise(resolve => setTimeout(() => resolve({
-        revenue: 1250000,
-        expenses: 450000,
-        netProfit: 800000,
-        taxLiability: 224000,
-        filingStatus: 'Pending Automated Submission',
-        quarterlyData: [
-            { name: 'Q1', revenue: 280000, expenses: 110000 },
-            { name: 'Q2', revenue: 310000, expenses: 120000 },
-            { name: 'Q3', revenue: 350000, expenses: 100000 },
-            { name: 'Q4', revenue: 310000, expenses: 120000 },
-        ]
-    }), 600)),
-    getTradeAlerts: () => new Promise(resolve => setTimeout(() => resolve([
-      { id: 1, type: 'info', message: 'Quantitative Agent identified a high-probability setup in EUR/USD.', time: '2m ago' },
-      { id: 2, type: 'success', message: 'Trade executed: BUY 1.5 lots of XAU/USD @ 2350.10', time: '5m ago' },
-      { id: 3, type: 'warning', message: 'High volatility expected for NASDAQ due to upcoming CPI data release.', time: '15m ago' },
-      { id: 4, type: 'error', message: 'Connection to Alpaca API timed out. Reconnecting...', time: '28m ago' },
-    ]), 300)),
-    getInsights: () => new Promise(resolve => setTimeout(() => resolve([
-        { id: 1, title: "Market Sentiment Shift", content: "AI sentiment analysis detects a shift towards risk-off sentiment in Asian markets." },
-        { id: 2, title: "Arbitrage Opportunity", content: "A minor price discrepancy has been detected for BTC between Binance and Coinbase Pro." },
-        { id: 3, title: "Technical Pattern Detected", content: "A bullish flag pattern has formed on the 4H chart for AAPL." },
-    ]), 400)),
-    getConnections: () => new Promise(resolve => setTimeout(() => resolve([
-        { id: 1, name: 'MetaTrader 5', type: 'mt5', status: 'Connected', account: '1002345' },
-        { id: 2, name: 'Alpaca', type: 'alpaca', status: 'Connected', account: 'AK34...B789' },
-        { id: 3, name: 'Binance', type: 'binance', status: 'Disconnected', account: 'BN...C45' },
-        { id: 4, name: 'Deriv', type: 'deriv', status: 'Connected', account: 'CR123456' },
-    ]), 200)),
-};
+    <!-- Additional Libraries: Recharts for charts, Lucide for icons -->
+    <script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.min.js"></script>
+    <script src="https://unpkg.com/lucide-react@0.379.0/dist/umd/lucide-react.js"></script>
 
-// -- SVG ICONS & ASSETS -- //
+</head>
+<body>
+    <div id="root"></div>
 
-const Logo = () => (
-    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M50 0L100 28.87V86.6L50 115.47L0 86.6V28.87L50 0Z" fill="#1f0000"/>
-        <path d="M50 12L90 35.77V80.23L50 104L10 80.23V35.77L50 12Z" fill="#FC7642"/>
-        <path d="M50 24.5L80 42.6V71.4L50 89.5L20 71.4V42.6L50 24.5Z" fill="#f0f0f0"/>
-        <path d="M50 34L70 46V64L50 76L30 64V46L50 34Z" fill="#1f0000"/>
-    </svg>
-);
-
-const PrivAvatarSvg = () => (
-    <svg width="100%" height="100%" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
-        <path d="M110.39 40.18c-5.9-10.22-14.4-18.72-24.62-24.62C75.55 9.66 63.18 6 50 6s-25.55 3.66-35.77 9.56c-10.22 5.9-18.72 14.4-24.62 24.62C3.66 50.4 0 62.82 0 76c0 13.18 3.66 25.55 9.56 35.77 5.9 10.22 14.4 18.72 24.62 24.62C44.4 122.34 56.82 126 70 126c26.51 0 48-21.49 48-48 0-10.1-3.14-19.3-8.61-26.82z" fill="#1f0000"/>
-        <path d="M107.5 78c0 20.71-16.79 37.5-37.5 37.5S32.5 98.71 32.5 78 49.29 40.5 70 40.5s37.5 16.79 37.5 37.5z" fill="#f0f0f0"/>
-        <circle cx="70" cy="78" r="24" fill="#FC7642"/>
-    </svg>
-);
-
-// -- UI HELPER COMPONENTS -- //
-
-const DashboardCard = ({ title, children, className = '' }) => (
-    <div className={`bg-card-bg p-6 rounded-xl shadow-lg ${className}`}>
-        <h3 className="text-xl font-semibold text-text-primary mb-4 font-display">{title}</h3>
-        {children}
-    </div>
-);
-
-const LoadingSpinner = () => (
-    <div className="flex justify-center items-center h-full">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-accent-primary"></div>
-    </div>
-);
-
-// -- RECREATED COMPONENTS -- //
-
-const Sidebar = ({ activeView, setActiveView }) => {
-    const navItems = [
-        { id: 'dashboard', label: 'Dashboard', icon: Home },
-        { id: 'analytics', label: 'Analytics', icon: BarChart2 },
-        { id: 'risk', label: 'Risk', icon: Shield },
-        { id: 'financials', label: 'Financials', icon: FileText },
-        { id: 'integrity', label: 'System Integrity', icon: Server },
-        { id: 'connections', label: 'Connections', icon: Link2 },
-    ];
-
-    return (
-        <div className="w-64 bg-sidebar-bg text-white flex flex-col h-screen fixed">
-            <div className="flex items-center justify-center p-4 border-b border-gray-700">
-                <Logo />
-                <h1 className="text-xl font-display ml-2">Sans Mercantile</h1>
-            </div>
-            <nav className="flex-1 p-4">
-                <ul>
-                    {navItems.map(item => (
-                        <li key={item.id}>
-                            <a href="#" onClick={(e) => { e.preventDefault(); setActiveView(item.id); }}
-                                className={`flex items-center p-3 my-1 rounded-lg transition-colors ${activeView === item.id ? 'bg-accent-primary text-white' : 'hover:bg-crimson-noir'}`}>
-                                <item.icon className="w-5 h-5 mr-3" />
-                                <span className="font-body">{item.label}</span>
-                            </a>
-                        </li>
-                    ))}
-                </ul>
-            </nav>
-        </div>
-    );
-};
-
-const Header = ({ title }) => (
-    <header className="flex items-center justify-between p-4 bg-card-bg border-b border-border-color">
-        <h1 className="text-2xl font-bold text-text-primary font-display">{title}</h1>
-        <div className="flex items-center space-x-4">
-            <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" size={20} />
-                <input type="text" placeholder="Search..." className="bg-input-bg border border-border-color rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-accent-primary" />
-            </div>
-            <Bell className="text-text-secondary hover:text-text-primary cursor-pointer" />
-            <div className="flex items-center space-x-2">
-                <img src="https://placehold.co/40x40/FC7642/1f0000?text=U" alt="User" className="w-10 h-10 rounded-full" />
-            </div>
-        </div>
-    </header>
-);
-
-const RealTimeDashboard = () => {
-    const [data, setData] = useState(null);
-
-    useEffect(() => {
-        const fetchData = () => {
-            mockApi.getRealTimeData().then(setData);
+    <script type="text/babel">
+        // Deconstruct libraries from window object
+        const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell } = window.Recharts;
+        
+        // -- MOCK API CLIENT -- //
+        const mockApi = {
+            getRealTimeData: () => new Promise(resolve => setTimeout(() => resolve({
+                pnl: 50123.45 + (Math.random() - 0.5) * 1000,
+                volume: 1234567 + Math.floor(Math.random() * 50000),
+                drawdown: 0.12 + (Math.random() - 0.5) * 0.01,
+                sharpe: 1.8 + (Math.random() - 0.5) * 0.1,
+                portfolioHistory: [
+                    { name: 'Jan', value: 100000 }, { name: 'Feb', value: 105000 },
+                    { name: 'Mar', value: 102000 }, { name: 'Apr', value: 110000 },
+                    { name: 'May', value: 115000 }, { name: 'Jun', value: 122000 },
+                    { name: 'Jul', value: 120000 }, { name: 'Aug', value: 128000 },
+                    { name: 'Sep', value: 135000 }, { name: 'Oct', value: 130000 },
+                    { name: 'Nov', value: 140000 }, { name: 'Dec', value: 150000 + (Math.random() * 5000) },
+                ],
+            }), 500)),
+            getAnalyticsData: () => new Promise(resolve => setTimeout(() => resolve({
+                strategyPerformance: [
+                    { name: 'Momentum', pnl: 15000, winRate: 65 },
+                    { name: 'Mean Reversion', pnl: 22000, winRate: 72 },
+                    { name: 'Arbitrage', pnl: 8500, winRate: 85 },
+                    { name: 'Sentiment', pnl: 4623, winRate: 58 },
+                ],
+                assetAllocation: [
+                    { name: 'Equities', value: 40 }, { name: 'Forex', value: 30 },
+                    { name: 'Crypto', value: 20 }, { name: 'Commodities', value: 10 },
+                ],
+            }), 800)),
+            getRiskData: () => new Promise(resolve => setTimeout(() => resolve({
+                var: 0.025,
+                esgScore: 85,
+                stressTests: [
+                    { name: 'Market Crash (-20%)', loss: 18.5 },
+                    { name: 'Interest Rate Hike', loss: 5.2 },
+                    { name: 'Flash Crash', loss: 11.8 },
+                    { name: 'Geopolitical Event', loss: 9.1 },
+                ]
+            }), 1000)),
+            getSystemIntegrityData: () => new Promise(resolve => setTimeout(() => resolve({
+                apiLatency: [
+                    { name: 'Alpaca', latency: 80 + Math.random() * 20 },
+                    { name: 'Binance', latency: 120 + Math.random() * 30 },
+                    { name: 'MT5', latency: 50 + Math.random() * 10 },
+                ],
+                databaseHealth: { status: 'Optimal', queriesPerSecond: 1450 + Math.floor((Math.random() - 0.5) * 100), uptime: '99.99%' },
+                agentHealth: { active: 9, idle: 1, total: 10 }
+            }), 700)),
+            getFinancialsData: () => new Promise(resolve => setTimeout(() => resolve({
+                revenue: 1250000,
+                expenses: 450000,
+                netProfit: 800000,
+                taxLiability: 224000,
+                filingStatus: 'Pending Automated Submission',
+                quarterlyData: [
+                    { name: 'Q1', revenue: 280000, expenses: 110000 },
+                    { name: 'Q2', revenue: 310000, expenses: 120000 },
+                    { name: 'Q3', revenue: 350000, expenses: 100000 },
+                    { name: 'Q4', revenue: 310000, expenses: 120000 },
+                ]
+            }), 600)),
+            getConnections: () => new Promise(resolve => setTimeout(() => resolve([
+                { id: 1, name: 'MetaTrader 5', type: 'mt5', status: 'Connected', account: '1002345' },
+                { id: 2, name: 'Alpaca', type: 'alpaca', status: 'Connected', account: 'AK34...B789' },
+                { id: 3, name: 'Binance', type: 'binance', status: 'Disconnected', account: 'BN...C45' },
+                { id: 4, name: 'Deriv', type: 'deriv', status: 'Connected', account: 'CR123456' },
+            ]), 200)),
         };
-        fetchData();
-        const interval = setInterval(fetchData, 1000); // Update every second
-        return () => clearInterval(interval);
-    }, []);
 
-    if (!data) return <DashboardCard title="Real-Time Dashboard"><LoadingSpinner /></DashboardCard>;
+        const { useState, useEffect, useRef } = React;
+        const { Home, Link2, Cpu, Shield, DollarSign, Zap, Settings, LogOut, Search, Bell, ChevronDown, ChevronUp, CheckCircle, XCircle, Clock, AlertTriangle, Info, PlusCircle, Trash2, Unlink, Link: LinkIcon, Server, Database, BrainCircuit, Bot, BarChart2, Send, FileText } = lucide;
 
-    return (
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <div className="lg:col-span-3 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div className="bg-card-bg p-4 rounded-xl shadow-md"><p className="text-sm text-text-secondary">Total P&L</p><p className="text-2xl font-bold text-text-primary">${data.pnl.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p><div className={`flex items-center text-sm ${data.pnl > 50123 ? 'text-accent-good' : 'text-accent-bad'}`}>{data.pnl > 50123 ? <ChevronUp size={16} /> : <ChevronDown size={16} />}<span>{((data.pnl / 50123.45 - 1) * 100).toFixed(2)}%</span></div></div>
-                    <div className="bg-card-bg p-4 rounded-xl shadow-md"><p className="text-sm text-text-secondary">24h Volume</p><p className="text-2xl font-bold text-text-primary">${Math.floor(data.volume).toLocaleString()}</p></div>
-                    <div className="bg-card-bg p-4 rounded-xl shadow-md"><p className="text-sm text-text-secondary">Max Drawdown</p><p className="text-2xl font-bold text-text-primary">{(data.drawdown * 100).toFixed(1)}%</p></div>
-                    <div className="bg-card-bg p-4 rounded-xl shadow-md"><p className="text-sm text-text-secondary">Sharpe Ratio</p><p className="text-2xl font-bold text-text-primary">{data.sharpe.toFixed(2)}</p></div>
-                </div>
-                <DashboardCard title="Portfolio Performance" className="h-96">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={data.portfolioHistory} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                            <defs><linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="var(--color-accent-primary)" stopOpacity={0.8}/><stop offset="95%" stopColor="var(--color-accent-primary)" stopOpacity={0}/></linearGradient></defs>
-                            <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-color)" />
-                            <XAxis dataKey="name" stroke="var(--color-text-secondary)" />
-                            <YAxis stroke="var(--color-text-secondary)" tickFormatter={(value) => `$${(value/1000)}k`} />
-                            <Tooltip contentStyle={{ backgroundColor: 'var(--color-card-bg)', border: '1px solid var(--color-border-color)' }} />
-                            <Area type="monotone" dataKey="value" stroke="var(--color-accent-primary)" fillOpacity={1} fill="url(#colorUv)" />
-                        </AreaChart>
-                    </ResponsiveContainer>
-                </DashboardCard>
+        // -- SVG ICONS & ASSETS -- //
+        const Logo = () => (
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 0L100 28.87V86.6L50 115.47L0 86.6V28.87L50 0Z" fill="#1f0000"/>
+                <path d="M50 12L90 35.77V80.23L50 104L10 80.23V35.77L50 12Z" fill="#FC7642"/>
+                <path d="M50 24.5L80 42.6V71.4L50 89.5L20 71.4V42.6L50 24.5Z" fill="#f0f0f0"/>
+                <path d="M50 34L70 46V64L50 76L30 64V46L50 34Z" fill="#1f0000"/>
+            </svg>
+        );
+
+        const PrivAvatarSvg = () => (
+            <svg width="100%" height="100%" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+                <path d="M110.39 40.18c-5.9-10.22-14.4-18.72-24.62-24.62C75.55 9.66 63.18 6 50 6s-25.55 3.66-35.77 9.56c-10.22 5.9-18.72 14.4-24.62 24.62C3.66 50.4 0 62.82 0 76c0 13.18 3.66 25.55 9.56 35.77 5.9 10.22 14.4 18.72 24.62 24.62C44.4 122.34 56.82 126 70 126c26.51 0 48-21.49 48-48 0-10.1-3.14-19.3-8.61-26.82z" fill="#1f0000"/>
+                <path d="M107.5 78c0 20.71-16.79 37.5-37.5 37.5S32.5 98.71 32.5 78 49.29 40.5 70 40.5s37.5 16.79 37.5 37.5z" fill="#f0f0f0"/>
+                <circle cx="70" cy="78" r="24" fill="#FC7642"/>
+            </svg>
+        );
+
+        // -- UI HELPER COMPONENTS -- //
+        const DashboardCard = ({ title, children, className = '' }) => (
+            <div className={`bg-card-bg p-6 rounded-xl shadow-lg ${className}`}>
+                <h3 className="text-xl font-semibold text-text-primary mb-4 font-display">{title}</h3>
+                {children}
             </div>
-            <div className="lg:col-span-1 space-y-6">
-                <EmotionReactor />
-                <SupportAssistant />
+        );
+
+        const LoadingSpinner = () => (
+            <div className="flex justify-center items-center h-full">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-accent-primary"></div>
             </div>
-        </div>
-    );
-};
+        );
 
-const AnalyticsDashboard = () => {
-    const [data, setData] = useState(null);
-    useEffect(() => { mockApi.getAnalyticsData().then(setData); }, []);
+        // -- RECREATED COMPONENTS -- //
+        const Sidebar = ({ activeView, setActiveView }) => {
+            const navItems = [
+                { id: 'dashboard', label: 'Dashboard', icon: Home },
+                { id: 'analytics', label: 'Analytics', icon: BarChart2 },
+                { id: 'risk', label: 'Risk', icon: Shield },
+                { id: 'financials', label: 'Financials', icon: FileText },
+                { id: 'integrity', label: 'System Integrity', icon: Server },
+                { id: 'connections', label: 'Connections', icon: Link2 },
+            ];
 
-    if (!data) return <DashboardCard title="Performance Analytics"><LoadingSpinner /></DashboardCard>;
-
-    return (
-        <div className="space-y-6">
-            <DashboardCard title="Strategy Performance">
-                 <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={data.strategyPerformance}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-color)" />
-                        <XAxis dataKey="name" stroke="var(--color-text-secondary)" />
-                        <YAxis yAxisId="left" orientation="left" stroke="var(--color-accent-primary)" label={{ value: 'P&L ($)', angle: -90, position: 'insideLeft' }} />
-                        <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" label={{ value: 'Win Rate (%)', angle: -90, position: 'insideRight' }} />
-                        <Tooltip contentStyle={{ backgroundColor: 'var(--color-card-bg)', border: '1px solid var(--color-border-color)' }} />
-                        <Legend />
-                        <Bar yAxisId="left" dataKey="pnl" fill="var(--color-accent-primary)" name="P&L" />
-                        <Bar yAxisId="right" dataKey="winRate" fill="#82ca9d" name="Win Rate" />
-                    </BarChart>
-                </ResponsiveContainer>
-            </DashboardCard>
-            <DashboardCard title="Asset Allocation">
-                 <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                        <Pie data={data.assetAllocation} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={120} label>
-                            {data.assetAllocation.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={['#FC7642', '#3d0917', '#490c09', '#A99EA0'][index % 4]} />
+            return (
+                <div className="w-64 bg-sidebar-bg text-white flex flex-col h-screen fixed">
+                    <div className="flex items-center justify-center p-4 border-b border-gray-700">
+                        <Logo />
+                        <h1 className="text-xl font-display ml-2">Sans Mercantile</h1>
+                    </div>
+                    <nav className="flex-1 p-4">
+                        <ul>
+                            {navItems.map(item => (
+                                <li key={item.id}>
+                                    <a href="#" onClick={(e) => { e.preventDefault(); setActiveView(item.id); }}
+                                        className={`flex items-center p-3 my-1 rounded-lg transition-colors ${activeView === item.id ? 'bg-accent-primary text-white' : 'hover:bg-crimson-noir'}`}>
+                                        <item.icon className="w-5 h-5 mr-3" />
+                                        <span className="font-body">{item.label}</span>
+                                    </a>
+                                </li>
                             ))}
-                        </Pie>
-                        <Tooltip contentStyle={{ backgroundColor: 'var(--color-card-bg)', border: '1px solid var(--color-border-color)' }} />
-                        <Legend />
-                    </PieChart>
-                </ResponsiveContainer>
-            </DashboardCard>
-        </div>
-    );
-};
-
-const RiskDashboard = () => {
-    const [data, setData] = useState(null);
-    useEffect(() => { mockApi.getRiskData().then(setData); }, []);
-
-    if (!data) return <DashboardCard title="Risk Analysis"><LoadingSpinner /></DashboardCard>;
-
-    return (
-        <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <DashboardCard title="Value at Risk (VaR)"><p className="text-4xl font-bold text-accent-bad">{(data.var * 100).toFixed(2)}%</p><p className="text-text-secondary text-sm">95% confidence, 1-day horizon</p></DashboardCard>
-                <DashboardCard title="ESG Score"><p className="text-4xl font-bold text-green-500">{data.esgScore} / 100</p><p className="text-text-secondary text-sm">Ethical, Social, & Governance</p></DashboardCard>
-                <DashboardCard title="Sentiment Fusion"><p className="text-4xl font-bold text-blue-500">78 (Bullish)</p><p className="text-text-secondary text-sm">Aggregated from news & social</p></DashboardCard>
-            </div>
-            <DashboardCard title="Stress Test Scenarios">
-                <ResponsiveContainer width="100%" height={350}>
-                    <BarChart data={data.stressTests} layout="vertical" margin={{ top: 5, right: 20, left: 100, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-color)" />
-                        <XAxis type="number" stroke="var(--color-text-secondary)" label={{ value: 'Portfolio Loss (%)', position: 'insideBottom', offset: -5 }} />
-                        <YAxis type="category" dataKey="name" stroke="var(--color-text-secondary)" width={150} />
-                        <Tooltip contentStyle={{ backgroundColor: 'var(--color-card-bg)', border: '1px solid var(--color-border-color)' }} />
-                        <Bar dataKey="loss" fill="var(--color-accent-bad)" />
-                    </BarChart>
-                </ResponsiveContainer>
-            </DashboardCard>
-        </div>
-    );
-};
-
-const SystemIntegrityDashboard = () => {
-    const [data, setData] = useState(null);
-    useEffect(() => {
-        const fetchData = () => mockApi.getSystemIntegrityData().then(setData);
-        fetchData();
-        const interval = setInterval(fetchData, 1000);
-        return () => clearInterval(interval);
-    }, []);
-
-    if (!data) return <DashboardCard title="System Integrity"><LoadingSpinner /></DashboardCard>;
-
-    return (
-        <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <DashboardCard title="Database Health"><p className={`text-2xl font-bold text-accent-good`}>{data.databaseHealth.status}</p><p className="text-text-secondary">{data.databaseHealth.queriesPerSecond} QPS</p><p className="text-text-secondary">{data.databaseHealth.uptime} Uptime</p></DashboardCard>
-                <DashboardCard title="Agent Fleet Status"><p className="text-2xl font-bold text-text-primary">{data.agentHealth.total} Agents Total</p><p className="text-accent-good">{data.agentHealth.active} Active</p><p className="text-yellow-500">{data.agentHealth.idle} Idle</p></DashboardCard>
-                <DashboardCard title="ZKP Proof Generation"><p className="text-2xl font-bold text-text-primary">~1.5s / batch</p><p className="text-text-secondary">Last proof generated 3m ago</p><p className="text-accent-good">All proofs valid</p></DashboardCard>
-            </div>
-            <DashboardCard title="API Latency (ms)">
-                <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={data.apiLatency}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-color)" />
-                        <XAxis dataKey="name" stroke="var(--color-text-secondary)" />
-                        <YAxis stroke="var(--color-text-secondary)" />
-                        <Tooltip contentStyle={{ backgroundColor: 'var(--color-card-bg)', border: '1px solid var(--color-border-color)' }} />
-                        <Legend />
-                        <Line type="monotone" dataKey="latency" stroke="var(--color-accent-primary)" strokeWidth={2} />
-                    </LineChart>
-                </ResponsiveContainer>
-            </DashboardCard>
-        </div>
-    );
-};
-
-const FinancialsPage = () => {
-    const [data, setData] = useState(null);
-    useEffect(() => { mockApi.getFinancialsData().then(setData); }, []);
-
-    if (!data) return <DashboardCard title="Financials & Tax Reporting"><LoadingSpinner /></DashboardCard>;
-
-    return (
-        <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <DashboardCard title="Gross Revenue (YTD)"><p className="text-4xl font-bold text-accent-good">${data.revenue.toLocaleString()}</p></DashboardCard>
-                <DashboardCard title="Net Profit (YTD)"><p className="text-4xl font-bold text-accent-good">${data.netProfit.toLocaleString()}</p></DashboardCard>
-                <DashboardCard title="Est. Tax Liability"><p className="text-4xl font-bold text-accent-bad">${data.taxLiability.toLocaleString()}</p></DashboardCard>
-            </div>
-            <DashboardCard title="Revenue vs. Expenses">
-                <ResponsiveContainer width="100%" height={350}>
-                    <BarChart data={data.quarterlyData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-color)" />
-                        <XAxis dataKey="name" stroke="var(--color-text-secondary)" />
-                        <YAxis stroke="var(--color-text-secondary)" tickFormatter={(value) => `$${(value/1000)}k`} />
-                        <Tooltip contentStyle={{ backgroundColor: 'var(--color-card-bg)', border: '1px solid var(--color-border-color)' }} />
-                        <Legend />
-                        <Bar dataKey="revenue" fill="var(--color-accent-good)" name="Revenue" />
-                        <Bar dataKey="expenses" fill="var(--color-accent-bad)" name="Expenses" />
-                    </BarChart>
-                </ResponsiveContainer>
-            </DashboardCard>
-             <DashboardCard title="Tax Reporting (SARS)">
-                <div className="space-y-2">
-                    <p className="text-text-secondary">Filing Status: <span className="font-semibold text-yellow-600">{data.filingStatus}</span></p>
-                    <p className="text-text-secondary">Next Due Date: <span className="font-semibold text-text-primary">2026-02-28</span></p>
-                    <button className="mt-4 bg-accent-primary text-white font-bold py-2 px-4 rounded-lg hover:opacity-90">Generate IT14SD Report</button>
+                        </ul>
+                    </nav>
                 </div>
+            );
+        };
+
+        const Header = ({ title }) => (
+            <header className="flex items-center justify-between p-4 bg-card-bg border-b border-border-color">
+                <h1 className="text-2xl font-bold text-text-primary font-display">{title}</h1>
+                <div className="flex items-center space-x-4">
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" size={20} />
+                        <input type="text" placeholder="Search..." className="bg-input-bg border border-border-color rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-accent-primary" />
+                    </div>
+                    <Bell className="text-text-secondary hover:text-text-primary cursor-pointer" />
+                    <div className="flex items-center space-x-2">
+                        <img src="https://placehold.co/40x40/FC7642/1f0000?text=U" alt="User" className="w-10 h-10 rounded-full" />
+                    </div>
+                </div>
+            </header>
+        );
+
+        const RealTimeDashboard = () => {
+            const [data, setData] = useState(null);
+
+            useEffect(() => {
+                const fetchData = () => {
+                    mockApi.getRealTimeData().then(setData);
+                };
+                fetchData();
+                const interval = setInterval(fetchData, 1000);
+                return () => clearInterval(interval);
+            }, []);
+
+            if (!data) return <DashboardCard title="Real-Time Dashboard"><LoadingSpinner /></DashboardCard>;
+
+            return (
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <div className="lg:col-span-3 space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div className="bg-card-bg p-4 rounded-xl shadow-md"><p className="text-sm text-text-secondary">Total P&L</p><p className="text-2xl font-bold text-text-primary">${data.pnl.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p><div className={`flex items-center text-sm ${data.pnl > 50123 ? 'text-accent-good' : 'text-accent-bad'}`}>{data.pnl > 50123 ? <ChevronUp size={16} /> : <ChevronDown size={16} />}<span>{((data.pnl / 50123.45 - 1) * 100).toFixed(2)}%</span></div></div>
+                            <div className="bg-card-bg p-4 rounded-xl shadow-md"><p className="text-sm text-text-secondary">24h Volume</p><p className="text-2xl font-bold text-text-primary">${Math.floor(data.volume).toLocaleString()}</p></div>
+                            <div className="bg-card-bg p-4 rounded-xl shadow-md"><p className="text-sm text-text-secondary">Max Drawdown</p><p className="text-2xl font-bold text-text-primary">{(data.drawdown * 100).toFixed(1)}%</p></div>
+                            <div className="bg-card-bg p-4 rounded-xl shadow-md"><p className="text-sm text-text-secondary">Sharpe Ratio</p><p className="text-2xl font-bold text-text-primary">{data.sharpe.toFixed(2)}</p></div>
+                        </div>
+                        <DashboardCard title="Portfolio Performance" className="h-96">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart data={data.portfolioHistory} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                                    <defs><linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="var(--color-accent-primary)" stopOpacity={0.8}/><stop offset="95%" stopColor="var(--color-accent-primary)" stopOpacity={0}/></linearGradient></defs>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-color)" />
+                                    <XAxis dataKey="name" stroke="var(--color-text-secondary)" />
+                                    <YAxis stroke="var(--color-text-secondary)" tickFormatter={(value) => `$${(value/1000)}k`} />
+                                    <Tooltip contentStyle={{ backgroundColor: 'var(--color-card-bg)', border: '1px solid var(--color-border-color)' }} />
+                                    <Area type="monotone" dataKey="value" stroke="var(--color-accent-primary)" fillOpacity={1} fill="url(#colorUv)" />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        </DashboardCard>
+                    </div>
+                    <div className="lg:col-span-1 space-y-6">
+                        <EmotionReactor />
+                        <SupportAssistant />
+                    </div>
+                </div>
+            );
+        };
+
+        const AnalyticsDashboard = () => {
+            const [data, setData] = useState(null);
+            useEffect(() => { mockApi.getAnalyticsData().then(setData); }, []);
+
+            if (!data) return <DashboardCard title="Performance Analytics"><LoadingSpinner /></DashboardCard>;
+
+            return (
+                <div className="space-y-6">
+                    <DashboardCard title="Strategy Performance">
+                         <ResponsiveContainer width="100%" height={300}>
+                            <BarChart data={data.strategyPerformance}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-color)" />
+                                <XAxis dataKey="name" stroke="var(--color-text-secondary)" />
+                                <YAxis yAxisId="left" orientation="left" stroke="var(--color-accent-primary)" label={{ value: 'P&L ($)', angle: -90, position: 'insideLeft' }} />
+                                <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" label={{ value: 'Win Rate (%)', angle: -90, position: 'insideRight' }} />
+                                <Tooltip contentStyle={{ backgroundColor: 'var(--color-card-bg)', border: '1px solid var(--color-border-color)' }} />
+                                <Legend />
+                                <Bar yAxisId="left" dataKey="pnl" fill="var(--color-accent-primary)" name="P&L" />
+                                <Bar yAxisId="right" dataKey="winRate" fill="#82ca9d" name="Win Rate" />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </DashboardCard>
+                    <DashboardCard title="Asset Allocation">
+                         <ResponsiveContainer width="100%" height={300}>
+                            <PieChart>
+                                <Pie data={data.assetAllocation} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={120} label>
+                                    {data.assetAllocation.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={['#FC7642', '#3d0917', '#490c09', '#A99EA0'][index % 4]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip contentStyle={{ backgroundColor: 'var(--color-card-bg)', border: '1px solid var(--color-border-color)' }} />
+                                <Legend />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </DashboardCard>
+                </div>
+            );
+        };
+
+        const RiskDashboard = () => {
+            const [data, setData] = useState(null);
+            useEffect(() => { mockApi.getRiskData().then(setData); }, []);
+
+            if (!data) return <DashboardCard title="Risk Analysis"><LoadingSpinner /></DashboardCard>;
+
+            return (
+                <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <DashboardCard title="Value at Risk (VaR)"><p className="text-4xl font-bold text-accent-bad">{(data.var * 100).toFixed(2)}%</p><p className="text-text-secondary text-sm">95% confidence, 1-day horizon</p></DashboardCard>
+                        <DashboardCard title="ESG Score"><p className="text-4xl font-bold text-green-500">{data.esgScore} / 100</p><p className="text-text-secondary text-sm">Ethical, Social, & Governance</p></DashboardCard>
+                        <DashboardCard title="Sentiment Fusion"><p className="text-4xl font-bold text-blue-500">78 (Bullish)</p><p className="text-text-secondary text-sm">Aggregated from news & social</p></DashboardCard>
+                    </div>
+                    <DashboardCard title="Stress Test Scenarios">
+                        <ResponsiveContainer width="100%" height={350}>
+                            <BarChart data={data.stressTests} layout="vertical" margin={{ top: 5, right: 20, left: 100, bottom: 5 }}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-color)" />
+                                <XAxis type="number" stroke="var(--color-text-secondary)" label={{ value: 'Portfolio Loss (%)', position: 'insideBottom', offset: -5 }} />
+                                <YAxis type="category" dataKey="name" stroke="var(--color-text-secondary)" width={150} />
+                                <Tooltip contentStyle={{ backgroundColor: 'var(--color-card-bg)', border: '1px solid var(--color-border-color)' }} />
+                                <Bar dataKey="loss" fill="var(--color-accent-bad)" />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </DashboardCard>
+                </div>
+            );
+        };
+
+        const SystemIntegrityDashboard = () => {
+            const [data, setData] = useState(null);
+            useEffect(() => {
+                const fetchData = () => mockApi.getSystemIntegrityData().then(setData);
+                fetchData();
+                const interval = setInterval(fetchData, 1000);
+                return () => clearInterval(interval);
+            }, []);
+
+            if (!data) return <DashboardCard title="System Integrity"><LoadingSpinner /></DashboardCard>;
+
+            return (
+                <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <DashboardCard title="Database Health"><p className={`text-2xl font-bold text-accent-good`}>{data.databaseHealth.status}</p><p className="text-text-secondary">{data.databaseHealth.queriesPerSecond} QPS</p><p className="text-text-secondary">{data.databaseHealth.uptime} Uptime</p></DashboardCard>
+                        <DashboardCard title="Agent Fleet Status"><p className="text-2xl font-bold text-text-primary">{data.agentHealth.total} Agents Total</p><p className="text-accent-good">{data.agentHealth.active} Active</p><p className="text-yellow-500">{data.agentHealth.idle} Idle</p></DashboardCard>
+                        <DashboardCard title="ZKP Proof Generation"><p className="text-2xl font-bold text-text-primary">~1.5s / batch</p><p className="text-text-secondary">Last proof generated 3m ago</p><p className="text-accent-good">All proofs valid</p></DashboardCard>
+                    </div>
+                    <DashboardCard title="API Latency (ms)">
+                        <ResponsiveContainer width="100%" height={300}>
+                            <LineChart data={data.apiLatency}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-color)" />
+                                <XAxis dataKey="name" stroke="var(--color-text-secondary)" />
+                                <YAxis stroke="var(--color-text-secondary)" />
+                                <Tooltip contentStyle={{ backgroundColor: 'var(--color-card-bg)', border: '1px solid var(--color-border-color)' }} />
+                                <Legend />
+                                <Line type="monotone" dataKey="latency" stroke="var(--color-accent-primary)" strokeWidth={2} />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </DashboardCard>
+                </div>
+            );
+        };
+
+        const FinancialsPage = () => {
+            const [data, setData] = useState(null);
+            useEffect(() => { mockApi.getFinancialsData().then(setData); }, []);
+
+            if (!data) return <DashboardCard title="Financials & Tax Reporting"><LoadingSpinner /></DashboardCard>;
+
+            return (
+                <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <DashboardCard title="Gross Revenue (YTD)"><p className="text-4xl font-bold text-accent-good">${data.revenue.toLocaleString()}</p></DashboardCard>
+                        <DashboardCard title="Net Profit (YTD)"><p className="text-4xl font-bold text-accent-good">${data.netProfit.toLocaleString()}</p></DashboardCard>
+                        <DashboardCard title="Est. Tax Liability"><p className="text-4xl font-bold text-accent-bad">${data.taxLiability.toLocaleString()}</p></DashboardCard>
+                    </div>
+                    <DashboardCard title="Revenue vs. Expenses">
+                        <ResponsiveContainer width="100%" height={350}>
+                            <BarChart data={data.quarterlyData}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-color)" />
+                                <XAxis dataKey="name" stroke="var(--color-text-secondary)" />
+                                <YAxis stroke="var(--color-text-secondary)" tickFormatter={(value) => `$${(value/1000)}k`} />
+                                <Tooltip contentStyle={{ backgroundColor: 'var(--color-card-bg)', border: '1px solid var(--color-border-color)' }} />
+                                <Legend />
+                                <Bar dataKey="revenue" fill="var(--color-accent-good)" name="Revenue" />
+                                <Bar dataKey="expenses" fill="var(--color-accent-bad)" name="Expenses" />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </DashboardCard>
+                     <DashboardCard title="Tax Reporting (SARS)">
+                        <div className="space-y-2">
+                            <p className="text-text-secondary">Filing Status: <span className="font-semibold text-yellow-600">{data.filingStatus}</span></p>
+                            <p className="text-text-secondary">Next Due Date: <span className="font-semibold text-text-primary">2026-02-28</span></p>
+                            <button className="mt-4 bg-accent-primary text-white font-bold py-2 px-4 rounded-lg hover:opacity-90">Generate IT14SD Report</button>
+                        </div>
+                    </DashboardCard>
+                </div>
+            );
+        };
+
+
+        const EmotionReactor = () => (
+            <DashboardCard title="PRIV Emotion State">
+                <div className="flex flex-col items-center"><div className="w-24 h-24 mb-4"><PrivAvatarSvg /></div><div className="text-center"><p className="font-bold text-lg text-text-primary">Calm & Focused</p><p className="text-sm text-text-secondary mt-1">"Market conditions are stable. Monitoring for emerging patterns. All systems nominal."</p></div><div className="w-full mt-4"><p className="text-xs text-text-secondary mb-1">Emotional Drivers</p><div className="space-y-1 text-xs"><div className="flex justify-between"><span>Market Volatility:</span> <span className="font-medium text-accent-good">Low</span></div><div className="flex justify-between"><span>P&L Velocity:</span> <span className="font-medium text-accent-good">Positive</span></div><div className="flex justify-between"><span>System Alerts:</span> <span className="font-medium text-accent-good">None</span></div></div></div></div>
             </DashboardCard>
-        </div>
-    );
-};
+        );
+
+        const SupportAssistant = () => {
+            const [messages, setMessages] = useState([
+                { sender: 'ai', text: 'Hello! I am PRIV, your personal trading assistant. How can I help you today?' }
+            ]);
+            const [inputValue, setInputValue] = useState('');
+            const chatEndRef = useRef(null);
+
+            useEffect(() => {
+                chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+            }, [messages]);
+
+            const handleSendMessage = (e) => {
+                e.preventDefault();
+                if (inputValue.trim() === '') return;
+
+                const newMessages = [...messages, { sender: 'user', text: inputValue }];
+                setMessages(newMessages);
+                setInputValue('');
+
+                setTimeout(() => {
+                    setMessages(prev => [...prev, { sender: 'ai', text: 'I am analyzing your request... This is a simulated response.' }]);
+                }, 1500);
+            };
+
+            return (
+                <DashboardCard title="Support Assistant" className="flex flex-col h-[400px]">
+                    <div className="flex-1 overflow-y-auto custom-scrollbar pr-2">
+                        {messages.map((msg, index) => (
+                            <div key={index} className={`flex mb-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                <div className={`p-3 rounded-lg max-w-[80%] ${msg.sender === 'user' ? 'bg-accent-primary text-white' : 'bg-input-bg text-text-primary'}`}>
+                                    <p className="text-sm">{msg.text}</p>
+                                </div>
+                            </div>
+                        ))}
+                        <div ref={chatEndRef} />
+                    </div>
+                    <form onSubmit={handleSendMessage} className="mt-4 flex items-center">
+                        <input
+                            type="text"
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            placeholder="Ask PRIV a question..."
+                            className="flex-1 bg-input-bg border border-border-color rounded-lg pl-4 pr-2 py-2 focus:outline-none focus:ring-2 focus:ring-accent-primary"
+                        />
+                        <button type="submit" className="ml-2 p-2 bg-accent-primary text-white rounded-full hover:opacity-90">
+                            <Send size={20} />
+                        </button>
+                    </form>
+                </DashboardCard>
+            );
+        };
 
 
-const EmotionReactor = () => (
-    <DashboardCard title="PRIV Emotion State">
-        <div className="flex flex-col items-center"><div className="w-24 h-24 mb-4"><PrivAvatarSvg /></div><div className="text-center"><p className="font-bold text-lg text-text-primary">Calm & Focused</p><p className="text-sm text-text-secondary mt-1">"Market conditions are stable. Monitoring for emerging patterns. All systems nominal."</p></div><div className="w-full mt-4"><p className="text-xs text-text-secondary mb-1">Emotional Drivers</p><div className="space-y-1 text-xs"><div className="flex justify-between"><span>Market Volatility:</span> <span className="font-medium text-accent-good">Low</span></div><div className="flex justify-between"><span>P&L Velocity:</span> <span className="font-medium text-accent-good">Positive</span></div><div className="flex justify-between"><span>System Alerts:</span> <span className="font-medium text-accent-good">None</span></div></div></div></div>
-    </DashboardCard>
-);
+        const ConnectionsView = () => {
+            const [connections, setConnections] = useState([]);
+            useEffect(() => { mockApi.getConnections().then(setConnections); }, []);
+            
+            const toggleConnection = (id) => {
+                setConnections(connections.map(c => c.id === id ? { ...c, status: c.status === 'Connected' ? 'Disconnected' : 'Connected' } : c));
+            };
 
-const SupportAssistant = () => {
-    const [messages, setMessages] = useState([
-        { sender: 'ai', text: 'Hello! I am PRIV, your personal trading assistant. How can I help you today?' }
-    ]);
-    const [inputValue, setInputValue] = useState('');
-    const chatEndRef = useRef(null);
+            if (connections.length === 0) return <DashboardCard title="Manage Broker & API Connections"><LoadingSpinner /></DashboardCard>;
 
-    useEffect(() => {
-        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+            return (
+                <DashboardCard title="Manage Broker & API Connections">
+                    <div className="space-y-4">{connections.map(conn => (<div key={conn.id} className="flex items-center justify-between p-4 rounded-lg bg-input-bg border border-border-color"><div className="flex items-center"><div className={`w-3 h-3 rounded-full mr-4 ${conn.status === 'Connected' ? 'bg-accent-good' : 'bg-accent-bad'}`}></div><div><p className="font-semibold text-text-primary">{conn.name}</p><p className="text-sm text-text-secondary">Account: {conn.account}</p></div></div><div className="flex items-center space-x-4"><span className={`text-sm font-medium ${conn.status === 'Connected' ? 'text-accent-good' : 'text-accent-bad'}`}>{conn.status}</span><button onClick={() => toggleConnection(conn.id)} className="p-2 rounded-md hover:bg-border-color">{conn.status === 'Connected' ? <Unlink size={20} className="text-accent-bad" /> : <LinkIcon size={20} className="text-accent-good" />}</button><button className="p-2 rounded-md hover:bg-border-color"><Trash2 size={20} className="text-text-secondary" /></button></div></div>))}</div>
+                    <button className="mt-6 flex items-center justify-center w-full bg-accent-primary text-white py-2 px-4 rounded-lg hover:opacity-90 transition-opacity"><PlusCircle size={20} className="mr-2" />Add New Connection</button>
+                </DashboardCard>
+            );
+        };
 
-    const handleSendMessage = (e) => {
-        e.preventDefault();
-        if (inputValue.trim() === '') return;
+        // -- MAIN APP & LAYOUT -- //
+        const App = () => {
+            const [activeView, setActiveView] = useState('dashboard');
 
-        const newMessages = [...messages, { sender: 'user', text: inputValue }];
-        setMessages(newMessages);
-        setInputValue('');
+            const renderActiveView = () => {
+                switch (activeView) {
+                    case 'dashboard': return <RealTimeDashboard />;
+                    case 'analytics': return <AnalyticsDashboard />;
+                    case 'risk': return <RiskDashboard />;
+                    case 'integrity': return <SystemIntegrityDashboard />;
+                    case 'connections': return <ConnectionsView />;
+                    case 'financials': return <FinancialsPage />;
+                    default: return <RealTimeDashboard />;
+                }
+            };
+            
+            const getTitle = () => {
+                const titles = {
+                    dashboard: 'Real-Time Dashboard',
+                    analytics: 'Performance Analytics',
+                    risk: 'Risk Analysis',
+                    integrity: 'System Integrity',
+                    connections: 'Broker Connections',
+                    financials: 'Financials & Tax Reporting',
+                };
+                return titles[activeView] || 'Dashboard';
+            };
 
-        setTimeout(() => {
-            setMessages(prev => [...prev, { sender: 'ai', text: 'I am analyzing your request... This is a simulated response.' }]);
-        }, 1500);
-    };
-
-    return (
-        <DashboardCard title="Support Assistant" className="flex flex-col h-[400px]">
-            <div className="flex-1 overflow-y-auto custom-scrollbar pr-2">
-                {messages.map((msg, index) => (
-                    <div key={index} className={`flex mb-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`p-3 rounded-lg max-w-[80%] ${msg.sender === 'user' ? 'bg-accent-primary text-white' : 'bg-input-bg text-text-primary'}`}>
-                            <p className="text-sm">{msg.text}</p>
+            return (
+                <React.Fragment>
+                    <style>{`
+                        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap');
+                        :root {
+                            --color-main-bg: #f0f0f0;
+                            --color-sidebar-bg: #1f0000;
+                            --color-card-bg: #ffffff;
+                            --color-input-bg: #f3f4f6;
+                            --color-border-color: #e5e7eb;
+                            --color-text-primary: #1f0000;
+                            --color-text-secondary: #555555;
+                            --color-icon-primary: #A99EA0;
+                            --color-accent-primary: #FC7642;
+                            --color-accent-good: #28A745;
+                            --color-accent-bad: #DC3545;
+                            --color-orange: #fc7642;
+                            --color-silver: #f0f0f0;
+                            --color-black-cherry: #3d0917;
+                            --color-burgundy-black: #1f0000;
+                            --color-crimson-noir: #490c09;
+                        }
+                        body {
+                            font-family: 'Inter', sans-serif;
+                            background-color: var(--color-main-bg);
+                            color: var(--color-text-primary);
+                        }
+                        .font-display { font-family: 'Playfair Display', serif; }
+                        .font-body { font-family: 'Inter', sans-serif; }
+                        .bg-sidebar-bg { background-color: var(--color-sidebar-bg); }
+                        .bg-card-bg { background-color: var(--color-card-bg); }
+                        .bg-input-bg { background-color: var(--color-input-bg); }
+                        .bg-accent-primary { background-color: var(--color-accent-primary); }
+                        .text-text-primary { color: var(--color-text-primary); }
+                        .text-text-secondary { color: var(--color-text-secondary); }
+                        .text-accent-good { color: var(--color-accent-good); }
+                        .text-accent-bad { color: var(--color-accent-bad); }
+                        .border-border-color { border-color: var(--color-border-color); }
+                        .hover\\:bg-crimson-noir:hover { background-color: var(--color-crimson-noir); }
+                        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+                        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
+                        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--color-crimson-noir); border-radius: 10px; }
+                    `}</style>
+                    <div className="flex bg-main-bg min-h-screen">
+                        <Sidebar activeView={activeView} setActiveView={setActiveView} />
+                        <div className="flex-1 ml-64 flex flex-col">
+                            <Header title={getTitle()} />
+                            <main className="flex-1 p-6 overflow-y-auto">
+                                {renderActiveView()}
+                            </main>
                         </div>
                     </div>
-                ))}
-                <div ref={chatEndRef} />
-            </div>
-            <form onSubmit={handleSendMessage} className="mt-4 flex items-center">
-                <input
-                    type="text"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    placeholder="Ask PRIV a question..."
-                    className="flex-1 bg-input-bg border border-border-color rounded-lg pl-4 pr-2 py-2 focus:outline-none focus:ring-2 focus:ring-accent-primary"
-                />
-                <button type="submit" className="ml-2 p-2 bg-accent-primary text-white rounded-full hover:opacity-90">
-                    <Send size={20} />
-                </button>
-            </form>
-        </DashboardCard>
-    );
-};
-
-
-const ConnectionsView = () => {
-    const [connections, setConnections] = useState([]);
-    useEffect(() => { mockApi.getConnections().then(setConnections); }, []);
-    
-    const toggleConnection = (id) => {
-        setConnections(connections.map(c => c.id === id ? { ...c, status: c.status === 'Connected' ? 'Disconnected' : 'Connected' } : c));
-    };
-
-    if (connections.length === 0) return <DashboardCard title="Manage Broker & API Connections"><LoadingSpinner /></DashboardCard>;
-
-    return (
-        <DashboardCard title="Manage Broker & API Connections">
-            <div className="space-y-4">{connections.map(conn => (<div key={conn.id} className="flex items-center justify-between p-4 rounded-lg bg-input-bg border border-border-color"><div className="flex items-center"><div className={`w-3 h-3 rounded-full mr-4 ${conn.status === 'Connected' ? 'bg-accent-good' : 'bg-accent-bad'}`}></div><div><p className="font-semibold text-text-primary">{conn.name}</p><p className="text-sm text-text-secondary">Account: {conn.account}</p></div></div><div className="flex items-center space-x-4"><span className={`text-sm font-medium ${conn.status === 'Connected' ? 'text-accent-good' : 'text-accent-bad'}`}>{conn.status}</span><button onClick={() => toggleConnection(conn.id)} className="p-2 rounded-md hover:bg-border-color">{conn.status === 'Connected' ? <Unlink size={20} className="text-accent-bad" /> : <LinkIcon size={20} className="text-accent-good" />}</button><button className="p-2 rounded-md hover:bg-border-color"><Trash2 size={20} className="text-text-secondary" /></button></div></div>))}</div>
-            <button className="mt-6 flex items-center justify-center w-full bg-accent-primary text-white py-2 px-4 rounded-lg hover:opacity-90 transition-opacity"><PlusCircle size={20} className="mr-2" />Add New Connection</button>
-        </DashboardCard>
-    );
-};
-
-// -- MAIN APP & LAYOUT -- //
-
-const App = () => {
-    const [activeView, setActiveView] = useState('dashboard');
-
-    const renderActiveView = () => {
-        switch (activeView) {
-            case 'dashboard': return <RealTimeDashboard />;
-            case 'analytics': return <AnalyticsDashboard />;
-            case 'risk': return <RiskDashboard />;
-            case 'integrity': return <SystemIntegrityDashboard />;
-            case 'connections': return <ConnectionsView />;
-            case 'financials': return <FinancialsPage />;
-            default: return <RealTimeDashboard />;
-        }
-    };
-    
-    const getTitle = () => {
-        const titles = {
-            dashboard: 'Real-Time Dashboard',
-            analytics: 'Performance Analytics',
-            risk: 'Risk Analysis',
-            integrity: 'System Integrity',
-            connections: 'Broker Connections',
-            financials: 'Financials & Tax Reporting',
+                </React.Fragment>
+            );
         };
-        return titles[activeView] || 'Dashboard';
-    };
 
-    return (
-        <>
-            <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap');
-                :root {
-                    --color-main-bg: #f0f0f0;
-                    --color-sidebar-bg: #1f0000;
-                    --color-card-bg: #ffffff;
-                    --color-input-bg: #f3f4f6;
-                    --color-border-color: #e5e7eb;
-                    --color-text-primary: #1f0000;
-                    --color-text-secondary: #555555;
-                    --color-icon-primary: #A99EA0;
-                    --color-accent-primary: #FC7642;
-                    --color-accent-good: #28A745;
-                    --color-accent-bad: #DC3545;
-                    --color-orange: #fc7642;
-                    --color-silver: #f0f0f0;
-                    --color-black-cherry: #3d0917;
-                    --color-burgundy-black: #1f0000;
-                    --color-crimson-noir: #490c09;
-                }
-                body {
-                    font-family: 'Inter', sans-serif;
-                    background-color: var(--color-main-bg);
-                    color: var(--color-text-primary);
-                }
-                .font-display { font-family: 'Playfair Display', serif; }
-                .font-body { font-family: 'Inter', sans-serif; }
-                .bg-sidebar-bg { background-color: var(--color-sidebar-bg); }
-                .bg-card-bg { background-color: var(--color-card-bg); }
-                .bg-input-bg { background-color: var(--color-input-bg); }
-                .bg-accent-primary { background-color: var(--color-accent-primary); }
-                .text-text-primary { color: var(--color-text-primary); }
-                .text-text-secondary { color: var(--color-text-secondary); }
-                .text-accent-good { color: var(--color-accent-good); }
-                .text-accent-bad { color: var(--color-accent-bad); }
-                .border-border-color { border-color: var(--color-border-color); }
-                .hover\\:bg-crimson-noir:hover { background-color: var(--color-crimson-noir); }
-                .custom-scrollbar::-webkit-scrollbar { width: 8px; }
-                .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--color-crimson-noir); border-radius: 10px; }
-            `}</style>
-            <div className="flex bg-main-bg min-h-screen">
-                <Sidebar activeView={activeView} setActiveView={setActiveView} />
-                <div className="flex-1 ml-64 flex flex-col">
-                    <Header title={getTitle()} />
-                    <main className="flex-1 p-6 overflow-y-auto">
-                        {renderActiveView()}
-                    </main>
-                </div>
-            </div>
-        </>
-    );
-};
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
 
-export default App;
-
+    </script>
+</body>
+</html>
