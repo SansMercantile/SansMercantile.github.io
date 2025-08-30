@@ -5,55 +5,72 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sans Mercantile™ | Platform</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css" /> <!-- Note: For preview, styles are included below. Link this to your actual CSS file. -->
     <meta name="description" content="Discover the Sans Mercantile™ Platform, a next-generation AI-driven execution engine with real-time compliance, predictive confidence scoring, and more." />
     <style>
-        /* Styles from previous version for preview purposes. Move to your style.css */
+        /* Variables */
         :root {
-            --color-main-bg: #110000;
-            --color-text-primary: #f0f0f0;
-            --color-text-secondary: #A99EA0;
-            --color-accent-primary: #FC7642;
-            --color-card-bg: #1f0000;
-            --color-border-color: #3d0917;
+            --color-black-cherry: #3d0917;
+            --color-burgundy-black: #1f0000;
+            --color-crimson-noir: #490c09;
+            --color-velvet-red-black: #310816;
+            --color-dark-scarlet: #781f25;
+            --color-orange: #fc7642;
+            --color-white: #fff;
+            --color-black: #000;
+            --color-silver: #f0f0f0;
+            --color-main-bg: #110000; /* Added for consistency */
+            --color-text-primary: #f0f0f0; /* Added for consistency */
+            --color-text-secondary: #A99EA0; /* Added for consistency */
+            --color-accent-primary: #FC7642; /* Added for consistency */
+            --color-card-bg: #1f0000; /* Added for consistency */
+            --color-border-color: #3d0917; /* Added for consistency */
         }
-        body {
-            background-color: var(--color-main-bg);
-            color: var(--color-text-primary);
-            font-family: 'Inter', sans-serif;
-        }
+
+        /* Global Styles */
+        *, html, body { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--color-burgundy-black); color: var(--color-white); overflow-x: hidden; font-family: 'Inter', sans-serif; }
+
+        /* Typography */
+        h1, h2, h3, h4 { color: var(--color-white); line-height: 1.2; }
+        h2 { font-size: 3rem; margin-bottom: 1.5rem; letter-spacing: -0.5px; }
+        h3 { font-size: 2.2rem; margin-bottom: 1.2rem; line-height: 1.3; letter-spacing: -0.2px; }
+        h4 { font-size: 1.5rem; margin-bottom: 0.8rem; line-height: 1.4; }
+        p { font-size: 1.1rem; line-height: 1.7; max-width: 800px; margin: 0 auto 1.5rem; color: rgba(255, 255, 255, 0.8); }
         .font-display { font-family: 'Playfair Display', serif; }
-        .gradient-text {
-            background: linear-gradient(90deg, var(--color-accent-primary), var(--color-text-primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .main-wrap { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+        /* Links & Buttons */
+        .cta { background-color: var(--color-crimson-noir); color: var(--color-white); font-weight: 700; border-radius: 8px; padding: 1rem 1.75rem; text-decoration: none; display: inline-block; transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); letter-spacing: 0.5px; }
+        .cta:hover { background-color: var(--color-dark-scarlet); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); }
+
+        /* Layout & Sections */
+        .main-wrap { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        section { padding: 5rem 2rem; text-align: center; position: relative; z-index: 1; }
         .platform-hero { text-align: center; padding: 4rem 0; }
         .platform-hero h2 { font-size: 3.5rem; font-weight: bold; font-family: 'Playfair Display', serif; margin-bottom: 1rem; }
         .platform-hero p { font-size: 1.25rem; color: var(--color-text-secondary); max-width: 800px; margin: 0 auto; }
-        
-        .platform-highlights, .how-it-works, .live-demo { padding: 4rem 0; }
         .platform-highlights h3, .how-it-works h3, .live-demo h3 { font-size: 2.5rem; text-align: center; font-family: 'Playfair Display', serif; margin-bottom: 3rem; }
+        .platform-highlights h4.font-display { font-size: 2xl; text-align: center; margin-bottom: 1.5rem; }
+        .platform-highlights, .how-it-works, .live-demo { padding: 4rem 0; }
         
+        /* Feature Grid */
         .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-        .feature-card { background-color: var(--color-card-bg); border: 1px solid var(--color-border-color); border-radius: 0.75rem; padding: 1.5rem; transition: all 0.3s ease; }
+        .feature-card { background-color: var(--color-card-bg); border: 1px solid var(--color-border-color); border-radius: 0.75rem; padding: 1.5rem; transition: all 0.3s ease; text-align: left;}
         .feature-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); border-color: var(--color-accent-primary); }
         .feature-card h4 { font-size: 1.25rem; font-weight: bold; color: var(--color-accent-primary); margin-bottom: 0.5rem; }
-        .feature-card p { color: var(--color-text-secondary); }
+        .feature-card p { color: var(--color-text-secondary); font-size: 1rem; margin: 0; line-height: 1.6;}
 
+        /* Workflow Steps */
         .workflow-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
         .step-card { text-align: center; }
         .step-number { width: 50px; height: 50px; border-radius: 50%; background-color: var(--color-accent-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; margin: 0 auto 1rem; }
-        .step-card h4 { font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem; }
+        .step-card h4 { font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem; color: var(--color-text-primary); }
         .step-card p { color: var(--color-text-secondary); }
-
-        .platform-actions { text-align: center; margin-top: 3rem; }
-        .cta { display: inline-block; background-color: var(--color-accent-primary); color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: bold; text-decoration: none; margin: 0 0.5rem; transition: opacity 0.3s; }
-        .cta:hover { opacity: 0.9; }
         
+        .platform-actions { text-align: center; margin-top: 3rem; }
+        
+        /* Device Mockups */
         .device-mockup { border: 8px solid #333; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); background: #111; padding: 12px; transition: transform 0.3s ease; }
         .device-mockup:hover { transform: translateY(-10px) scale(1.02); }
         .device-mockup iframe { width: 100%; height: 100%; border: none; background: #fff; border-radius: 16px; }
@@ -62,6 +79,7 @@
         .laptop { width: 1280px; height: 800px; border-radius: 16px; background: #222; padding: 20px; padding-top: 20px; }
         .laptop-top { background: #333; border-radius: 12px; position: relative; padding-top: 25px; }
         .laptop-camera { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 8px; height: 8px; background: #111; border-radius: 50%; }
+
     </style>
 </head>
 <body>
@@ -78,7 +96,7 @@
             <h3>Platform Features: A Detailed Look</h3>
             
             <div class="mb-12">
-                <h4 class="font-display text-2xl text-center mb-6">Core Intelligence: AGI & AI</h4>
+                <h4 class="font-display text-2xl text-center mb-6 text-orange-400">Core Intelligence: AGI & AI</h4>
                 <div class="feature-grid">
                     <div class="feature-card"><h4>AGI Core</h4><p>The central nervous system, orchestrating agents and making high-level strategic decisions based on a unified understanding of the market.</p></div>
                     <div class="feature-card"><h4>Emotional Intelligence</h4><p>Features a unique `Empathy Engine` and `Unified Consciousness` module, allowing the primary agent (PRIV) to interpret market fear, greed, and hype for unparalleled intuitive insight.</p></div>
@@ -87,7 +105,7 @@
             </div>
 
             <div class="mb-12">
-                <h4 class="font-display text-2xl text-center mb-6">The Multi-Agent System</h4>
+                <h4 class="font-display text-2xl text-center mb-6 text-orange-400">The Multi-Agent System</h4>
                 <div class="feature-grid">
                     <div class="feature-card"><h4>Specialized Agent Fleet</h4><p>An ecosystem of dozens of agents, each an expert in its domain: Quantitative, Technical, Fundamental, Economic, Political, Sentiment, Arbitrage, Risk, and Compliance.</p></div>
                     <div class="feature-card"><h4>Arbitration & Escalation Engine</h4><p>When agents disagree, a sophisticated `Arbitration Engine` finds consensus. Critical issues are escalated to a simulated C-Suite of agents for executive-level decisions.</p></div>
@@ -97,7 +115,7 @@
             </div>
 
             <div class="mb-12">
-                <h4 class="font-display text-2xl text-center mb-6">Data Ingestion & Advanced Analysis</h4>
+                <h4 class="font-display text-2xl text-center mb-6 text-orange-400">Data Ingestion & Advanced Analysis</h4>
                 <div class="feature-grid">
                     <div class="feature-card"><h4>Multi-Source Data Ingestion</h4><p>Sources data from global news APIs, RSS feeds, social media, economic calendars, and direct market data streams via WebSocket.</p></div>
                     <div class="feature-card"><h4>Alternative Data Integration</h4><p>Unlocks unique alpha by integrating non-traditional data via the `IoT Sensory Ingestor`, providing insights invisible to the rest of the market.</p></div>
@@ -106,7 +124,7 @@
             </div>
 
              <div class="mb-12">
-                <h4 class="font-display text-2xl text-center mb-6">Governance & Security</h4>
+                <h4 class="font-display text-2xl text-center mb-6 text-orange-400">Governance & Security</h4>
                 <div class="feature-grid">
                     <div class="feature-card"><h4>Zero-Knowledge Proofs</h4><p>Utilizes a Rust-based ZKP verifier to cryptographically prove the integrity of actions without revealing proprietary logic—a new frontier in algorithmic transparency.</p></div>
                     <div class="feature-card"><h4>Ethical & Regulatory Framework</h4><p>An integrated `Ethical Framework` and `Regulatory Compliance` engine ensures all actions align with pre-defined ethical principles and global financial regulations.</p></div>
@@ -115,7 +133,7 @@
             </div>
             
             <div class="mb-12">
-                <h4 class="font-display text-2xl text-center mb-6">Automation & Autonomy</h4>
+                <h4 class="font-display text-2xl text-center mb-6 text-orange-400">Automation & Autonomy</h4>
                 <div class="feature-grid">
                     <div class="feature-card"><h4>Full Financial Automation</h4><p>Automates complex financial operations from accounts payable to FP&A, including automated SARS tax reporting for South African compliance.</p></div>
                     <div class="feature-card"><h4>Autonomous Self-Healing</h4><p>A dedicated `self_update` module allows the PRIV Core to autonomously deploy updates and fix issues, ensuring constant operational readiness.</p></div>
@@ -156,7 +174,7 @@
                 <div class="device-mockup laptop">
                     <div class="laptop-top">
                         <div class="laptop-camera"></div>
-                        <iframe src="./priv-core-demo" class="w-full h-[720px]"></iframe>
+                        <iframe src="./mpeti-core-demo" class="w-full h-[720px]"></iframe>
                     </div>
                 </div>
             </div>
