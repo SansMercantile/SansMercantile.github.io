@@ -17,9 +17,17 @@ const hashtagMap = {
 function injectSEO(fileName, html) {
   const $ = cheerio.load(html);
 
+  // Remove existing SEO tags
+  $('meta[name="description"]').remove();
+  $('meta[name="keywords"]').remove();
+  $('link[rel="canonical"]').remove();
+  $('meta[property^="og:"]').remove();
+  $('meta[name^="twitter:"]').remove();
+
   const title = $('title').text().trim();
   const description = $('meta[name="description"]').attr('content') || 'Sans Mercantile™ blog post.';
-  const image = $('img').first().attr('src') || '/img/default.jpg';
+  const rawImage = $('img').first().attr('src') || '/img/default.jpg';
+  const imagePath = rawImage.startsWith('/') ? rawImage : '/' + rawImage.replace(/^\.\.\//, '');
   const canonical = `https://www.sansmercantile.com/blog/${fileName}`;
   const keywords = hashtagMap[fileName] || ['#Uncategorized'];
 
@@ -29,19 +37,21 @@ function injectSEO(fileName, html) {
     <meta property="og:type" content="article" />
     <meta property="og:title" content="${title}" />
     <meta property="og:description" content="${description}" />
-    <meta property="og:image" content="https://www.sansmercantile.com${image}" />
+    <meta property="og:image" content="https://www.sansmercantile.com${imagePath}" />
     <meta property="og:url" content="${canonical}" />
     <meta property="og:site_name" content="Sans Mercantile™" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${title}" />
     <meta name="twitter:description" content="${description}" />
-    <meta name="twitter:image" content="https://www.sansmercantile.com${image}" />
+    <meta name="twitter:image" content="https://www.sansmercantile.com${imagePath}" />
     <meta name="twitter:site" content="@SansMercantile" />
-    <meta name="keywords" content="${keywords.join(', ')}">
+    <meta name="keywords" content="${keywords.join(', ')}" />
   `;
 
   $('head').append(seoBlock);
-  return $.html();
+
+  // Use XML-style serialization to preserve self-closing slashes
+  return $.xml();
 }
 
 const blogFiles = fs.readdirSync(BLOG_DIR).filter(file => file.endsWith('.html'));
