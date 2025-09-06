@@ -498,6 +498,14 @@ nav a:hover {
   text-decoration: underline;
 }
 
+.insight-card img.insight-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  object-fit: cover;
+}
+
 .latest-insights .articles-grid {
   margin-bottom: 2.5rem; /* Creates space above the CTA */
 }
