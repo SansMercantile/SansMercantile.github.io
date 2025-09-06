@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentPage = window.location.pathname;
     const currentIndex = allPosts.indexOf(currentPage);
 
-    const prevButton = document.getElementById('prev-post-link');
-    const nextButton = document.getElementById('next-post-link');
+    const prevButton = document.getElementById('prevArticleBtn');
+    const nextButton = document.getElementById('nextArticleBtn');
 
     // Function to navigate to the next or previous post
     function navigateToPost(direction) {
