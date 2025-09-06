@@ -1,76 +1,68 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // A complete list of your blog posts in the desired order
-    const allPosts = [
-        '/blogs/redefining-risk.html',
-        '/blogs/blog-ai-revolution.html',
-        '/blogs/blog-human-edge.html',
-        '/blogs/blog-compliance-framework.html'
-    ];
-
+    // ✅ Dynamically load blog post list from localStorage
+    const allPosts = JSON.parse(localStorage.getItem('sansBlogPosts') || '[]');
     const currentPage = window.location.pathname;
     const currentIndex = allPosts.indexOf(currentPage);
 
     const prevButton = document.getElementById('prevArticleBtn');
     const nextButton = document.getElementById('nextArticleBtn');
 
-    // Function to navigate to the next or previous post
+    let hasNavigated = false;
+
     function navigateToPost(direction) {
-        if (currentIndex !== -1) {
-            const newIndex = currentIndex + direction;
-            if (newIndex >= 0 && newIndex < allPosts.length) {
-                window.location.href = allPosts[newIndex];
-            }
+        if (hasNavigated || currentIndex === -1) return;
+        const newIndex = currentIndex + direction;
+        if (newIndex >= 0 && newIndex < allPosts.length) {
+            hasNavigated = true;
+            window.location.href = allPosts[newIndex];
         }
     }
 
-    // --- 1. Button Navigation Logic ---
+    // --- Button Navigation Logic ---
     if (currentIndex !== -1) {
-        // Handle the "Previous Post" button
         if (prevButton) {
             if (currentIndex === 0) {
-                prevButton.style.display = 'none'; // Hide on the first post
+                prevButton.style.display = 'none';
             } else {
-                prevButton.href = allPosts[currentIndex - 1];
+                prevButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                prevButton.addEventListener('click', () => navigateToPost(-1));
             }
         }
-        // Handle the "Next Post" button
+
         if (nextButton) {
             if (currentIndex === allPosts.length - 1) {
-                nextButton.style.display = 'none'; // Hide on the last post
+                nextButton.style.display = 'none';
             } else {
-                nextButton.href = allPosts[currentIndex + 1];
+                nextButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                nextButton.addEventListener('click', () => navigateToPost(1));
             }
         }
     }
 
-
-    // --- 2. Mobile Swipe Navigation Logic ---
+    // --- Mobile Swipe Navigation Logic ---
     let touchstartX = 0;
     let touchendX = 0;
-    const swipeThreshold = 50; // Minimum distance (in pixels) to register as a swipe
+    const swipeThreshold = 50;
 
-    const articleBody = document.querySelector('.main-wrap') || document.body;  // The main content area to swipe on
+    const swipeTarget = document.querySelector('.main-wrap') || document.body;
 
-    if (articleBody) {
-        articleBody.addEventListener('touchstart', e => {
+    if (swipeTarget) {
+        swipeTarget.addEventListener('touchstart', e => {
             touchstartX = e.changedTouches[0].screenX;
         }, { passive: true });
 
-        articleBody.addEventListener('touchend', e => {
+        swipeTarget.addEventListener('touchend', e => {
             touchendX = e.changedTouches[0].screenX;
             handleSwipe();
         });
     }
 
     function handleSwipe() {
-        // Swipe Left (to go to the next post)
         if (touchendX < touchstartX - swipeThreshold) {
-            navigateToPost(1); // 1 for next
+            navigateToPost(1);
         }
-
-        // Swipe Right (to go to the previous post)
         if (touchendX > touchstartX + swipeThreshold) {
-            navigateToPost(-1); // -1 for previous
+            navigateToPost(-1);
         }
     }
 });
