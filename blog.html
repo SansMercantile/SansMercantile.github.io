@@ -18,7 +18,6 @@
     </section>
 
     <section class="blog-articles-grid" data-aos="fade-up" data-aos-delay="100">
-      <!-- ✅ Add class="blog-link" to each blog anchor tag -->
       <article class="blog-card" id="article1">
         <h3>Redefining Risk: Why Township Markets Deserve Better Infrastructure</h3>
         <p>A deep dive into how our AI engine mitigates structural volatility while unlocking scalable growth for communities long overlooked by traditional finance.</p>
@@ -63,18 +62,15 @@
   <script src="/js/main.js"></script>
   <script src="js/blog-navigation.js"></script>
 
-  <!-- ✅ NEW SCRIPT: Collect blog links and store in localStorage -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const blogLinks = Array.from(document.querySelectorAll('a.blog-link'))
         .map(link => {
           const href = link.getAttribute('href');
-          // Normalize relative paths to absolute
           return href.startsWith('/') ? href : '/' + href;
         })
         .filter(href => href.startsWith('/blogs/'));
 
-      // ✅ Store the list for use in blog-navigation.js
       localStorage.setItem('sansBlogPosts', JSON.stringify(blogLinks));
     });
   </script>
