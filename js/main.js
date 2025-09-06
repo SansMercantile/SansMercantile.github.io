@@ -179,23 +179,30 @@ document.addEventListener("DOMContentLoaded", function () {
     let interval;
 
     function renderCards(section, index = 0) {
-      const posts = sections[section];
-      const pair = posts.slice(index, index + 2);
-      insightGrid.classList.remove('fade-in');
-      insightGrid.classList.add('fade-out');
+  const posts = sections[section];
+  const pair = posts.slice(index, index + 2);
+  insightGrid.classList.remove('fade-in');
+  insightGrid.classList.add('fade-out');
 
-      setTimeout(() => {
-        insightGrid.innerHTML = pair.map(post => `
-          <article class="insight-card">
-            <h4>${post.title}</h4>
-            <p>${post.description}</p>
-            <a href="${post.link}">Read more</a>
-          </article>
-        `).join('');
-        insightGrid.classList.remove('fade-out');
-        insightGrid.classList.add('fade-in');
-      }, 300);
-    }
+  setTimeout(() => {
+    insightGrid.innerHTML = pair.map(post => `
+      <article class="insight-card">
+        <img 
+          src="${post.image || 'img/default.jpg'}" 
+          alt="${post.title}" 
+          class="insight-image" 
+          loading="lazy"
+        />
+        <h4>${post.title}</h4>
+        <p>${post.description}</p>
+        <a href="${post.link}">Read more</a>
+      </article>
+    `).join('');
+    insightGrid.classList.remove('fade-out');
+    insightGrid.classList.add('fade-in');
+  }, 300);
+}
+
 
     function startCarousel() {
       clearInterval(interval);
