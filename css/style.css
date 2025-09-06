@@ -500,10 +500,10 @@ nav a:hover {
 
 .insight-card img.insight-image {
   width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+  max-height: 150px;
   object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
   background-color: #f0f0f0;
 }
 
