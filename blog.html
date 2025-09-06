@@ -17,36 +17,13 @@
       <p>Dive into Sans Mercantile’s™ research, expert analysis, and thought leadership on AI-powered trading, compliance, and inclusive market development.</p>
     </section>
 
-    <section class="blog-articles-grid" data-aos="fade-up" data-aos-delay="100">
-
-      <article class="blog-card" id="article1">
-        <h3>Redefining Risk: Why Township Markets Deserve Better Infrastructure</h3>
-        <p>A deep dive into how our AI engine mitigates structural volatility while unlocking scalable growth for communities long overlooked by traditional finance.</p>
-        <a href="blogs/redefining-risk.html" class="blog-link">Read More &rarr;</a>
-      </article>
-
-      <article class="blog-card" id="article2">
-        <h3>Compliance Isn’t a Checkbox. It’s a Framework.</h3>
-        <p>Why built-in governance matters—and how Sans Mercantile™ approaches compliance as a trust-building opportunity, not a hurdle.</p>
-        <a href="blogs/blog-compliance-framework.html" class="blog-link">Read More &rarr;</a>
-      </article>
-
-      <article class="blog-card">
-        <h3>The AI Revolution in CFD Trading: Precision & Profitability</h3>
-        <p>Explore how deep-learning models are transforming CFD market analysis, delivering unmatched accuracy and automated execution.</p>
-        <a href="blogs/blog-ai-revolution.html" class="blog-link">Read More &rarr;</a>
-      </article>
-
-      <article class="blog-card">
-        <h3>Beyond Algorithms: The Human Edge in AI-Driven Finance</h3>
-        <p>Discover how Sans Mercantile™ fuses AI-driven intelligence with human expertise to maximize trading profits and ensure ethical AI adoption.</p>
-        <a href="blogs/blog-human-edge.html" class="blog-link">Read More &rarr;</a>
-      </article>
+    <section class="blog-articles-grid" id="blogGrid" data-aos="fade-up" data-aos-delay="100">
+      <!-- Blog cards will be injected here -->
     </section>
 
     <section class="blog-categories" data-aos="fade-up" data-aos-delay="200">
       <h3>Explore by Category</h3>
-      <div class="category-tags">
+      <div class="category-tags" id="tagBar">
         <a href="#" class="tag">#AITrading</a>
         <a href="#" class="tag">#FintechInnovation</a>
         <a href="#" class="tag">#RegulatoryCompliance</a>
@@ -54,6 +31,7 @@
         <a href="#" class="tag">#MarketIntelligence</a>
         <a href="#" class="tag">#Cybersecurity</a>
       </div>
+      <button id="seeMoreBtn" class="cta hidden">See More</button>
     </section>
   </main>
 
@@ -63,18 +41,89 @@
   <script src="/js/main.js"></script>
   <script src="js/blog-navigation.js"></script>
 
-
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const blogLinks = Array.from(document.querySelectorAll('a.blog-link'))
-        .map(link => {
-          const href = link.getAttribute('href');
+      AOS.init();
 
-          return href.startsWith('/') ? href : '/' + href;
-        })
-        .filter(href => href.startsWith('/blogs/'));
+      const blogGrid = document.getElementById('blogGrid');
+      const tagBar = document.getElementById('tagBar');
+      const seeMoreBtn = document.getElementById('seeMoreBtn');
 
+      const allPosts = [
+        {
+          title: "Redefining Risk",
+          description: "How our AI engine mitigates volatility in underserved markets.",
+          link: "blogs/redefining-risk.html",
+          tags: ["#EmergingMarkets", "#InclusiveFinance", "#AIInfrastructure", "#MarketResilience"]
+        },
+        {
+          title: "Compliance Isn’t a Checkbox",
+          description: "Governance as a trust-building framework.",
+          link: "blogs/blog-compliance-framework.html",
+          tags: ["#RegulatoryCompliance", "#GovernanceTech", "#TrustByDesign", "#FintechFrameworks"]
+        },
+        {
+          title: "AI Revolution in CFD Trading",
+          description: "Precision and profitability through deep learning.",
+          link: "blogs/blog-ai-revolution.html",
+          tags: ["#AITrading", "#CFDMarkets", "#MachineLearning", "#QuantFinance"]
+        },
+        {
+          title: "The Human Edge in AI Finance",
+          description: "Fusing human intuition with machine intelligence.",
+          link: "blogs/blog-human-edge.html",
+          tags: ["#EthicalAI", "#HumanCenteredTech", "#AILeadership", "#FintechInnovation"]
+        }
+      ];
 
+      let currentTag = null;
+
+      function renderPosts(posts) {
+        blogGrid.innerHTML = posts.map(post => `
+          <article class="blog-card" data-tags="${post.tags.join(',')}">
+            <h3>${post.title}</h3>
+            <p>${post.description}</p>
+            <a href="${post.link}" class="blog-link">Read More &rarr;</a>
+          </article>
+        `).join('');
+      }
+
+      function showRandomPosts() {
+        const shuffled = [...allPosts].sort(() => 0.5 - Math.random());
+        renderPosts(shuffled.slice(0, 4));
+        seeMoreBtn.classList.add('hidden');
+        currentTag = null;
+      }
+
+      function filterByTag(tag) {
+        currentTag = tag;
+        const filtered = allPosts.filter(post => post.tags.includes(tag));
+        renderPosts(filtered.slice(0, 2));
+        seeMoreBtn.classList.remove('hidden');
+      }
+
+      function showAllForTag() {
+        const filtered = allPosts.filter(post => post.tags.includes(currentTag));
+        renderPosts(filtered);
+        seeMoreBtn.classList.add('hidden');
+      }
+
+      tagBar.addEventListener('click', e => {
+        if (e.target.classList.contains('tag')) {
+          e.preventDefault();
+          filterByTag(e.target.textContent.trim());
+        }
+      });
+
+      seeMoreBtn.addEventListener('click', showAllForTag);
+
+      showRandomPosts();
+
+      setInterval(() => {
+        if (!currentTag) showRandomPosts();
+      }, 10000);
+
+      const blogLinks = allPosts.map(post => '/' + post.link);
       localStorage.setItem('sansBlogPosts', JSON.stringify(blogLinks));
     });
   </script>
