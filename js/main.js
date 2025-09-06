@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    // --- Latest Insights Carousel ---
+    // --- Homepage Carousel ---
     const insightGrid = document.getElementById('insight-carousel-grid');
     const toggleButtons = document.querySelectorAll('.insight-toggle button');
 
@@ -217,7 +217,61 @@ document.addEventListener("DOMContentLoaded", function () {
       renderCards(currentSection);
       startCarousel();
     }
-  };
+
+    // --- Blog Index Filtering ---
+    const blogGrid = document.getElementById('blogGrid');
+    const tagBar = document.getElementById('tagBar');
+    const seeMoreBtn = document.getElementById('seeMoreBtn');
+
+    if (blogGrid && tagBar) {
+      const allPosts = JSON.parse(localStorage.getItem('sansBlogPostsData') || '[]');
+      let currentTag = null;
+
+      function renderPosts(posts) {
+        blogGrid.innerHTML = posts.map(post => `
+          <article class="blog-card" data-tags="${post.tags.join(',')}">
+            <h3>${post.title}</h3>
+            <p>${post.description}</p>
+            <a href="${post.href}" class="blog-link">Read More &rarr;</a>
+          </article>
+        `).join('');
+      }
+
+      function showRandomPosts() {
+        const shuffled = [...allPosts].sort(() => 0.5 - Math.random());
+        renderPosts(shuffled.slice(0, 4));
+        seeMoreBtn.classList.add('hidden');
+        currentTag = null;
+      }
+
+      function filterByTag(tag) {
+        currentTag = tag;
+        const filtered = allPosts.filter(post => post.tags.includes(tag));
+        renderPosts(filtered.slice(0, 2));
+        seeMoreBtn.classList.remove('hidden');
+      }
+
+    function showAllForTag() {
+    const filtered = allPosts.filter(post => post.tags.includes(currentTag));
+    renderPosts(filtered);
+    seeMoreBtn.classList.add('hidden');
+  }
+
+  tagBar.addEventListener('click', e => {
+    if (e.target.classList.contains('tag')) {
+      e.preventDefault();
+      filterByTag(e.target.textContent.trim());
+    }
+  });
+
+  seeMoreBtn.addEventListener('click', showAllForTag);
+  showRandomPosts();
+
+  setInterval(() => {
+    if (!currentTag) showRandomPosts();
+  }, 10000);
+    } 
+  }; 
 
   loadAllComponents();
 });
