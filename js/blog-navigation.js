@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const allPosts = JSON.parse(localStorage.getItem('sansBlogPosts') || '[]');
+  const allPosts = JSON.parse(localStorage.getItem('sansBlogPostsData') || '[]');
   const currentPage = window.location.pathname;
-  const currentIndex = allPosts.indexOf(currentPage);
+  const currentIndex = allPosts.findIndex(post => post.href === currentPage);
 
   const prevButton = document.getElementById('prevArticleBtn');
   const nextButton = document.getElementById('nextArticleBtn');
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const newIndex = currentIndex + direction;
     if (newIndex >= 0 && newIndex < allPosts.length) {
       hasNavigated = true;
-      window.location.href = allPosts[newIndex];
+      window.location.href = allPosts[newIndex].href;
     }
   }
 
@@ -37,6 +37,23 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   }
+
+    // Keyboard Navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') {
+      navigateToPost(1);
+    }
+    if (e.key === 'ArrowLeft') {
+      navigateToPost(-1);
+    }
+  });
+
+    // Escape key to return to blog index
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      window.location.href = '/blog.html';
+    }
+  });
 
   // Swipe Navigation
   let touchstartX = 0;
