@@ -1,21 +1,61 @@
 const fs = require('fs');
 const path = require('path');
-const cheerio = require('cheerio'); // npm install cheerio
+const cheerio = require('cheerio');
 
 const BLOG_DIR = path.join(__dirname, 'blogs');
 const OUTPUT_FILE = path.join(__dirname, 'blog.html');
 
-const blogFiles = fs.readdirSync(BLOG_DIR).filter(file => file.endsWith('.html'));
+// Define hashtags per blog post filename
+const hashtagMap = {
+  'redefining-risk.html': ['#EmergingMarkets', '#InclusiveFinance', '#AIInfrastructure', '#MarketResilience'],
+  'blog-compliance-framework.html': ['#RegulatoryCompliance', '#GovernanceTech', '#TrustByDesign', '#FintechFrameworks'],
+  'blog-ai-revolution.html': ['#AITrading', '#CFDMarkets', '#MachineLearning', '#QuantFinance'],
+  'blog-human-edge.html': ['#EthicalAI', '#HumanCenteredTech', '#AILeadership', '#FintechInnovation']
+};
 
+// Inject SEO metadata into each blog post
+function injectSEO(fileName, html) {
+  const $ = cheerio.load(html);
+
+  const title = $('title').text().trim();
+  const description = $('meta[name="description"]').attr('content') || 'Sans Mercantile™ blog post.';
+  const image = $('img').first().attr('src') || '/img/default.jpg';
+  const canonical = `https://www.sansmercantile.com/blog/${fileName}`;
+  const keywords = hashtagMap[fileName] || ['#Uncategorized'];
+
+  const seoBlock = `
+    <meta name="description" content="${description}" />
+    <link rel="canonical" href="${canonical}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="${title}" />
+    <meta property="og:description" content="${description}" />
+    <meta property="og:image" content="https://www.sansmercantile.com${image}" />
+    <meta property="og:url" content="${canonical}" />
+    <meta property="og:site_name" content="Sans Mercantile™" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${title}" />
+    <meta name="twitter:description" content="${description}" />
+    <meta name="twitter:image" content="https://www.sansmercantile.com${image}" />
+    <meta name="twitter:site" content="@SansMercantile" />
+    <meta name="keywords" content="${keywords.join(', ')}">
+  `;
+
+  $('head').append(seoBlock);
+  return $.html();
+}
+
+const blogFiles = fs.readdirSync(BLOG_DIR).filter(file => file.endsWith('.html'));
 const categories = {};
 
 blogFiles.forEach(file => {
   const filePath = path.join(BLOG_DIR, file);
   const html = fs.readFileSync(filePath, 'utf8');
-  const $ = cheerio.load(html);
+  const updatedHtml = injectSEO(file, html);
+  fs.writeFileSync(filePath, updatedHtml, 'utf8');
 
-  const title = $('title').text().trim() || 'Untitled';
-  const description = $('meta[name="description"]').attr('content') || 'No description available.';
+  const $ = cheerio.load(updatedHtml);
+  const title = $('title').text().trim();
+  const description = $('meta[name="description"]').attr('content') || '';
   const keywords = $('meta[name="keywords"]').attr('content') || '';
   const href = `/blogs/${file}`;
 
@@ -40,7 +80,7 @@ blogFiles.forEach(file => {
 
 const categorySections = Object.entries(categories).map(([tag, posts]) => {
   return `
-    <section class="blog-category-section" data-aos="fade-up">
+    <section class="blog-category-section" data-aos="fade-up" id="${tag.slice(1)}">
       <h3>${tag}</h3>
       <div class="blog-articles-grid">
         ${posts.join('\n')}
@@ -53,6 +93,7 @@ const htmlOutput = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sans Mercantile™ | Thought Leadership</title>
