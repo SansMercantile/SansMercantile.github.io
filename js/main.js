@@ -126,22 +126,26 @@ document.addEventListener("DOMContentLoaded", function () {
         {
           title: "Redefining Risk",
           description: "How our AI engine mitigates structural volatility in underserved markets.",
-          link: "blogs/redefining-risk.html"
+          link: "blogs/redefining-risk.html",
+          image: "img/township-market-aerial-view.webp"
         },
         {
           title: "Compliance Isn’t a Checkbox",
           description: "How Sans Mercantile™ approaches governance as a trust-building framework.",
-          link: "blogs/blog-compliance-framework.html"
+          link: "blogs/blog-compliance-framework.html",
+          image: "img/compliance.webp"
         },
         {
           title: "AI Revolution in CFD Trading",
           description: "Deep learning models transforming precision and profitability.",
-          link: "blogs/blog-ai-revolution.html"
+          link: "blogs/blog-ai-revolution.html",
+          image: "img/ai-predictive-analytics-data-visualization.webp"
         },
         {
           title: "The Human Edge in AI Finance",
           description: "Fusing human intuition with machine intelligence for ethical growth.",
-          link: "blogs/blog-human-edge.html"
+          link: "blogs/blog-human-edge.html",
+          image: "img/human-ai-edge.webp"
         }
       ],
       newsroom: [
