@@ -117,76 +117,88 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    // --- Insights Carousel & Toggle ---
+    // --- Latest Insights Carousel ---
+    const insightGrid = document.getElementById('insight-carousel-grid');
+    const toggleButtons = document.querySelectorAll('.insight-toggle button');
+
     const sections = {
       insights: [
         {
-          title: "Redefining Risk: Why Township Markets Deserve Better Infrastructure",
-          description: "A deep dive into how our AI engine mitigates structural volatility while unlocking scalable growth for communities long overlooked by traditional finance.",
+          title: "Redefining Risk",
+          description: "How our AI engine mitigates structural volatility in underserved markets.",
           link: "blogs/redefining-risk.html"
         },
         {
-          title: "Compliance Isn’t a Checkbox. It’s a Framework.",
-          description: "Why built-in governance matters—and how Sans Mercantile™ approaches compliance as a trust-building opportunity, not a hurdle.",
+          title: "Compliance Isn’t a Checkbox",
+          description: "How Sans Mercantile™ approaches governance as a trust-building framework.",
           link: "blogs/blog-compliance-framework.html"
+        },
+        {
+          title: "AI Revolution in CFD Trading",
+          description: "Deep learning models transforming precision and profitability.",
+          link: "blogs/blog-ai-revolution.html"
+        },
+        {
+          title: "The Human Edge in AI Finance",
+          description: "Fusing human intuition with machine intelligence for ethical growth.",
+          link: "blogs/blog-human-edge.html"
         }
       ],
       newsroom: [
         {
-          title: "Sans Mercantile Featured in Fintech Weekly",
-          description: "Our CEO shares insights on ethical AI and inclusive finance in this exclusive interview.",
+          title: "Fintech Weekly Feature",
+          description: "Our CEO shares insights on ethical AI and inclusive finance.",
           link: "newsroom/fintech-weekly-feature.html"
         },
         {
-          title: "Global Summit 2025: Keynote Recap",
+          title: "Global Summit 2025",
           description: "Highlights from our keynote on AI infrastructure in emerging markets.",
           link: "newsroom/global-summit-keynote.html"
         }
       ],
       caseStudies: [
         {
-          title: "Microfinance Inclusion in Township Markets",
-          description: "How our predictive models increased loan approvals by 40% without raising default rates.",
+          title: "Microfinance Inclusion",
+          description: "Predictive models increased loan approvals by 40%.",
           link: "case-studies/microfinance-inclusion.html"
         },
         {
-          title: "AI-Powered Inventory Optimization",
-          description: "A case study on reducing waste and boosting vendor profits in informal trade zones.",
+          title: "Inventory Optimization",
+          description: "Reducing waste and boosting vendor profits in informal trade zones.",
           link: "case-studies/inventory-optimization.html"
         }
       ]
     };
 
-    const track = document.getElementById('carousel-track');
-    const toggleButtons = document.querySelectorAll('.insight-toggle button');
-    const titleEl = document.getElementById('insight-title');
-    const viewAllLink = document.getElementById('view-all-link');
-
     let currentSection = 'insights';
     let currentIndex = 0;
     let interval;
 
-    function renderCarousel(section) {
-      track.innerHTML = '';
-      sections[section].forEach(item => {
-        const card = document.createElement('article');
-        card.className = 'insight-card';
-        card.innerHTML = `
-          <h4>${item.title}</h4>
-          <p>${item.description}</p>
-          <a href="${item.link}">Read more</a>
-        `;
-        track.appendChild(card);
-      });
-      track.style.transform = 'translateX(0)';
-      currentIndex = 0;
+    function renderCards(section, index = 0) {
+      const posts = sections[section];
+      const pair = posts.slice(index, index + 2);
+      insightGrid.classList.remove('fade-in');
+      insightGrid.classList.add('fade-out');
+
+      setTimeout(() => {
+        insightGrid.innerHTML = pair.map(post => `
+          <article class="insight-card">
+            <h4>${post.title}</h4>
+            <p>${post.description}</p>
+            <a href="${post.link}">Read more</a>
+          </article>
+        `).join('');
+        insightGrid.classList.remove('fade-out');
+        insightGrid.classList.add('fade-in');
+      }, 300);
     }
 
     function startCarousel() {
       clearInterval(interval);
+      const posts = sections[currentSection];
       interval = setInterval(() => {
-        currentIndex = (currentIndex + 1) % sections[currentSection].length;
-        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        currentIndex = (currentIndex + 2) % posts.length;
+        renderCards(currentSection, currentIndex);
       }, 5000);
     }
 
@@ -194,17 +206,15 @@ document.addEventListener("DOMContentLoaded", function () {
       btn.addEventListener('click', () => {
         toggleButtons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-
         currentSection = btn.dataset.section;
-        titleEl.textContent = `Latest ${btn.textContent}`;
-        viewAllLink.href = `${btn.dataset.section}.html`;
-        renderCarousel(currentSection);
+        currentIndex = 0;
+        renderCards(currentSection, currentIndex);
         startCarousel();
       });
     });
 
-    if (track && toggleButtons.length) {
-      renderCarousel(currentSection);
+    if (insightGrid) {
+      renderCards(currentSection);
       startCarousel();
     }
   };
