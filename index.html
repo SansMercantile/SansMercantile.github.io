@@ -121,22 +121,22 @@
       </section>
 
       <section class="latest-insights" data-aos="fade-up" data-aos-delay="100">
-        <h3>Latest Insights</h3>
-        <div class="articles-grid">
-          <article class="insight-card">
-            <h4>Redefining Risk: Why Township Markets Deserve Better Infrastructure</h4>
-            <p>A deep dive into how our AI engine mitigates structural volatility while unlocking scalable growth for communities long overlooked by traditional finance.</p>
-            <a href="blogs/redefining-risk.html">Read more about Redefining Risk</a>
-          </article>
-          <article class="insight-card">
-            <h4>Compliance Isn’t a Checkbox. It’s a Framework.</h4>
-            <p>Why built-in governance matters—and how Sans Mercantile™ approaches compliance as a trust-building opportunity, not a hurdle.</p>
-            <a href="blogs/blog-compliance-framework.html">Read more about our Compliance Framework</a>
-          </article>
+        <h3 id="insight-title">Latest Insights</h3>
+
+            <div class="insight-toggle">
+              <button data-section="insights" class="active">Insights</button>
+              <button data-section="newsroom">Newsroom</button>
+              <button data-section="case-studies">Case Studies</button>
+            </div>
+
+      <div class="carousel-container">
+        <div class="carousel-track" id="carousel-track">
+      <!-- Blog cards will be injected here -->
         </div>
-        <a class="cta" href="blog.html">View All Insights</a>
+      </div>
+
+      <a class="cta" id="view-all-link" href="blog.html">View All Insights</a>
       </section>
-    </main>
   <div id="footer-placeholder"></div>
 
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

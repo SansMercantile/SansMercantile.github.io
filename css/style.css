@@ -2288,6 +2288,41 @@ body.legal-background {
   transition: opacity 0.5s ease;
 } 
 
+.carousel-container {
+  overflow: hidden;
+  position: relative;
+  height: 200px;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.insight-card {
+  min-width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.insight-toggle {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.insight-toggle button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+}
+
+.insight-toggle button.active {
+  background: #333;
+  color: #fff;
+}
+
 /* --- Fixes for Blinking and Scaling --- */
 
 /* 1. Fix for Blinking (FOUC) */
