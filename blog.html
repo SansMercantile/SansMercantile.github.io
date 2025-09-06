@@ -123,7 +123,6 @@
         if (!currentTag) showRandomPosts();
       }, 10000);
 
-      const blogLinks = allPosts.map(post => '/' + post.link);
       localStorage.setItem('sansBlogPostsData', JSON.stringify(allPosts));
     });
   </script>
