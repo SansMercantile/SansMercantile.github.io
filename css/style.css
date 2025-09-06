@@ -502,6 +502,44 @@ nav a:hover {
   margin-bottom: 2.5rem; /* Creates space above the CTA */
 }
 
+.insight-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.insight-toggle button {
+  background-color: transparent;
+  border: 2px solid var(--color-orange);
+  color: var(--color-orange);
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.insight-toggle button.active {
+  background-color: var(--color-orange);
+  color: var(--color-velvet-red-black);
+}
+
+.insight-toggle button:hover {
+  background-color: var(--color-orange);
+  color: var(--color-velvet-red-black);
+}
+
+.articles-grid.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.articles-grid.fade-in {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
 /* About Page Sections */
 .about-hero,
 .our-mission,
@@ -2287,41 +2325,6 @@ body.legal-background {
   opacity: 1;
   transition: opacity 0.5s ease;
 } 
-
-.carousel-container {
-  overflow: hidden;
-  position: relative;
-  height: 200px;
-}
-
-.carousel-track {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-}
-
-.insight-card {
-  min-width: 100%;
-  padding: 1rem;
-  box-sizing: border-box;
-}
-
-.insight-toggle {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.insight-toggle button {
-  padding: 0.5rem 1rem;
-  border: none;
-  background: #eee;
-  cursor: pointer;
-}
-
-.insight-toggle button.active {
-  background: #333;
-  color: #fff;
-}
 
 /* --- Fixes for Blinking and Scaling --- */
 
