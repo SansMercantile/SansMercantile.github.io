@@ -152,24 +152,28 @@ document.addEventListener("DOMContentLoaded", function () {
         {
           title: "Fintech Weekly Feature",
           description: "Our CEO shares insights on ethical AI and inclusive finance.",
-          link: "newsroom/fintech-weekly-feature.html"
+          link: "newsroom/fintech-weekly-feature.html",
+          image: "img/fintech-weekly-feature.webp"
         },
         {
           title: "Global Summit 2025",
           description: "Highlights from our keynote on AI infrastructure in emerging markets.",
-          link: "newsroom/global-summit-keynote.html"
+          link: "newsroom/global-summit-keynote.html",
+          image: "img/global-summit-2025.webp"
         }
       ],
       caseStudies: [
         {
           title: "Microfinance Inclusion",
           description: "Predictive models increased loan approvals by 40%.",
-          link: "case-studies/microfinance-inclusion.html"
+          link: "case-studies/microfinance-inclusion.html",
+          image: "img/microfinance-inclusion.webp"
         },
         {
           title: "Inventory Optimization",
           description: "Reducing waste and boosting vendor profits in informal trade zones.",
-          link: "case-studies/inventory-optimization.html"
+          link: "case-studies/inventory-optimization.html",
+          image: "img/inventory-optimization.webp"
         }
       ]
     };
@@ -202,7 +206,6 @@ document.addEventListener("DOMContentLoaded", function () {
     insightGrid.classList.add('fade-in');
   }, 300);
 }
-
 
     function startCarousel() {
       clearInterval(interval);

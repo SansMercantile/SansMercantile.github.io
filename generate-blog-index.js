@@ -74,26 +74,14 @@ blogFiles.forEach(file => {
   const title = $('title').text().trim();
   const description = $('meta[name="description"]').attr('content') || '';
   const keywords = $('meta[name="keywords"]').attr('content') || '';
-  const href = `/blogs/${file}`;
+  const link = `/blogs/${file}`;
   const tags = keywords.split(',').map(tag => tag.trim()).filter(tag => tag.startsWith('#'));
 
-  allPosts.push({ title, description, href, tags });
+  allPosts.push({ title, description, link, tags });
 });
 
 // Build tag list
 const uniqueTags = [...new Set(allPosts.flatMap(post => post.tags))];
-
-// Build carousel markup (random 4)
-const carouselMarkup = allPosts
-  .sort(() => 0.5 - Math.random())
-  .slice(0, 4)
-  .map(post => `
-    <article class="insight-card">
-      <h4>${post.title}</h4>
-      <p>${post.description}</p>
-      <a href="${post.href}">Read more</a>
-    </article>
-  `).join('\n');
 
 // Build blog.html output
 const htmlOutput = `
@@ -114,16 +102,6 @@ const htmlOutput = `
     <section class="blog-hero" data-aos="fade-up">
       <h2>Insights & Innovation: Shaping the Future of AI Finance</h2>
       <p>Dive into Sans Mercantile’s™ research, expert analysis, and thought leadership on AI-powered trading, compliance, and inclusive market development.</p>
-    </section>
-
-    <section class="latest-insights-carousel" data-aos="fade-up" data-aos-delay="100">
-      <h3>Latest Insights</h3>
-      <div class="carousel-container">
-        <div class="carousel-track" id="carousel-track">
-          ${carouselMarkup}
-        </div>
-      </div>
-      <a class="cta" href="blog.html">View All Insights</a>
     </section>
 
     <section class="blog-articles-grid" id="blogGrid" data-aos="fade-up" data-aos-delay="150">
@@ -161,7 +139,7 @@ const htmlOutput = `
           <article class="blog-card" data-tags="\${post.tags.join(',')}">
             <h3>\${post.title}</h3>
             <p>\${post.description}</p>
-            <a href="\${post.href}" class="blog-link">Read More &rarr;</a>
+            <a href="\${post.link}" class="blog-link">Read More &rarr;</a>
           </article>
         \`).join('');
       }
@@ -200,7 +178,7 @@ const htmlOutput = `
         if (!currentTag) showRandomPosts();
       }, 10000);
 
-      const blogLinks = allPosts.map(post => post.href);
+      const blogLinks = allPosts.map(post => post.link);
       localStorage.setItem('sansBlogPosts', JSON.stringify(blogLinks));
           });
   </script>
