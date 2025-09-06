@@ -49,13 +49,15 @@ function injectSEO(fileName, html) {
   `;
 
   $('head').append(seoBlock);
-
-  // Use XML-style serialization to preserve self-closing slashes
   return $.xml();
 }
 
-const blogFiles = fs.readdirSync(BLOG_DIR).filter(file => file.endsWith('.html'));
+// Exclude template files like post.html
+const blogFiles = fs.readdirSync(BLOG_DIR)
+  .filter(file => file.endsWith('.html') && file !== 'post.html');
+
 const categories = {};
+const carouselPosts = [];
 
 blogFiles.forEach(file => {
   const filePath = path.join(BLOG_DIR, file);
@@ -76,6 +78,10 @@ blogFiles.forEach(file => {
 
   if (tags.length === 0) tags.push('#Uncategorized');
 
+  // Add to carousel list
+  carouselPosts.push({ title, description, href });
+
+  // Add to category map
   tags.forEach(tag => {
     if (!categories[tag]) categories[tag] = [];
     categories[tag].push(`
@@ -88,9 +94,10 @@ blogFiles.forEach(file => {
   });
 });
 
+// Generate static category sections (non-animated)
 const categorySections = Object.entries(categories).map(([tag, posts]) => {
   return `
-    <section class="blog-category-section" data-aos="fade-up" id="${tag.slice(1)}">
+    <section class="blog-category-section" id="${tag.slice(1)}">
       <h3>${tag}</h3>
       <div class="blog-articles-grid">
         ${posts.join('\n')}
@@ -98,6 +105,15 @@ const categorySections = Object.entries(categories).map(([tag, posts]) => {
     </section>
   `;
 }).join('\n');
+
+// Generate carousel markup
+const carouselMarkup = carouselPosts.map(post => `
+  <article class="insight-card">
+    <h4>${post.title}</h4>
+    <p>${post.description}</p>
+    <a href="${post.href}">Read more</a>
+  </article>
+`).join('\n');
 
 const htmlOutput = `
 <!DOCTYPE html>
@@ -119,7 +135,15 @@ const htmlOutput = `
       <p>Dive into Sans Mercantile’s™ research, expert analysis, and thought leadership on AI-powered trading, compliance, and inclusive market development.</p>
     </section>
 
-    ${categorySections}
+    <section class="latest-insights-carousel" data-aos="fade-up" data-aos-delay="100">
+      <h3>Latest Insights</h3>
+      <div class="carousel-container">
+        <div class="carousel-track" id="carousel-track">
+          ${carouselMarkup}
+        </div>
+      </div>
+      <a class="cta" href="blog.html">View All Insights</a>
+    </section>
 
     <section class="blog-categories" data-aos="fade-up" data-aos-delay="200">
       <h3>Explore by Category</h3>
@@ -127,6 +151,8 @@ const htmlOutput = `
         ${Object.keys(categories).map(tag => `<a href="#${tag.slice(1)}" class="tag">${tag}</a>`).join('\n')}
       </div>
     </section>
+
+    ${categorySections}
   </main>
 
   <div id="footer-placeholder"></div>
@@ -145,6 +171,17 @@ const htmlOutput = `
         .filter(href => href.startsWith('/blogs/'));
 
       localStorage.setItem('sansBlogPosts', JSON.stringify(blogLinks));
+
+      // Carousel rotation
+      const track = document.getElementById('carousel-track');
+      let currentIndex = 0;
+      const cards = track ? track.children : [];
+      if (track && cards.length > 1) {
+        setInterval(() => {
+          currentIndex = (currentIndex + 1) % cards.length;
+          track.style.transform = \`translateX(-\${currentIndex * 100}%)\`;
+        }, 5000);
+      }
     });
   </script>
 </body>
