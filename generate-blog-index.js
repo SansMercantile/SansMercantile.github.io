@@ -62,6 +62,7 @@ const carouselPosts = [];
 blogFiles.forEach(file => {
   const filePath = path.join(BLOG_DIR, file);
   const html = fs.readFileSync(filePath, 'utf8');
+  if (html.includes('<!-- SEO injected by generator -->')) return;
   const updatedHtml = injectSEO(file, html);
   fs.writeFileSync(filePath, updatedHtml, 'utf8');
 
