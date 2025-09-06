@@ -221,41 +221,10 @@
 
     </main>
 
-    <!-- Footer will be loaded here -->
-    <div id="footer-placeholder"></div>
+  <!-- Footer will be loaded here -->
+  <div id="footer-placeholder"></div>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            AOS.init({
-                duration: 1000,
-                once: true,
-            });
-
-            const toggleContainer = document.getElementById('device-toggles');
-            if (toggleContainer) {
-                const toggleButtons = toggleContainer.querySelectorAll('.toggle-btn');
-                const deviceWrappers = document.querySelectorAll('.device-wrapper');
-
-                toggleContainer.addEventListener('click', (e) => {
-                    const clickedButton = e.target.closest('.toggle-btn');
-                    if (!clickedButton) return;
-
-                    const deviceToShow = clickedButton.dataset.device;
-
-                    toggleButtons.forEach(btn => btn.classList.remove('active'));
-                    clickedButton.classList.add('active');
-
-                    deviceWrappers.forEach(wrapper => {
-                        if (wrapper.id === `demo-${deviceToShow}`) {
-                            wrapper.classList.add('active');
-                        } else {
-                            wrapper.classList.remove('active');
-                        }
-                    });
-                });
-            }
-        });
-    </script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
