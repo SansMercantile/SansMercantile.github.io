@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let touchendX = 0;
     const swipeThreshold = 50; // Minimum distance (in pixels) to register as a swipe
 
-    const articleBody = document.querySelector('article'); // The main content area to swipe on
+    const articleBody = document.querySelector('.main-wrap') || document.body;  // The main content area to swipe on
 
     if (articleBody) {
         articleBody.addEventListener('touchstart', e => {
