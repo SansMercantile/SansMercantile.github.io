@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="icon" type="image/svg+xml" href="img/logo.svg" />
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sans Mercantile™ | Thought Leadership</title>
@@ -11,50 +11,51 @@
 <body>
   <div id="header-placeholder"></div>
 
-<main role="main" class="main-wrap">
-  <section class="blog-hero" data-aos="fade-up">
-    <h2>Insights & Innovation: Shaping the Future of AI Finance</h2>
-    <p>Dive into Sans Mercantile’s™ research, expert analysis, and thought leadership on AI-powered trading, compliance, and inclusive market development. </p>
-  </section>
+  <main role="main" class="main-wrap">
+    <section class="blog-hero" data-aos="fade-up">
+      <h2>Insights & Innovation: Shaping the Future of AI Finance</h2>
+      <p>Dive into Sans Mercantile’s™ research, expert analysis, and thought leadership on AI-powered trading, compliance, and inclusive market development.</p>
+    </section>
 
-  <section class="blog-articles-grid" data-aos="fade-up" data-aos-delay="100">
-    <article class="blog-card" id="article1">
-      <h3>Redefining Risk: Why Township Markets Deserve Better Infrastructure</h3>
-      <p>A deep dive into how our AI engine mitigates structural volatility while unlocking scalable growth for communities long overlooked by traditional finance.</p>
-      <a href="blogs/redefining-risk.html">Read More &rarr;</a>
-    </article>
+    <section class="blog-articles-grid" data-aos="fade-up" data-aos-delay="100">
+      <!-- ✅ Add class="blog-link" to each blog anchor tag -->
+      <article class="blog-card" id="article1">
+        <h3>Redefining Risk: Why Township Markets Deserve Better Infrastructure</h3>
+        <p>A deep dive into how our AI engine mitigates structural volatility while unlocking scalable growth for communities long overlooked by traditional finance.</p>
+        <a href="blogs/redefining-risk.html" class="blog-link">Read More &rarr;</a>
+      </article>
 
-    <article class="blog-card" id="article2">
-      <h3>Compliance Isn’t a Checkbox. It’s a Framework.</h3>
-      <p>Why built-in governance matters—and how Sans Mercantile™ approaches compliance as a trust-building opportunity, not a hurdle.</p>
-      <a href="blogs/blog-compliance-framework.html">Read More &rarr;</a>
-    </article>
+      <article class="blog-card" id="article2">
+        <h3>Compliance Isn’t a Checkbox. It’s a Framework.</h3>
+        <p>Why built-in governance matters—and how Sans Mercantile™ approaches compliance as a trust-building opportunity, not a hurdle.</p>
+        <a href="blogs/blog-compliance-framework.html" class="blog-link">Read More &rarr;</a>
+      </article>
 
-    <article class="blog-card">
-      <h3>The AI Revolution in CFD Trading: Precision & Profitability</h3>
-      <p>Explore how deep-learning models are transforming CFD market analysis, delivering unmatched accuracy and automated execution.</p>
-      <a href="blogs/blog-ai-revolution.html">Read More &rarr;</a>
-    </article>
+      <article class="blog-card">
+        <h3>The AI Revolution in CFD Trading: Precision & Profitability</h3>
+        <p>Explore how deep-learning models are transforming CFD market analysis, delivering unmatched accuracy and automated execution.</p>
+        <a href="blogs/blog-ai-revolution.html" class="blog-link">Read More &rarr;</a>
+      </article>
 
-    <article class="blog-card">
-      <h3>Beyond Algorithms: The Human Edge in AI-Driven Finance</h3>
-      <p>Discover how Sans Mercantile™ fuses AI-driven intelligence with human expertise to maximize trading profits and ensure ethical AI adoption.</p>
-      <a href="blogs/blog-human-edge.html">Read More &rarr;</a>
-    </article>
-  </section>
+      <article class="blog-card">
+        <h3>Beyond Algorithms: The Human Edge in AI-Driven Finance</h3>
+        <p>Discover how Sans Mercantile™ fuses AI-driven intelligence with human expertise to maximize trading profits and ensure ethical AI adoption.</p>
+        <a href="blogs/blog-human-edge.html" class="blog-link">Read More &rarr;</a>
+      </article>
+    </section>
 
-  <section class="blog-categories" data-aos="fade-up" data-aos-delay="200">
-    <h3>Explore by Category</h3>
-    <div class="category-tags">
-      <a href="#" class="tag">#AITrading</a>
-      <a href="#" class="tag">#FintechInnovation</a>
-      <a href="#" class="tag">#RegulatoryCompliance</a>
-      <a href="#" class="tag">#EmergingMarkets</a>
-      <a href="#" class="tag">#MarketIntelligence</a>
-      <a href="#" class="tag">#Cybersecurity</a>
-    </div>
-  </section>
-</main>
+    <section class="blog-categories" data-aos="fade-up" data-aos-delay="200">
+      <h3>Explore by Category</h3>
+      <div class="category-tags">
+        <a href="#" class="tag">#AITrading</a>
+        <a href="#" class="tag">#FintechInnovation</a>
+        <a href="#" class="tag">#RegulatoryCompliance</a>
+        <a href="#" class="tag">#EmergingMarkets</a>
+        <a href="#" class="tag">#MarketIntelligence</a>
+        <a href="#" class="tag">#Cybersecurity</a>
+      </div>
+    </section>
+  </main>
 
   <div id="footer-placeholder"></div>
 
@@ -62,7 +63,20 @@
   <script src="/js/main.js"></script>
   <script src="js/blog-navigation.js"></script>
 
+  <!-- ✅ NEW SCRIPT: Collect blog links and store in localStorage -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const blogLinks = Array.from(document.querySelectorAll('a.blog-link'))
+        .map(link => {
+          const href = link.getAttribute('href');
+          // Normalize relative paths to absolute
+          return href.startsWith('/') ? href : '/' + href;
+        })
+        .filter(href => href.startsWith('/blogs/'));
+
+      // ✅ Store the list for use in blog-navigation.js
+      localStorage.setItem('sansBlogPosts', JSON.stringify(blogLinks));
+    });
+  </script>
 </body>
 </html>
-
-
