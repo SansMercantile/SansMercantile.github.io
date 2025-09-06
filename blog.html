@@ -124,7 +124,7 @@
       }, 10000);
 
       const blogLinks = allPosts.map(post => '/' + post.link);
-      localStorage.setItem('sansBlogPosts', JSON.stringify(blogLinks));
+      localStorage.setItem('sansBlogPostsData', JSON.stringify(allPosts));
     });
   </script>
 </body>
