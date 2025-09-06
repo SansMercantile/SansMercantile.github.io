@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // --- Blog Index Filtering ---
-    const blogGrid = document.getElementById('blogGrid');
+    const blogGrid = document.querySelector('.blog-articles-grid');
     const tagBar = document.getElementById('tagBar');
     const seeMoreBtn = document.getElementById('seeMoreBtn');
 

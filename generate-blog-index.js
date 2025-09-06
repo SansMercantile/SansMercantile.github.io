@@ -127,7 +127,7 @@ const htmlOutput = `
     document.addEventListener('DOMContentLoaded', () => {
       AOS.init();
 
-      const blogGrid = document.getElementById('blogGrid');
+      const blogGrid = document.querySelector('.blog-articles-grid');
       const tagBar = document.getElementById('tagBar');
       const seeMoreBtn = document.getElementById('seeMoreBtn');
 
