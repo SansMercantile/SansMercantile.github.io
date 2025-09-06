@@ -53,25 +53,25 @@
       {
         title: "Redefining Risk",
         description: "A deep dive into how Sans Mercantile's AI engine mitigates structural volatility while unlocking scalable growth for communities long overlooked by traditional finance.",
-        link: "blogs/redefining-risk.html",
+        href: "blogs/redefining-risk.html",
         tags: ["#EmergingMarkets", "#InclusiveFinance", "#AIInfrastructure", "#MarketResilience"]
       },
       {
         title: "Compliance Isn’t a Checkbox",
         description: "Why built-in governance matters—and how Sans Mercantile™ approaches compliance as a trust-building opportunity, not a hurdle.",
-        link: "blogs/blog-compliance-framework.html",
+        href: "blogs/blog-compliance-framework.html",
         tags: ["#RegulatoryCompliance", "#GovernanceTech", "#TrustByDesign", "#FintechFrameworks"]
       },
       {
         title: "AI Revolution in CFD Trading",
         description: "Precision and profitability through deep learning.",
-        link: "blogs/blog-ai-revolution.html",
+        href: "blogs/blog-ai-revolution.html",
         tags: ["#AITrading", "#CFDMarkets", "#MachineLearning", "#QuantFinance"]
       },
       {
         title: "The Human Edge in AI Finance",
         description: "Fusing human intuition with machine intelligence for ethical growth.",
-        link: "blogs/blog-human-edge.html",
+        href: "blogs/blog-human-edge.html",
         tags: ["#EthicalAI", "#HumanCenteredTech", "#AILeadership", "#FintechInnovation"]
       }
     ];
@@ -98,7 +98,7 @@
           <article class="blog-card" data-tags="${post.tags.join(',')}">
             <h3>${post.title}</h3>
             <p>${post.description}</p>
-            <a href="${post.link}" class="blog-link">Read More &rarr;</a>
+            <a href="${post.href}" class="blog-link">Read More &rarr;</a>
           </article>
         `).join('');
       }
@@ -137,7 +137,7 @@
         if (!currentTag) showRandomPosts();
       }, 10000);
 
-      const blogLinks = allPosts.map(post => post.link);
+      const blogLinks = allPosts.map(post => post.href);
       localStorage.setItem('sansBlogPosts', JSON.stringify(blogLinks));
     });
   </script>

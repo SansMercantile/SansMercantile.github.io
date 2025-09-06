@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
         />
         <h4>${post.title}</h4>
         <p>${post.description}</p>
-        <a href="${post.link}">Read more</a>
+        <a href="${post.href}">Read more</a>
       </article>
     `).join('');
     insightGrid.classList.remove('fade-out');

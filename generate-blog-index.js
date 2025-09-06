@@ -17,10 +17,8 @@ const hashtagMap = {
 function injectSEO(fileName, html) {
   const $ = cheerio.load(html);
 
-  // Skip if already injected
   if (html.includes('<!-- SEO injected by generator -->')) return html;
 
-  // Remove existing SEO tags
   $('meta[name="description"]').remove();
   $('meta[name="keywords"]').remove();
   $('link[rel="canonical"]').remove();
@@ -74,13 +72,12 @@ blogFiles.forEach(file => {
   const title = $('title').text().trim();
   const description = $('meta[name="description"]').attr('content') || '';
   const keywords = $('meta[name="keywords"]').attr('content') || '';
-  const link = `/blogs/${file}`;
+  const href = `/blogs/${file}`;
   const tags = keywords.split(',').map(tag => tag.trim()).filter(tag => tag.startsWith('#'));
 
-  allPosts.push({ title, description, link, tags });
+  allPosts.push({ title, description, href, tags });
 });
 
-// Build tag list
 const uniqueTags = [...new Set(allPosts.flatMap(post => post.tags))];
 
 // Build blog.html output
@@ -94,6 +91,11 @@ const htmlOutput = `
   <title>Sans Mercantile™ | Thought Leadership</title>
   <link rel="stylesheet" href="css/style.css" />
   <meta name="description" content="Dive into Sans Mercantile's™ research, expert analysis, and thought leadership on AI-powered trading, compliance, and inclusive market development." />
+
+  <script>
+    const allPosts = ${JSON.stringify(allPosts, null, 2)};
+    localStorage.setItem('sansBlogPostsData', JSON.stringify(allPosts));
+  </script>
 </head>
 <body>
   <div id="header-placeholder"></div>
@@ -104,9 +106,7 @@ const htmlOutput = `
       <p>Dive into Sans Mercantile’s™ research, expert analysis, and thought leadership on AI-powered trading, compliance, and inclusive market development.</p>
     </section>
 
-    <section class="blog-articles-grid" id="blogGrid" data-aos="fade-up" data-aos-delay="150">
-      <!-- Blog cards will be injected dynamically -->
-    </section>
+    <section class="blog-articles-grid" id="blogGrid" data-aos="fade-up" data-aos-delay="150"></section>
 
     <section class="blog-categories" data-aos="fade-up" data-aos-delay="200">
       <h3>Explore by Category</h3>
@@ -131,7 +131,7 @@ const htmlOutput = `
       const tagBar = document.getElementById('tagBar');
       const seeMoreBtn = document.getElementById('seeMoreBtn');
 
-      const allPosts = ${JSON.stringify(allPosts, null, 2)};
+      const allPosts = JSON.parse(localStorage.getItem('sansBlogPostsData') || '[]');
       let currentTag = null;
 
       function renderPosts(posts) {
@@ -139,7 +139,7 @@ const htmlOutput = `
           <article class="blog-card" data-tags="\${post.tags.join(',')}">
             <h3>\${post.title}</h3>
             <p>\${post.description}</p>
-            <a href="\${post.link}" class="blog-link">Read More &rarr;</a>
+            <a href="\${post.href}" class="blog-link">Read More &rarr;</a>
           </article>
         \`).join('');
       }
@@ -178,9 +178,9 @@ const htmlOutput = `
         if (!currentTag) showRandomPosts();
       }, 10000);
 
-      const blogLinks = allPosts.map(post => post.link);
+      const blogLinks = allPosts.map(post => post.href);
       localStorage.setItem('sansBlogPosts', JSON.stringify(blogLinks));
-          });
+    });
   </script>
 </body>
 </html>
