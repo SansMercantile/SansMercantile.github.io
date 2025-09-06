@@ -17,6 +17,9 @@ const hashtagMap = {
 function injectSEO(fileName, html) {
   const $ = cheerio.load(html);
 
+  // Skip if already injected
+  if (html.includes('<!-- SEO injected by generator -->')) return html;
+
   // Remove existing SEO tags
   $('meta[name="description"]').remove();
   $('meta[name="keywords"]').remove();
@@ -46,76 +49,53 @@ function injectSEO(fileName, html) {
     <meta name="twitter:image" content="https://www.sansmercantile.com${imagePath}" />
     <meta name="twitter:site" content="@SansMercantile" />
     <meta name="keywords" content="${keywords.join(', ')}" />
+    <!-- SEO injected by generator -->
   `;
 
   $('head').append(seoBlock);
-  return $.xml();
+  return $.html();
 }
 
-// Exclude template files like post.html
+// Read and process blog files
 const blogFiles = fs.readdirSync(BLOG_DIR)
   .filter(file => file.endsWith('.html') && file !== 'post.html');
 
-const categories = {};
-const carouselPosts = [];
+const allPosts = [];
 
 blogFiles.forEach(file => {
   const filePath = path.join(BLOG_DIR, file);
   const html = fs.readFileSync(filePath, 'utf8');
-  if (html.includes('<!-- SEO injected by generator -->')) return;
   const updatedHtml = injectSEO(file, html);
-  fs.writeFileSync(filePath, updatedHtml, 'utf8');
+  if (updatedHtml !== html) {
+    fs.writeFileSync(filePath, updatedHtml, 'utf8');
+  }
 
   const $ = cheerio.load(updatedHtml);
   const title = $('title').text().trim();
   const description = $('meta[name="description"]').attr('content') || '';
   const keywords = $('meta[name="keywords"]').attr('content') || '';
   const href = `/blogs/${file}`;
+  const tags = keywords.split(',').map(tag => tag.trim()).filter(tag => tag.startsWith('#'));
 
-  const tags = keywords
-    .split(',')
-    .map(tag => tag.trim())
-    .filter(tag => tag.startsWith('#'));
-
-  if (tags.length === 0) tags.push('#Uncategorized');
-
-  // Add to carousel list
-  carouselPosts.push({ title, description, href });
-
-  // Add to category map
-  tags.forEach(tag => {
-    if (!categories[tag]) categories[tag] = [];
-    categories[tag].push(`
-      <article class="blog-card">
-        <h3>${title}</h3>
-        <p>${description}</p>
-        <a href="${href}" class="blog-link">Read More &rarr;</a>
-      </article>
-    `);
-  });
+  allPosts.push({ title, description, href, tags });
 });
 
-// Generate static category sections (non-animated)
-const categorySections = Object.entries(categories).map(([tag, posts]) => {
-  return `
-    <section class="blog-category-section" id="${tag.slice(1)}">
-      <h3>${tag}</h3>
-      <div class="blog-articles-grid">
-        ${posts.join('\n')}
-      </div>
-    </section>
-  `;
-}).join('\n');
+// Build tag list
+const uniqueTags = [...new Set(allPosts.flatMap(post => post.tags))];
 
-// Generate carousel markup
-const carouselMarkup = carouselPosts.map(post => `
-  <article class="insight-card">
-    <h4>${post.title}</h4>
-    <p>${post.description}</p>
-    <a href="${post.href}">Read more</a>
-  </article>
-`).join('\n');
+// Build carousel markup (random 4)
+const carouselMarkup = allPosts
+  .sort(() => 0.5 - Math.random())
+  .slice(0, 4)
+  .map(post => `
+    <article class="insight-card">
+      <h4>${post.title}</h4>
+      <p>${post.description}</p>
+      <a href="${post.href}">Read more</a>
+    </article>
+  `).join('\n');
 
+// Build blog.html output
 const htmlOutput = `
 <!DOCTYPE html>
 <html lang="en">
@@ -146,14 +126,17 @@ const htmlOutput = `
       <a class="cta" href="blog.html">View All Insights</a>
     </section>
 
-    <section class="blog-categories" data-aos="fade-up" data-aos-delay="200">
-      <h3>Explore by Category</h3>
-      <div class="category-tags">
-        ${Object.keys(categories).map(tag => `<a href="#${tag.slice(1)}" class="tag">${tag}</a>`).join('\n')}
-      </div>
+    <section class="blog-articles-grid" id="blogGrid" data-aos="fade-up" data-aos-delay="150">
+      <!-- Blog cards will be injected dynamically -->
     </section>
 
-    ${categorySections}
+    <section class="blog-categories" data-aos="fade-up" data-aos-delay="200">
+      <h3>Explore by Category</h3>
+      <div class="category-tags" id="tagBar">
+        ${uniqueTags.map(tag => `<a href="#" class="tag">${tag}</a>`).join('\n')}
+      </div>
+      <button id="seeMoreBtn" class="cta hidden">See More</button>
+    </section>
   </main>
 
   <div id="footer-placeholder"></div>
@@ -164,30 +147,63 @@ const htmlOutput = `
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const blogLinks = Array.from(document.querySelectorAll('a.blog-link'))
-        .map(link => {
-          const href = link.getAttribute('href');
-          return href.startsWith('/') ? href : '/' + href;
-        })
-        .filter(href => href.startsWith('/blogs/'));
+      AOS.init();
 
-      localStorage.setItem('sansBlogPosts', JSON.stringify(blogLinks));
+      const blogGrid = document.getElementById('blogGrid');
+      const tagBar = document.getElementById('tagBar');
+      const seeMoreBtn = document.getElementById('seeMoreBtn');
 
-      // Carousel rotation
-      const track = document.getElementById('carousel-track');
-      let currentIndex = 0;
-      const cards = track ? track.children : [];
-      if (track && cards.length > 1) {
-        setInterval(() => {
-          currentIndex = (currentIndex + 1) % cards.length;
-          track.style.transform = \`translateX(-\${currentIndex * 100}%)\`;
-        }, 5000);
+      const allPosts = ${JSON.stringify(allPosts, null, 2)};
+      let currentTag = null;
+
+      function renderPosts(posts) {
+        blogGrid.innerHTML = posts.map(post => \`
+          <article class="blog-card" data-tags="\${post.tags.join(',')}">
+            <h3>\${post.title}</h3>
+            <p>\${post.description}</p>
+            <a href="\${post.href}" class="blog-link">Read More &rarr;</a>
+          </article>
+        \`).join('');
       }
-    });
+
+      function showRandomPosts() {
+        const shuffled = [...allPosts].sort(() => 0.5 - Math.random());
+        renderPosts(shuffled.slice(0, 4));
+        seeMoreBtn.classList.add('hidden');
+        currentTag = null;
+      }
+
+      function filterByTag(tag) {
+        currentTag = tag;
+        const filtered = allPosts.filter(post => post.tags.includes(tag));
+        renderPosts(filtered.slice(0, 2));
+        seeMoreBtn.classList.remove('hidden');
+      }
+
+      function showAllForTag() {
+        const filtered = allPosts.filter(post => post.tags.includes(currentTag));
+        renderPosts(filtered);
+        seeMoreBtn.classList.add('hidden');
+      }
+
+      tagBar.addEventListener('click', e => {
+        if (e.target.classList.contains('tag')) {
+          e.preventDefault();
+          filterByTag(e.target.textContent.trim());
+        }
+      });
+
+      seeMoreBtn.addEventListener('click', showAllForTag);
+      showRandomPosts();
+
+      setInterval(() => {
+        if (!currentTag) showRandomPosts();
+      }, 10000);
+
+      const blogLinks = allPosts.map(post => post.href);
+      localStorage.setItem('sansBlogPosts', JSON.stringify(blogLinks));
+          });
   </script>
 </body>
 </html>
 `;
-
-fs.writeFileSync(OUTPUT_FILE, htmlOutput, 'utf8');
-console.log(`✅ Blog index generated with ${blogFiles.length} posts across ${Object.keys(categories).length} categories.`);
