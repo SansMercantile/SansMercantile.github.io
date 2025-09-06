@@ -207,3 +207,6 @@ const htmlOutput = `
 </body>
 </html>
 `;
+
+fs.writeFileSync(OUTPUT_FILE, htmlOutput, 'utf8');
+console.log(`✅ blog.html generated with ${allPosts.length} posts and ${uniqueTags.length} unique tags.`);

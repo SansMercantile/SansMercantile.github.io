@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,19 +18,66 @@
       <p>Dive into Sans Mercantile’s™ research, expert analysis, and thought leadership on AI-powered trading, compliance, and inclusive market development.</p>
     </section>
 
-    <section class="blog-articles-grid" id="blogGrid" data-aos="fade-up" data-aos-delay="100">
-      <!-- Blog cards will be injected here -->
+    <section class="latest-insights-carousel" data-aos="fade-up" data-aos-delay="100">
+      <h3>Latest Insights</h3>
+      <div class="carousel-container">
+        <div class="carousel-track" id="carousel-track">
+          
+    <article class="insight-card">
+      <h4>Beyond Algorithms: The Human Edge in AI-Driven Finance | Sans Mercantile™</h4>
+      <p>Sans Mercantile™ blog post.</p>
+      <a href="/blogs/blog-human-edge.html">Read more</a>
+    </article>
+  
+
+    <article class="insight-card">
+      <h4>Compliance Isn’t a Checkbox. It’s a Framework. | Sans Mercantile™</h4>
+      <p>Why built-in governance matters—and how Sans Mercantile™ approaches compliance as a trust-building opportunity, not a hurdle.</p>
+      <a href="/blogs/blog-compliance-framework.html">Read more</a>
+    </article>
+  
+
+    <article class="insight-card">
+      <h4>Redefining Risk: Why Township Markets Deserve Better Infrastructure | Sans Mercantile™</h4>
+      <p>A deep dive into how Sans Mercantile's AI engine mitigates structural volatility while unlocking scalable growth for communities long overlooked by traditional finance.</p>
+      <a href="/blogs/redefining-risk.html">Read more</a>
+    </article>
+  
+
+    <article class="insight-card">
+      <h4>The Power of Predictive Analytics in Emerging Economies | Sans Mercantile™</h4>
+      <p>Learn how Sans Mercantile's AI-driven predictive models are transforming supply chains and credit access in underserved markets.</p>
+      <a href="/blogs/blog-ai-revolution.html">Read more</a>
+    </article>
+  
+        </div>
+      </div>
+      <a class="cta" href="blog.html">View All Insights</a>
+    </section>
+
+    <section class="blog-articles-grid" id="blogGrid" data-aos="fade-up" data-aos-delay="150">
+      <!-- Blog cards will be injected dynamically -->
     </section>
 
     <section class="blog-categories" data-aos="fade-up" data-aos-delay="200">
       <h3>Explore by Category</h3>
       <div class="category-tags" id="tagBar">
         <a href="#" class="tag">#AITrading</a>
-        <a href="#" class="tag">#FintechInnovation</a>
-        <a href="#" class="tag">#RegulatoryCompliance</a>
-        <a href="#" class="tag">#EmergingMarkets</a>
-        <a href="#" class="tag">#MarketIntelligence</a>
-        <a href="#" class="tag">#Cybersecurity</a>
+<a href="#" class="tag">#CFDMarkets</a>
+<a href="#" class="tag">#MachineLearning</a>
+<a href="#" class="tag">#QuantFinance</a>
+<a href="#" class="tag">#RegulatoryCompliance</a>
+<a href="#" class="tag">#GovernanceTech</a>
+<a href="#" class="tag">#TrustByDesign</a>
+<a href="#" class="tag">#FintechFrameworks</a>
+<a href="#" class="tag">#EthicalAI</a>
+<a href="#" class="tag">#HumanCenteredTech</a>
+<a href="#" class="tag">#AILeadership</a>
+<a href="#" class="tag">#FintechInnovation</a>
+<a href="#" class="tag">#EmergingMarkets</a>
+<a href="#" class="tag">#InclusiveFinance</a>
+<a href="#" class="tag">#AIInfrastructure</a>
+<a href="#" class="tag">#MarketResilience</a>
       </div>
       <button id="seeMoreBtn" class="cta hidden">See More</button>
     </section>
@@ -50,32 +98,51 @@
       const seeMoreBtn = document.getElementById('seeMoreBtn');
 
       const allPosts = [
-        {
-          title: "Redefining Risk",
-          description: "How our AI engine mitigates volatility in underserved markets.",
-          link: "blogs/redefining-risk.html",
-          tags: ["#EmergingMarkets", "#InclusiveFinance", "#AIInfrastructure", "#MarketResilience"]
-        },
-        {
-          title: "Compliance Isn’t a Checkbox",
-          description: "Governance as a trust-building framework.",
-          link: "blogs/blog-compliance-framework.html",
-          tags: ["#RegulatoryCompliance", "#GovernanceTech", "#TrustByDesign", "#FintechFrameworks"]
-        },
-        {
-          title: "AI Revolution in CFD Trading",
-          description: "Precision and profitability through deep learning.",
-          link: "blogs/blog-ai-revolution.html",
-          tags: ["#AITrading", "#CFDMarkets", "#MachineLearning", "#QuantFinance"]
-        },
-        {
-          title: "The Human Edge in AI Finance",
-          description: "Fusing human intuition with machine intelligence.",
-          link: "blogs/blog-human-edge.html",
-          tags: ["#EthicalAI", "#HumanCenteredTech", "#AILeadership", "#FintechInnovation"]
-        }
-      ];
-
+  {
+    "title": "Beyond Algorithms: The Human Edge in AI-Driven Finance | Sans Mercantile™",
+    "description": "Sans Mercantile™ blog post.",
+    "href": "/blogs/blog-human-edge.html",
+    "tags": [
+      "#EthicalAI",
+      "#HumanCenteredTech",
+      "#AILeadership",
+      "#FintechInnovation"
+    ]
+  },
+  {
+    "title": "Compliance Isn’t a Checkbox. It’s a Framework. | Sans Mercantile™",
+    "description": "Why built-in governance matters—and how Sans Mercantile™ approaches compliance as a trust-building opportunity, not a hurdle.",
+    "href": "/blogs/blog-compliance-framework.html",
+    "tags": [
+      "#RegulatoryCompliance",
+      "#GovernanceTech",
+      "#TrustByDesign",
+      "#FintechFrameworks"
+    ]
+  },
+  {
+    "title": "Redefining Risk: Why Township Markets Deserve Better Infrastructure | Sans Mercantile™",
+    "description": "A deep dive into how Sans Mercantile's AI engine mitigates structural volatility while unlocking scalable growth for communities long overlooked by traditional finance.",
+    "href": "/blogs/redefining-risk.html",
+    "tags": [
+      "#EmergingMarkets",
+      "#InclusiveFinance",
+      "#AIInfrastructure",
+      "#MarketResilience"
+    ]
+  },
+  {
+    "title": "The Power of Predictive Analytics in Emerging Economies | Sans Mercantile™",
+    "description": "Learn how Sans Mercantile's AI-driven predictive models are transforming supply chains and credit access in underserved markets.",
+    "href": "/blogs/blog-ai-revolution.html",
+    "tags": [
+      "#AITrading",
+      "#CFDMarkets",
+      "#MachineLearning",
+      "#QuantFinance"
+    ]
+  }
+];
       let currentTag = null;
 
       function renderPosts(posts) {
@@ -83,7 +150,7 @@
           <article class="blog-card" data-tags="${post.tags.join(',')}">
             <h3>${post.title}</h3>
             <p>${post.description}</p>
-            <a href="${post.link}" class="blog-link">Read More &rarr;</a>
+            <a href="${post.href}" class="blog-link">Read More &rarr;</a>
           </article>
         `).join('');
       }
@@ -116,15 +183,15 @@
       });
 
       seeMoreBtn.addEventListener('click', showAllForTag);
-
       showRandomPosts();
 
       setInterval(() => {
         if (!currentTag) showRandomPosts();
       }, 10000);
 
-      localStorage.setItem('sansBlogPostsData', JSON.stringify(allPosts));
-    });
+      const blogLinks = allPosts.map(post => post.href);
+      localStorage.setItem('sansBlogPosts', JSON.stringify(blogLinks));
+          });
   </script>
 </body>
 </html>
