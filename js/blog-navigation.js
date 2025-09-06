@@ -39,21 +39,25 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
     // Keyboard Navigation
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight') {
-      navigateToPost(1);
-    }
-    if (e.key === 'ArrowLeft') {
-      navigateToPost(-1);
-    }
-  });
+document.addEventListener('keydown', e => {
+  if (hasNavigated) return;
 
-    // Escape key to return to blog index
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      window.location.href = '/blog.html';
-    }
-  });
+  if (e.key === 'ArrowRight') {
+    hasNavigated = true;
+    navigateToPost(1);
+  }
+
+  if (e.key === 'ArrowLeft') {
+    hasNavigated = true;
+    navigateToPost(-1);
+  }
+
+  if (e.key === 'Escape') {
+    hasNavigated = true;
+    window.location.href = '/blog.html';
+  }
+});
+
 
   // Swipe Navigation
   let touchstartX = 0;
