@@ -156,22 +156,22 @@ document.addEventListener("DOMContentLoaded", function () {
           image: "img/fintech-weekly-feature.webp"
         },
         {
-          title: "Global Summit 2025",
-          description: "Highlights from our keynote on AI infrastructure in emerging markets.",
+          title: "Coming soon",
+          description: "More press releases will be made available soon.",
           link: "newsroom/global-summit-keynote.html",
           image: "img/global-summit-2025.webp"
         }
       ],
       caseStudies: [
         {
-          title: "Microfinance Inclusion",
-          description: "Predictive models increased loan approvals by 40%.",
+          title: "Coming soon",
+          description: "Our case studies will be made available soon.",
           link: "case-studies/microfinance-inclusion.html",
           image: "img/microfinance-inclusion.webp"
         },
         {
-          title: "Inventory Optimization",
-          description: "Reducing waste and boosting vendor profits in informal trade zones.",
+          title: "Coming soon",
+          description: "Our case studies will be made available soon.",
           link: "case-studies/inventory-optimization.html",
           image: "img/inventory-optimization.webp"
         }
