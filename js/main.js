@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
         />
         <h4>${post.title}</h4>
         <p>${post.description}</p>
-        <a href="${post.href}">Read more</a>
+        <a href="${post.link}">Read more</a>
       </article>
     `).join('');
     insightGrid.classList.remove('fade-out');
@@ -246,7 +246,7 @@ document.addEventListener("DOMContentLoaded", function () {
           <article class="blog-card" data-tags="${post.tags.join(',')}">
             <h3>${post.title}</h3>
             <p>${post.description}</p>
-            <a href="${post.href}" class="blog-link">Read More &rarr;</a>
+            <a href="${post.link}" class="blog-link">Read More &rarr;</a>
           </article>
         `).join('');
       }
