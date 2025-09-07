@@ -150,8 +150,8 @@ document.addEventListener("DOMContentLoaded", function () {
       ],
       newsroom: [
         {
-          title: "Fintech Weekly Feature",
-          description: "Our CEO shares insights on ethical AI and inclusive finance.",
+          title: "Coming soon",
+          description: "More press releases will be made available soon.",
           link: "newsroom/fintech-weekly-feature.html",
           image: "img/fintech-weekly-feature.webp"
         },
