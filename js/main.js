@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
           title: "Coming soon",
           description: "Our case studies will be made available soon.",
           link: "case-studies/microfinance-inclusion.html",
-          image: "img/microfinance-inclusion.webp"
+          image: "img/anima-line.webp"
         },
         {
           title: "Coming soon",
