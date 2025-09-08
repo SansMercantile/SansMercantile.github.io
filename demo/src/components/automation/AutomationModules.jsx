@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { DollarSign, Wrench, Bot, Activity, FileText, Settings, Landmark } from 'lucide-react';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '../ui/use-toast';
 
 const icons = { DollarSign, Wrench, Bot, Activity, FileText, Settings, Landmark };
 
