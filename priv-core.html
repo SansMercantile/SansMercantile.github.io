@@ -224,7 +224,33 @@
   <!-- Footer will be loaded here -->
   <div id="footer-placeholder"></div>
 
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script src="js/main.js"></script>
+</div>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Device toggle functionality for live demo
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtns = document.querySelectorAll('.toggle-btn');
+            const deviceWrappers = {
+                mobile: document.getElementById('demo-mobile'),
+                tablet: document.getElementById('demo-tablet'),
+                desktop: document.getElementById('demo-desktop')
+            };
+            toggleBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    toggleBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    // Hide all device wrappers
+                    Object.values(deviceWrappers).forEach(wrapper => wrapper.classList.remove('active'));
+                    // Show selected device wrapper
+                    const device = btn.getAttribute('data-device');
+                    if (deviceWrappers[device]) {
+                        deviceWrappers[device].classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
