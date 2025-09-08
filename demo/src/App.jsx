@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
-import { Toaster } from '@/components/ui/toaster';
-import Sidebar from '@/components/Sidebar';
-import Dashboard from '@/components/Dashboard';
-import AGICore from '@/components/AGICore';
-import MultiAgent from '@/components/MultiAgent';
-import DataIngestion from '@/components/DataIngestion';
-import Security from '@/components/Security';
-import Automation from '@/components/Automation';
-import Tax from '@/components/Tax';
-import PrivAssistant from '@/components/PrivAssistant';
-import GuidedWalkthrough from '@/components/GuidedWalkthrough';
+import { Toaster } from './components/ui/toaster';
+import Sidebar from './components/Sidebar';
+import Dashboard from './components/Dashboard';
+import AGICore from './components/AGICore';
+import MultiAgent from './components/MultiAgent';
+import DataIngestion from './components/DataIngestion';
+import Security from './components/Security';
+import Automation from './components/Automation';
+import Tax from './components/Tax';
+import PrivAssistant from './components/PrivAssistant';
+import GuidedWalkthrough from './components/GuidedWalkthrough';
 
 function App() {
   const [activeSection, setActiveSection] = useState('dashboard');
