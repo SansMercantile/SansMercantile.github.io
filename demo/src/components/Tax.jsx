@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Landmark, Users, Gamepad2, Brain, BarChart, TrendingUp, ShieldCheck } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/use-toast';
+import { Button } from './ui/button';
+import { toast } from './ui/use-toast';
 
 const MetricTile = ({ icon: Icon, label, value, color }) => (
     <motion.div 
