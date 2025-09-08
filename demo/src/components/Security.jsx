@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Lock, Key, AlertTriangle, CheckCircle, Eye, Zap, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from './ui/button';
 import SecurityArchitecture from '@/components/security/SecurityArchitecture';
 
 const Security = () => {
