@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
-const MetricCard = ({ title, value, change, icon: Icon, trend, color = 'green' }) => {
+const MetricCard = ({ title, value, change, icon: Icon, trend, color = 'green', onClick }) => {
   const getTrendIcon = () => {
     switch (trend) {
       case 'up':
@@ -25,13 +25,16 @@ const MetricCard = ({ title, value, change, icon: Icon, trend, color = 'green' }
     return colors[color] || colors.green;
   };
 
+  const isClickable = !!onClick;
+
   return (
     <motion.div
-      className={`metric-card rounded-xl p-4 ${getColorClasses()}`}
-      whileHover={{ scale: 1.02 }}
+      className={`metric-card rounded-xl p-4 ${getColorClasses()} ${isClickable ? 'cursor-pointer' : ''}`}
+      whileHover={{ scale: isClickable ? 1.05 : 1.02 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
+      onClick={onClick}
     >
       <div className="flex items-center justify-between mb-2">
         <Icon className={`w-5 h-5 text-${color}-400`} />
