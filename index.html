@@ -140,30 +140,30 @@
 
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="js/main.js"></script>
-    <script>
-      // --- Main Initialization Script ---
-      document.addEventListener('DOMContentLoaded', () => {
-        // --- AOS Initialization ---
-        AOS.init();
-
-        // --- Mobile Navigation Toggle ---
-        const navToggle = document.querySelector('.mobile-nav-toggle');
-        const navOverlay = document.querySelector('.mobile-nav-overlay');
-        if (navToggle) {
-            navToggle.addEventListener('click', () => {
-                navToggle.classList.toggle('active');
-                navOverlay.classList.toggle('active');
-            });
+        {
+          title: "Redefining Risk",
+          description: "How our AI engine mitigates structural volatility in underserved markets.",
+          href: "blogs/redefining-risk.html",
+          image: "img/township-market-aerial-view.webp"
+        },
+        {
+          title: "Compliance Isn’t a Checkbox",
+          description: "How Sans Mercantile™ approaches governance as a trust-building framework.",
+          href: "blogs/blog-compliance-framework.html",
+          image: "img/compliance.webp"
+        },
+        {
+          title: "AI Revolution in CFD Trading",
+          description: "Deep learning models transforming precision and profitability.",
+          href: "blogs/blog-ai-revolution.html",
+          image: "img/ai-predictive-analytics-data-visualization.webp"
+        },
+        {
+          title: "The Human Edge in AI Finance",
+          description: "Fusing human intuition with machine intelligence for ethical growth.",
+          href: "blogs/blog-human-edge.html",
+          image: "img/human-ai-edge.webp"
         }
-
-        // --- Language Selector Abbreviation & Logic ---
-        const languageSelect = document.getElementById('language-select');
-        if (languageSelect) {
-            const options = languageSelect.querySelectorAll('option');
-
-            function updateLanguageDisplay() {
-                if (window.innerWidth <= 768) { // Mobile breakpoint
-                    options.forEach(option => {
                         option.textContent = option.value.toUpperCase();
                     });
                 } else {
