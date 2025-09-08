@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { Toaster } from '@/components/ui/toaster';
@@ -9,14 +9,26 @@ import MultiAgent from '@/components/MultiAgent';
 import DataIngestion from '@/components/DataIngestion';
 import Security from '@/components/Security';
 import Automation from '@/components/Automation';
+import Tax from '@/components/Tax';
+import PrivAssistant from '@/components/PrivAssistant';
+import GuidedWalkthrough from '@/components/GuidedWalkthrough';
 
 function App() {
   const [activeSection, setActiveSection] = useState('dashboard');
+  const [isWalkthroughActive, setWalkthroughActive] = useState(false);
+
+  useEffect(() => {
+    const hasSeenWalkthrough = localStorage.getItem('hasSeenWalkthrough');
+    if (!hasSeenWalkthrough) {
+      setWalkthroughActive(true);
+      localStorage.setItem('hasSeenWalkthrough', 'true');
+    }
+  }, []);
 
   const renderContent = () => {
     switch (activeSection) {
       case 'dashboard':
-        return <Dashboard />;
+        return <Dashboard setActiveSection={setActiveSection} />;
       case 'agi-core':
         return <AGICore />;
       case 'multi-agent':
@@ -27,9 +39,15 @@ function App() {
         return <Security />;
       case 'automation':
         return <Automation />;
+      case 'tax':
+        return <Tax />;
       default:
-        return <Dashboard />;
+        return <Dashboard setActiveSection={setActiveSection} />;
     }
+  };
+
+  const handleEndWalkthrough = () => {
+    setWalkthroughActive(false);
   };
 
   return (
@@ -42,6 +60,8 @@ function App() {
       </Helmet>
       
       <div className="min-h-screen bg-black neural-grid matrix-bg">
+        {isWalkthroughActive && <GuidedWalkthrough onEnd={handleEndWalkthrough} />}
+        
         <div className="flex">
           <Sidebar activeSection={activeSection} setActiveSection={setActiveSection} />
           
@@ -58,10 +78,9 @@ function App() {
           </main>
         </div>
         
+        <PrivAssistant />
         <Toaster />
       </div>
     </>
   );
 }
-
-export default App;
