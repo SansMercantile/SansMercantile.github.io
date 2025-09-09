@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Brain, TrendingUp, Shield, Globe, Zap, AlertTriangle, CheckCircle, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from './ui/button';
 
 const MultiAgent = () => {
   const [agents, setAgents] = useState([]);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Database, Globe, Rss, Wifi, BarChart3, Activity, TrendingUp, Zap } from 'lucide-react';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from './ui/use-toast';
 
 const DataIngestion = () => {
   const [dataSources, setDataSources] = useState([]);

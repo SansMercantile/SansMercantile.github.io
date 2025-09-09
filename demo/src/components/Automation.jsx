@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Zap, CheckCircle, Bot } from 'lucide-react';
 
-import AutomationMetrics from '@/components/automation/AutomationMetrics';
-import AutomationModules from '@/components/automation/AutomationModules';
-import RecentTasks from '@/components/automation/RecentTasks';
-import SystemHealth from '@/components/automation/SystemHealth';
-import AutonomousCapabilities from '@/components/automation/AutonomousCapabilities';
-import TaxAutomationPreview from '@/components/automation/TaxAutomationPreview';
+import AutomationMetrics from './automation/AutomationMetrics';
+import AutomationModules from './automation/AutomationModules';
+import RecentTasks from './automation/RecentTasks';
+import SystemHealth from './automation/SystemHealth';
+import AutonomousCapabilities from './automation/AutonomousCapabilities';
+import TaxAutomationPreview from './automation/TaxAutomationPreview';
 
 const Automation = () => {
   const [automationMetricsData, setAutomationMetricsData] = useState({

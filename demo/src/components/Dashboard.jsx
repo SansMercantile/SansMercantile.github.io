@@ -13,9 +13,9 @@ import {
   AlertTriangle,
   FileText
 } from 'lucide-react';
-import MetricCard from '@/components/MetricCard';
-import LiveChart from '@/components/LiveChart';
-import ActivityFeed from '@/components/ActivityFeed';
+import MetricCard from './MetricCard';
+import LiveChart from './LiveChart';
+import ActivityFeed from './ActivityFeed';
 
 const Dashboard = ({ setActiveSection }) => {
   const [metrics, setMetrics] = useState({

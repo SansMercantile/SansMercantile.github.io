@@ -20,10 +20,20 @@ const navItems = [
   { name: 'Tax Intelligence', icon: FileText, section: 'tax' },
 ];
 
-const Sidebar = ({ activeSection, setActiveSection }) => {
+const Sidebar = ({ activeSection, setActiveSection, device = 'desktop' }) => {
+  const isMobile = device === 'mobile';
   return (
-    <motion.aside 
-      className="w-64 fixed top-0 left-0 h-full bg-black/50 backdrop-blur-lg p-4 flex flex-col z-40 border-r border-green-500/20"
+    <>
+      {isMobile ? (
+        <motion.header className="fixed top-0 left-0 right-0 p-3 flex items-center justify-between bg-black/60 z-50 border-b border-green-500/10">
+          <div className="flex items-center space-x-3">
+            <img  alt="Sans Mercantile Logo" className="w-8 h-8 rounded" src="https://images.unsplash.com/photo-1585065799297-ce07d1855c01" />
+            <div className="text-sm font-medium">PRIV Core — Mobile</div>
+          </div>
+        </motion.header>
+      ) : (
+        <motion.aside 
+          className="w-64 fixed top-0 left-0 h-full bg-black/50 backdrop-blur-lg p-4 flex flex-col z-40 border-r border-green-500/20"
       initial={{ x: -256 }}
       animate={{ x: 0 }}
       transition={{ duration: 0.5 }}
@@ -69,16 +79,18 @@ const Sidebar = ({ activeSection, setActiveSection }) => {
         </ul>
       </nav>
 
-      <div className="mt-auto">
-        <div className="p-4 bg-gray-800/50 rounded-lg">
-          <p className="text-sm text-gray-300">System Status:</p>
-          <div className="flex items-center space-x-2 mt-2">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-green-400 font-medium text-sm">All Systems Optimal</span>
+          <div className="mt-auto">
+            <div className="p-4 bg-gray-800/50 rounded-lg">
+              <p className="text-sm text-gray-300">System Status:</p>
+              <div className="flex items-center space-x-2 mt-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-green-400 font-medium text-sm">All Systems Optimal</span>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </motion.aside>
+        </motion.aside>
+      )}
+    </>
   );
 };
 

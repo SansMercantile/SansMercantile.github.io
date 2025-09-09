@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Lock, Key, AlertTriangle, CheckCircle, Eye, Zap, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import SecurityArchitecture from '@/components/security/SecurityArchitecture';
+import { Button } from './ui/button';
+import SecurityArchitecture from './security/SecurityArchitecture';
 
 const Security = () => {
   const [securityMetrics, setSecurityMetrics] = useState({ zkpVerifications: 15847, blockchainLogs: 2847, encryptionStrength: 256, threatLevel: 'Low', complianceScore: 98.7 });

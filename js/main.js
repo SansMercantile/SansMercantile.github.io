@@ -68,6 +68,24 @@ document.addEventListener("DOMContentLoaded", function () {
   const initializePage = () => {
     AOS.init();
 
+    // Mobile nav toggle behavior
+    const mobileToggle = document.querySelector('.mobile-nav-toggle');
+    const mobileOverlay = document.querySelector('.mobile-nav-overlay');
+    if (mobileToggle && mobileOverlay) {
+      mobileToggle.addEventListener('click', () => {
+        const isOpen = mobileOverlay.getAttribute('aria-hidden') === 'false';
+        mobileOverlay.setAttribute('aria-hidden', String(!isOpen));
+        mobileToggle.setAttribute('aria-expanded', String(!isOpen));
+      });
+      // close when clicking overlay background
+      mobileOverlay.addEventListener('click', (e) => {
+        if (e.target === mobileOverlay) {
+          mobileOverlay.setAttribute('aria-hidden', 'true');
+          mobileToggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
     const languageSelect = document.getElementById('language-select');
     if (languageSelect) {
       const englishRegions = ['en', 'en-US', 'en-GB', 'en-CA', 'en-AU', 'en-NZ', 'en-ZA'];

@@ -55,7 +55,7 @@
         .platform-actions { text-align: center; margin-top: 3rem; }
         
         /* Feature Hero Section */
-        .feature-hero { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 4rem; align-items: center; padding: 6rem 4rem; text-align: left; min-height: 90vh; }
+    .feature-hero { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; align-items: center; padding: 3.5rem 1.5rem; text-align: left; }
         .feature-hero:nth-child(odd) { background-color: var(--color-black-cherry); }
         .feature-hero .content { max-width: 600px; }
         .feature-hero:nth-child(even) .content { order: 2; }
@@ -203,16 +203,16 @@
 
             <div class="mockup-container">
                 <div id="demo-mobile" class="device-wrapper">
-                    <div class="device-mockup phone"><iframe src="demo.html"></iframe></div>
+                    <div class="device-mockup phone"><iframe src="/demo/index.html?device=mobile"></iframe></div>
                 </div>
                 <div id="demo-tablet" class="device-wrapper active">
-                    <div class="device-mockup tablet"><iframe src="https://app--mercantile-alchemist-copy-440e4c27.base44.app/Dashboard"></iframe></div>
+                    <div class="device-mockup tablet"><iframe src="/demo/index.html?device=tablet"></iframe></div>
                 </div>
                 <div id="demo-desktop" class="device-wrapper">
                     <div class="device-mockup laptop">
                         <div class="laptop-top">
                             <div class="laptop-camera"></div>
-                            <iframe src="demo.html" class="w-full h-[720px]"></iframe>
+                            <iframe src="/demo/index.html?device=desktop" class="w-full h-[720px]"></iframe>
                         </div>
                     </div>
                 </div>
@@ -226,5 +226,19 @@
 
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="js/main.js"></script>
+    <script>
+        (function(){
+            const toggles = document.querySelectorAll('#device-toggles .toggle-btn');
+            function setActive(device){
+                document.querySelectorAll('.device-wrapper').forEach(el => el.classList.remove('active'));
+                const sel = document.getElementById('demo-' + device);
+                if(sel) sel.classList.add('active');
+                toggles.forEach(b => b.classList.toggle('active', b.dataset.device === device));
+            }
+            toggles.forEach(btn => btn.addEventListener('click', () => setActive(btn.dataset.device)));
+            // init
+            setActive('tablet');
+        })();
+    </script>
 </body>
 </html>

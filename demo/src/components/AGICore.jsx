@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Brain, Heart, Eye, Zap, Activity, TrendingUp } from 'lucide-react';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from './ui/use-toast';
 
 const AGICore = () => {
   const [empathyScore, setEmpathyScore] = useState(87.3);
