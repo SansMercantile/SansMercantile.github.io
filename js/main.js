@@ -144,25 +144,25 @@ document.addEventListener("DOMContentLoaded", function () {
         {
           title: "Redefining Risk",
           description: "How our AI engine mitigates structural volatility in underserved markets.",
-          link: "blogs/redefining-risk.html",
+          href: "blogs/redefining-risk.html",
           image: "img/township-market-aerial-view.webp"
         },
         {
           title: "Compliance Isn’t a Checkbox",
           description: "How Sans Mercantile™ approaches governance as a trust-building framework.",
-          link: "blogs/blog-compliance-framework.html",
+          href: "blogs/blog-compliance-framework.html",
           image: "img/compliance.webp"
         },
         {
           title: "AI Revolution in CFD Trading",
           description: "Deep learning models transforming precision and profitability.",
-          link: "blogs/blog-ai-revolution.html",
+          href: "blogs/blog-ai-revolution.html",
           image: "img/ai-predictive-analytics-data-visualization.webp"
         },
         {
           title: "The Human Edge in AI Finance",
           description: "Fusing human intuition with machine intelligence for ethical growth.",
-          link: "blogs/blog-human-edge.html",
+          href: "blogs/blog-human-edge.html",
           image: "img/human-ai-edge.webp"
         }
       ],
@@ -170,13 +170,13 @@ document.addEventListener("DOMContentLoaded", function () {
         {
           title: "Coming soon",
           description: "More press releases will be made available soon.",
-          link: "newsroom/fintech-weekly-feature.html",
+          href: "newsroom/fintech-weekly-feature.html",
           image: "img/fintech-weekly-feature.webp"
         },
         {
           title: "Coming soon",
           description: "More press releases will be made available soon.",
-          link: "newsroom/global-summit-keynote.html",
+          href: "newsroom/global-summit-keynote.html",
           image: "img/global-summit-2025.webp"
         }
       ],
@@ -184,13 +184,13 @@ document.addEventListener("DOMContentLoaded", function () {
         {
           title: "Coming soon",
           description: "Our case studies will be made available soon.",
-          link: "case-studies/microfinance-inclusion.html",
+          href: "case-studies/microfinance-inclusion.html",
           image: "img/anima-line.webp"
         },
         {
           title: "Coming soon",
           description: "Our case studies will be made available soon.",
-          link: "case-studies/inventory-optimization.html",
+          href: "case-studies/inventory-optimization.html",
           image: "img/inventory-optimization.webp"
         }
       ]
@@ -217,7 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
         />
         <h4>${post.title}</h4>
         <p>${post.description}</p>
-        <a href="${post.link}">Read more</a>
+  <a href="${post.href}">Read more</a>
       </article>
     `).join('');
     insightGrid.classList.remove('fade-out');
@@ -264,7 +264,7 @@ document.addEventListener("DOMContentLoaded", function () {
           <article class="blog-card" data-tags="${post.tags.join(',')}">
             <h3>${post.title}</h3>
             <p>${post.description}</p>
-            <a href="${post.link}" class="blog-link">Read More &rarr;</a>
+            <a href="${post.href}" class="blog-link">Read More &rarr;</a>
           </article>
         `).join('');
       }
