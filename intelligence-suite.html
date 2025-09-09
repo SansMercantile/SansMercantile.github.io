@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Intelligence Suite — Hidden</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="header-placeholder"></div>
+  <main class="main-wrap">
+    <section style="padding:2.5rem 1.25rem; max-width:1100px; margin:1.5rem auto; text-align:left;">
+      <h1 class="font-display">Intelligence Suite</h1>
+      <p class="lead">One-pagers and conceptual modules for PRIV, MEZZO, PRIMO, MPETI, INPU. Each card can be extended into an interactive module.</p>
+
+      <div class="feature-grid" style="margin-top:1rem;">
+        <div class="feature-card">
+          <h4>PRIV</h4>
+          <p>Execution engine: emotional intelligence meets regulatory safety to execute with precision and consent.</p>
+          <button class="cta" onclick="openDetail('priv')">Open one-pager</button>
+        </div>
+
+        <div class="feature-card">
+          <h4>MEZZO</h4>
+          <p>Advisory orchestration and human-in-the-loop governance metaphors for strategic decisions.</p>
+          <button class="cta" onclick="openDetail('mezzo')">Open one-pager</button>
+        </div>
+
+        <div class="feature-card">
+          <h4>PRIMO</h4>
+          <p>Market primitives, microstructure, and execution analytics.</p>
+          <button class="cta" onclick="openDetail('primo')">Open one-pager</button>
+        </div>
+
+        <div class="feature-card">
+          <h4>MPETI</h4>
+          <p>Privacy-preserving telemetry and auditing layer.</p>
+          <button class="cta" onclick="openDetail('mpeti')">Open one-pager</button>
+        </div>
+
+        <div class="feature-card">
+          <h4>INPU</h4>
+          <p>Ingestion pipeline for multi-source alternative data.</p>
+          <button class="cta" onclick="openDetail('inpu')">Open one-pager</button>
+        </div>
+      </div>
+
+      <div id="detail" style="margin-top:1.5rem; display:none;">
+        <div class="feature-card" id="detail-card">
+          <h3 id="detail-title"></h3>
+          <p id="detail-body"></p>
+          <button class="cta" onclick="closeDetail()">Close</button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+  <div id="footer-placeholder"></div>
+  <script src="js/main.js"></script>
+  <script>
+    function openDetail(key){
+      const detail = document.getElementById('detail');
+      const title = document.getElementById('detail-title');
+      const body = document.getElementById('detail-body');
+      const content = {
+        priv: { title: 'PRIV — Execution Engine', body: 'PRIV blends emotional intelligence with strict compliance layers. Designed to execute with consent and auditability.' },
+        mezzo: { title: 'MEZZO — Advisory Orchestration', body: 'MEZZO provides strategy orchestration and explainability interfaces for human governance.' },
+        primo: { title: 'PRIMO — Market Primitives', body: 'PRIMO focuses on market microstructure and execution liquidity analysis.' },
+        mpeti: { title: 'MPETI — Telemetry', body: 'MPETI collects privacy-preserving traces and telemetry for audit and improvement.' },
+        inpu: { title: 'INPU — Ingestion', body: 'INPU ingests alternative data across multiple formats with robust validation.' }
+      };
+      title.textContent = content[key].title;
+      body.textContent = content[key].body;
+      detail.style.display = 'block';
+      detail.scrollIntoView({behavior:'smooth'});
+    }
+    function closeDetail(){
+      document.getElementById('detail').style.display = 'none';
+    }
+  </script>
+  <div style="display:none;" id="visuals">
+    <img src="/img/diagrams/priv-architecture.svg" alt="PRIV architecture" style="width:100%;max-width:900px;margin:1rem auto;display:block;" />
+  </div>
+</body>
+</html>
