@@ -71,7 +71,7 @@ const Tax = () => {
                     transition={{ duration: 0.5, delay: 0.2 }}
                     className="space-y-6"
                 >
-                    <h2 className="text-2xl font-semibold text-white flex items-center"><Brain className="w-8 h-8 mr-3 text-green-400" />Pillar 1: The Tax Intelligence Engine</h2>
+                    <h2 className="text-2xl font-semibold text-white flex items-center"><Brain className="w-8 h-8 mr-3 text-green-400" />The Tax Intelligence Engine</h2>
                     <div className="metric-card rounded-xl p-6 space-y-4">
                         <h3 className="font-semibold text-lg text-green-400">Predict Tax Revenue</h3>
                         <p className="text-gray-400 text-sm">Deploying Priv Sentiment and Economic Agents to analyze vast data sources, forecasting revenue from informal sectors with unprecedented accuracy.</p>
@@ -96,7 +96,7 @@ const Tax = () => {
                     transition={{ duration: 0.5, delay: 0.4 }}
                     className="space-y-6"
                 >
-                    <h2 className="text-2xl font-semibold text-white flex items-center"><Users className="w-8 h-8 mr-3 text-purple-400" />Pillar 2: Citizen-Centric Compliance</h2>
+                    <h2 className="text-2xl font-semibold text-white flex items-center"><Users className="w-8 h-8 mr-3 text-purple-400" />Citizen-Centric Compliance</h2>
                     <div className="metric-card rounded-xl p-6 space-y-4">
                         <h3 className="font-semibold text-lg text-purple-400">Adaptive Tax Education Tools</h3>
                         <p className="text-gray-400 text-sm">Our Emotion Driver and Empathy Engine create adaptive tutorials that gauge user sentiment, ensuring every citizen feels understood and supported through their tax journey.</p>
