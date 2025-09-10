@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const mobileToggle = document.querySelector('.mobile-nav-toggle');
   const mobileOverlay = document.querySelector('.mobile-nav-overlay');
   const mobileInner = document.querySelector('.mobile-nav-inner');
+  const header = document.querySelector('header');
+  const logo = document.querySelector('.logo');
   const navLinks = [
     { href: '/index.html', label: 'Home' },
     { href: '/about.html', label: 'About' },
@@ -40,6 +42,11 @@ document.addEventListener('DOMContentLoaded', function() {
     mobileToggle.addEventListener('click', function() {
       const expanded = mobileOverlay.getAttribute('aria-hidden') === 'false';
       mobileOverlay.setAttribute('aria-hidden', expanded ? 'true' : 'false');
+      // Always show logo, never fade
+      if (logo) {
+        logo.style.opacity = '1';
+        logo.style.transition = 'none';
+      }
     });
     // Optional: close overlay when clicking outside nav
     mobileOverlay.addEventListener('click', function(e) {
