@@ -1,29 +1,3 @@
-<!-- If your index.html was replaced by the demo app, restore your original homepage content here. If you want a specific design, let me know. -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sans Mercantile</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-  <header>
-    <!-- The header is included from header.html -->
-    <!-- If you use server-side includes or templating, reference header.html here. Otherwise, copy the header markup. -->
-  </header>
-  <main>
-    <section class="hero">
-      <h1>Welcome to Sans Mercantile</h1>
-      <p>Innovating the future of compliance, intelligence, and social impact.</p>
-    </section>
-    <!-- Add more homepage content as needed -->
-  </main>
-  <footer>
-    <!-- The footer is included from footer.html -->
-  </footer>
-</body>
-</html>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -39,15 +13,14 @@
   <body>
   <div id="header-placeholder"></div>
     <main role="main" class="main-wrap">
-      <section class="hero-section">
-        <div class="hero-overlay">
-          <h2>AI-Native Financial Infrastructure for Tomorrow’s Economies</h2>
-          <p>
-            Empowering underbanked and high-growth markets with predictive,
-            transparent, and institution-grade CFD trading intelligence.
-          </p>
-          <a class="cta" href="platform.html">Explore the AI Platform</a>
-        </div>
+       <section class="hero-section"></section>
+      <section class="hero-overlay">
+        <h2>AI-Native Financial Infrastructure for Tomorrow’s Economies</h2>
+        <p>
+          Empowering underbanked and high-growth markets with predictive,
+          transparent, and institution-grade CFD trading intelligence.
+        </p>
+        <a class="cta" href="platform.html">Explore the AI Platform</a>
       </section>
       <section class="vision-snippet" data-aos="fade-up" data-aos-delay="100">
         <h3>Our Vision</h3>
@@ -143,18 +116,111 @@
           <div class="platform-image">
             <img src="img/platform-preview.webp" alt="A preview of the Sans Mercantile™ AI-driven trading platform dashboard, showing predictive signal confidence and other metrics." />
           </div>
+        </div>
+        <a class="cta" href="platform.html">See All Platform Features</a>
+      </section>
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./assets/logo-68c471dd.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PRIV Core</title>
-    <script type="module" crossorigin src="./assets/index-02b33a6f.js"></script>
-    <link rel="stylesheet" href="./assets/index-6dbc22ee.css">
-  </head>
-  <body>
-    <div id="root"></div>
+<section class="latest-insights" data-aos="fade-up" data-aos-delay="100">
+  <h3>Latest Insights</h3>
+
+  <div class="insight-toggle">
+    <button data-section="insights" class="active">Insights</button>
+    <button data-section="newsroom">Newsroom</button>
+    <button data-section="caseStudies">Case Studies</button>
+  </div>
+
+  <div class="articles-grid" id="insight-carousel-grid">
+    <!-- Cards will be injected here -->
+  </div>
+
+  <a class="cta" href="blog.html">View All Insights</a>
+</section>
+
+
+
+  <div id="footer-placeholder"></div>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="js/main.js"></script>
+    <script>
+      // --- Main Initialization Script ---
+      document.addEventListener('DOMContentLoaded', () => {
+        // --- AOS Initialization ---
+        AOS.init();
+
+        // --- Mobile Navigation Toggle ---
+        const navToggle = document.querySelector('.mobile-nav-toggle');
+        const navOverlay = document.querySelector('.mobile-nav-overlay');
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                navToggle.classList.toggle('active');
+                navOverlay.classList.toggle('active');
+            });
+        }
+
+        // --- Language Selector Abbreviation & Logic ---
+        const languageSelect = document.getElementById('language-select');
+        if (languageSelect) {
+            const options = languageSelect.querySelectorAll('option');
+
+            function updateLanguageDisplay() {
+                if (window.innerWidth <= 768) { // Mobile breakpoint
+                    options.forEach(option => {
+                        option.textContent = option.value.toUpperCase();
+                    });
+                } else {
+                    options.forEach(option => {
+                        option.textContent = option.getAttribute('data-full-text');
+                    });
+                }
+            }
+
+            window.addEventListener('resize', updateLanguageDisplay);
+            updateLanguageDisplay(); // Initial check on load
+
+            // --- Existing Language Detection ---
+            const englishRegions = ['en', 'en-US', 'en-GB', 'en-CA', 'en-AU', 'en-NZ', 'en-ZA'];
+            const userLang = navigator.language || navigator.userLanguage;
+            if (englishRegions.some(region => userLang.startsWith(region))) {
+                languageSelect.value = 'en';
+            } else {
+                const langPrefix = userLang.split('-')[0];
+                const optionExists = languageSelect.querySelector(`option[value="${langPrefix}"]`);
+                if (optionExists) {
+                    languageSelect.value = langPrefix;
+                } else {
+                    languageSelect.value = 'en';
+                }
+            }
+            languageSelect.addEventListener('change', (event) => {
+                const selectedLanguage = event.target.value;
+                console.log(`Language changed to: ${selectedLanguage}`);
+                alert(`Page would now translate to ${selectedLanguage}. You need to implement the translation logic.`);
+            });
+        }
+
+        // Hero overlay scripts for index.html
+        const overlay = document.querySelector('.hero-overlay');
+        if (overlay) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 100) {
+                overlay.style.backdropFilter = 'blur(8px)';
+                overlay.style.backgroundColor = 'rgba(31, 0, 0, 0.8)';
+                } else {
+                overlay.style.backdropFilter = 'blur(6px)';
+                overlay.style.backgroundColor = 'rgba(31, 0, 0, 0.65)';
+                }
+            });
+            window.addEventListener('scroll', () => {
+                const triggerPoint = window.innerHeight * 0.01;
+                if (window.scrollY > triggerPoint) {
+                overlay.style.opacity = 1;
+                } else {
+                overlay.style.opacity = 0;
+                }
+            });
+        }
+      });
+    </script>
   </body>
 </html>
