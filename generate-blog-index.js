@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const cheerio = require('cheerio');
+const escapeHtml = require('escape-html');
 
 const BLOG_DIR = path.join(__dirname, 'blogs');
 const OUTPUT_FILE = path.join(__dirname, 'blog.html');
@@ -29,24 +30,32 @@ function injectSEO(fileName, html) {
   const description = $('meta[name="description"]').attr('content') || 'Sans Mercantile™ blog post.';
   const rawImage = $('img').first().attr('src') || '/img/default.jpg';
   const imagePath = rawImage.startsWith('/') ? rawImage : '/' + rawImage.replace(/^\.\.\//, '');
-  const canonical = `https://www.sansmercantile.com/blog/${fileName}`;
+  const safeFileName = encodeURIComponent(fileName);
+  const canonical = `https://www.sansmercantile.com/blog/${safeFileName}`;
   const keywords = hashtagMap[fileName] || ['#Uncategorized'];
 
+  // Escape content for safe HTML attribute usage
+  const escapedTitle = escapeHtml(title);
+  const escapedDescription = escapeHtml(description);
+  const escapedImagePath = escapeHtml(imagePath);
+  const escapedCanonical = escapeHtml(canonical);
+  const escapedKeywords = escapeHtml(keywords.join(', '));
+
   const seoBlock = `
-    <meta name="description" content="${description}" />
-    <link rel="canonical" href="${canonical}" />
+    <meta name="description" content="${escapedDescription}" />
+    <link rel="canonical" href="${escapedCanonical}" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="${title}" />
-    <meta property="og:description" content="${description}" />
-    <meta property="og:image" content="https://www.sansmercantile.com${imagePath}" />
-    <meta property="og:url" content="${canonical}" />
+    <meta property="og:title" content="${escapedTitle}" />
+    <meta property="og:description" content="${escapedDescription}" />
+    <meta property="og:image" content="https://www.sansmercantile.com${escapedImagePath}" />
+    <meta property="og:url" content="${escapedCanonical}" />
     <meta property="og:site_name" content="Sans Mercantile™" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="${title}" />
-    <meta name="twitter:description" content="${description}" />
-    <meta name="twitter:image" content="https://www.sansmercantile.com${imagePath}" />
+    <meta name="twitter:title" content="${escapedTitle}" />
+    <meta name="twitter:description" content="${escapedDescription}" />
+    <meta name="twitter:image" content="https://www.sansmercantile.com${escapedImagePath}" />
     <meta name="twitter:site" content="@SansMercantile" />
-    <meta name="keywords" content="${keywords.join(', ')}" />
+    <meta name="keywords" content="${escapedKeywords}" />
     <!-- SEO injected by generator -->
   `;
 
