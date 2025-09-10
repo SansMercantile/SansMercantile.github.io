@@ -1,3 +1,54 @@
+// Responsive mobile navigation toggle and dynamic menu rendering
+document.addEventListener('DOMContentLoaded', function() {
+  const mobileToggle = document.querySelector('.mobile-nav-toggle');
+  const mobileOverlay = document.querySelector('.mobile-nav-overlay');
+  const mobileInner = document.querySelector('.mobile-nav-inner');
+  const navLinks = [
+    { href: '/index.html', label: 'Home' },
+    { href: '/about.html', label: 'About' },
+    { href: '/founders-vision.html', label: "Founder's Vision", sub: true },
+    { href: '/social-impact.html', label: 'Social Impact', sub: true },
+    { href: '/intelligence-suite.html', label: 'Intelligence Suite', sub: true },
+    { href: '/governance-ethics.html', label: 'Governance & Ethics', sub: true },
+    { href: '/founders-feed.html', label: "Founder's Feed", sub: true },
+    { href: '/services.html', label: 'Services' },
+    { href: '/platform.html', label: 'Platform' },
+    { href: '/blog.html', label: 'Blog' },
+    { href: '/investors.html', label: 'Investors' },
+    { href: '/contact.html', label: 'Contact' },
+    { href: '/careers.html', label: 'Careers' }
+  ];
+
+  function renderMobileNav() {
+    if (!mobileInner) return;
+    mobileInner.innerHTML = '';
+    const nav = document.createElement('nav');
+    nav.className = 'nav-mobile';
+    nav.setAttribute('role', 'navigation');
+    navLinks.forEach(link => {
+      const a = document.createElement('a');
+      a.href = link.href;
+      a.textContent = link.sub ? '- ' + link.label : link.label;
+      nav.appendChild(a);
+    });
+    mobileInner.appendChild(nav);
+  }
+
+  renderMobileNav();
+
+  if (mobileToggle && mobileOverlay) {
+    mobileToggle.addEventListener('click', function() {
+      const expanded = mobileOverlay.getAttribute('aria-hidden') === 'false';
+      mobileOverlay.setAttribute('aria-hidden', expanded ? 'true' : 'false');
+    });
+    // Optional: close overlay when clicking outside nav
+    mobileOverlay.addEventListener('click', function(e) {
+      if (e.target === mobileOverlay) {
+        mobileOverlay.setAttribute('aria-hidden', 'true');
+      }
+    });
+  }
+});
 // js/main.js
 // This script is for pages in the root directory.
 
