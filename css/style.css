@@ -2595,6 +2595,62 @@ body.legal-background {
   transition: opacity 0.5s ease;
 } 
 
+/* --- Constellation --- */
+.constellation-card {
+  background-color: #1F2937; /* Tailwind gray-800 */
+  border: 1px solid #374151; /* Tailwind gray-700 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.constellation-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(99, 102, 241, 0.1);
+}
+.status-tag {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+.status-conceptual { background-color: #374151; color: #D1D5DB; }
+.status-alpha { background-color: #4F46E5; color: #FFFFFF; }
+.status-development { background-color: #059669; color: #FFFFFF; }
+.status-production { background-color: #ca8a04; color: #FFFFFF; } /* Amber-500 */
+
+/* --- PRIV Core --- */
+@media (max-width: 900px) {
+.device-mockup.phone, .device-mockup.tablet, .device-mockup.laptop { width: 100vw !important; height: 400px !important; min-width: 0; }
+.mockup-container { min-height: 300px; }
+}
+@media (max-width: 600px) {
+.device-toggles { flex-direction: column; gap: 0.5rem; }
+.device-mockup.phone, .device-mockup.tablet, .device-mockup.laptop { height: 250px !important; }
+}
+
+@media (max-width: 900px) {
+.mockup-container { flex-direction: row; min-height: 400px; overflow-x: auto; gap: 1rem; }
+.device-mockup.phone, .device-mockup.tablet, .device-mockup.laptop {
+   width: 90vw !important;
+   max-width: 350px;
+   height: 400px !important;
+   min-width: 220px;
+   min-height: 320px;
+   padding: 6px;
+}
+}
+@media (max-width: 480px) {
+.mockup-container { min-height: 120px; }
+.device-mockup.phone, .device-mockup.tablet, .device-mockup.laptop {
+   max-width: 100vw;
+   height: 120px !important;
+   min-width: 60px;
+   min-height: 60px;
+   padding: 1px;
+}
+.feature-hero .visual img, .platform-hero img, .logo {
+   opacity: 1 !important;
+   transition: none !important;
+  }
+}
+
 /* --- Fixes for Blinking and Scaling --- */
 
 /* 1. Fix for Blinking (FOUC) */
