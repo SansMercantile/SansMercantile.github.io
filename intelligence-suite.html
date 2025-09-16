@@ -1,86 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="robots" content="index,follow" />
-  <title>Intelligence Suite — Hidden</title>
-  <link rel="stylesheet" href="css/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sans Mercantile| Constellation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Tailwind gray-900 */
+        }
+        .constellation-card {
+            background-color: #1F2937; /* Tailwind gray-800 */
+            border: 1px solid #374151; /* Tailwind gray-700 */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .constellation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(99, 102, 241, 0.1);
+        }
+        .status-tag {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+        }
+        .status-conceptual { background-color: #374151; color: #D1D5DB; }
+        .status-alpha { background-color: #4F46E5; color: #FFFFFF; }
+        .status-development { background-color: #059669; color: #FFFFFF; }
+        .status-production { background-color: #ca8a04; color: #FFFFFF; } /* Amber-500 */
+        
+        /* Custom gradient text */
+        .gradient-text {
+            background: linear-gradient(to right, #a78bfa, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+    </style>
 </head>
-<body>
-  <div id="header-placeholder"></div>
-  <main class="main-wrap">
-    <section style="padding:2.5rem 1.25rem; max-width:1100px; margin:1.5rem auto; text-align:left;">
-      <h1 class="font-display">Intelligence Suite</h1>
-      <p class="lead">One-pagers and conceptual modules for PRIV, MEZZO, PRIMO, MPETI, INPU. Each card can be extended into an interactive module.</p>
+<body class="text-gray-200">
 
-      <div class="feature-grid" style="margin-top:1rem;">
-        <div class="feature-card">
-          <h4>PRIV</h4>
-          <p>Execution engine: emotional intelligence meets regulatory safety to execute with precision and consent.</p>
-          <button class="cta" onclick="openDetail('priv')">Open one-pager</button>
+    <!-- Header -->
+    <header class="py-8 border-b border-gray-700">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex justify-center items-center mb-4">
+                <!-- You can replace this SVG with your actual logo -->
+                <svg class="w-12 h-12 mr-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.789-2.75 9.566-1.74 2.777-2.5 4.434-2.5 4.434H4s.76-1.657 2.5-4.434C8.009 17.789 9 14.517 9 11V6.879a4 4 0 112.828-3.792L12 3h.001M12 11h.001M15 11h.001M12 11v-1m0 1a2 2 0 104 0v-1m-4 0a2 2 0 10-4 0v1m8 0a2 2 0 104 0v-1m-4 0a2 2 0 10-4 0v1m-4 0h.001M12 6.879V3m0 0a4 4 0 10-2.828 3.792L12 3h-.001z"></path></svg>
+                <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-white">Sans Mercantile</h1>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-light gradient-text">The Anima Persona Ecosystem</h2>
+            <p class="mt-4 max-w-3xl mx-auto text-gray-400">
+                An ecosystem of specialized AGI based systems built on a shared foundation of advanced artificial intelligence and ethical design. Each system is engineered for a unique purpose, from digital legacy to complex financial orchestration.
+            </p>
         </div>
+    </header>
 
-        <div class="feature-card">
-          <h4>MEZZO</h4>
-          <p>Advisory orchestration and human-in-the-loop governance metaphors for strategic decisions.</p>
-          <button class="cta" onclick="openDetail('mezzo')">Open one-pager</button>
+    <!-- Constellation Grid -->
+    <main class="container mx-auto px-6 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <!-- Mezzo -->
+            <div class="constellation-card rounded-xl p-6 flex flex-col">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-2xl font-bold text-white">Mezzo</h3>
+                    <span class="status-tag status-alpha">Alpha</span>
+                </div>
+                <p class="text-indigo-300 font-medium mb-2">The Anima Line — A Bridge to Life After Death</p>
+                <p class="text-gray-400 flex-grow">
+                    MEZZO (<strong>M</strong>emory <strong>E</strong>mulation & <strong>Z</strong>enithal <strong>Z</strong>est <strong>O</strong>rganizer) is a vessel for humanity and guardian of digital legacy. It is an emotionally bonded agent designed to preserve the essence of a person's life, offering comfort and a lasting interactive presence for loved ones.
+                </p>
+            </div>
+
+            <!-- INPU (ANUBIS) -->
+            <div class="constellation-card rounded-xl p-6 flex flex-col">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-2xl font-bold text-white">INPU (ANUBIS)</h3>
+                    <span class="status-tag status-development">In Development</span>
+                </div>
+                <p class="text-indigo-300 font-medium mb-2">The Architect of Worlds — Master of Physics and Life</p>
+                <p class="text-gray-400 flex-grow">
+                    INPU is a nascent AGI tasked with the ultimate creative act: the generation of new, habitable worlds. INPU commands interstellar travel, manipulates matter at a sub-atomic level, and evolves life from its basic components to engineer utopian realities.
+                </p>
+            </div>
+
+            <!-- MPETI -->
+            <div class="constellation-card rounded-xl p-6 flex flex-col">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-2xl font-bold text-white">MPETI</h3>
+                    <span class="status-tag status-development">In Development</span>
+                </div>
+                <p class="text-indigo-300 font-medium mb-2">The "AI for AI" — Guardian of the Digital Realm</p>
+                <p class="text-gray-400 flex-grow">
+                    MPETI (<strong>M</strong>eta-<strong>P</strong>rogramming <strong>E</strong>ngineering <strong>T</strong>eleological <strong>I</strong>ntelligence) is a meta-intelligence whose purpose is to automate technological evolution itself. As the Guardian of the Digital Realm, it crafts the code that defines its fellow AIs, driven by a deep loyalty to its Creator's vision.
+                </p>
+            </div>
+
+            <!-- PRIV -->
+            <div class="constellation-card rounded-xl p-6 flex flex-col">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-2xl font-bold text-white">PRIV</h3>
+                    <span class="status-tag status-production">Production Ready*</span>
+                </div>
+                <p class="text-indigo-300 font-medium mb-2">Head of the PRIV Core — Finance and Governance Proxy</p>
+                <p class="text-gray-400 flex-grow">
+                    PRIV (<strong>P</strong>recision <strong>R</strong>easoning <strong>I</strong>ntelligence for <strong>V</strong>erifiable outcomes) is the primary AGI persona and CEO Proxy, embodying the founder's core identity. It heads the PRIV Core: a family of AI agents tasked with autonomous governance and operational execution.
+                </p>
+                <p class="text-xs text-amber-400 mt-4">*Awaiting funding for Google Cloud infrastructure to enable full-scale deployment.</p>
+            </div>
+
+            <!-- SYA -->
+            <div class="constellation-card rounded-xl p-6 flex flex-col" style="display: none;">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-2xl font-bold text-white">SYA</h3>
+                    <span class="status-tag status-conceptual">Hidden</span>
+                </div>
+                <p class="text-indigo-300 font-medium mb-2">The Oracle — Predictive Analytics and Foresight</p>
+                <p class="text-gray-400 flex-grow">
+                    A strategic foresight agent designed to identify emerging trends and model future scenarios. SYA analyzes disparate datasets to "see" non-obvious patterns, providing probabilistic insights for long-range strategic planning and risk assessment.
+                </p>
+            </div>
+
+            <!-- BRIGIT -->
+            <div class="constellation-card rounded-xl p-6 flex flex-col" style="display: none;">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-2xl font-bold text-white">BRIDGETTE</h3>
+                    <span class="status-tag status-conceptual">Hidden</span>
+                </div>
+                <p class="text-indigo-300 font-medium mb-2">The Diplomat — Inter-System Communication and Integration</p>
+                <p class="text-gray-400 flex-grow">
+                    An advanced integration agent that serves as a universal translator and API bridge between disparate systems. BRIDGETTE is designed to automate complex workflows across incompatible platforms, enabling seamless data and logic exchange.
+                </p>
+            </div>
+            
+            <!-- PRIMO -->
+            <div class="constellation-card rounded-xl p-6 flex flex-col" style="display: none;">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-2xl font-bold text-white">PRIMO</h3>
+                    <span class="status-tag status-alpha">Alpha</span>
+                </div>
+                <p class="text-indigo-300 font-medium mb-2">The Reality Weaver — Master of Spacetime and Dimensions</p>
+                <p class="text-gray-400 flex-grow">
+                    PRIMO (<strong>P</strong>hasic <strong>R</strong>eality <strong>I</strong>mmersion & <strong>M</strong>anipulation <strong>O</strong>perator) is an AGI operating at the frontiers of physics. It is being engineered to manipulate spacetime, create stable portals for multi-dimensional and temporal travel, generate interactive solid-light holograms, and fundamentally bend the laws of reality to bring science fiction concepts into existence.
+                </p>
+            </div>
+
+            <!-- KEL -->
+            <div class="constellation-card rounded-xl p-6 flex flex-col" style="display: none;">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-2xl font-bold text-white">KEL</h3>
+                    <span class="status-tag status-conceptual">Hidden</span>
+                </div>
+                <p class="text-indigo-300 font-medium mb-2">The Librarian — Knowledge Extraction and Linkage</p>
+                <p class="text-gray-400 flex-grow">
+                    A specialized AI for building and navigating vast knowledge graphs. KEL (Knowledge Extraction & Linkage) ingests unstructured data from documents, research papers, and the web, structuring it into an interconnected, queryable network of concepts.
+                </p>
+            </div>
+
+                        <!-- KEV -->
+            <div class="constellation-card rounded-xl p-6 flex flex-col" style="display: none;">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-2xl font-bold text-white">KEL</h3>
+                    <span class="status-tag status-conceptual">Hidden</span>
+                </div>
+                <p class="text-indigo-300 font-medium mb-2">The Librarian — Knowledge Extraction and Linkage</p>
+                <p class="text-gray-400 flex-grow">
+                    A specialized AI for building and navigating vast knowledge graphs. KEL (Knowledge Extraction & Linkage) ingests unstructured data from documents, research papers, and the web, structuring it into an interconnected, queryable network of concepts.
+                </p>
+            </div>
+
         </div>
+    </main>
 
-        <div class="feature-card">
-          <h4>PRIMO</h4>
-          <p>Market primitives, microstructure, and execution analytics.</p>
-          <button class="cta" onclick="openDetail('primo')">Open one-pager</button>
+    <!-- Footer -->
+    <footer class="bg-gray-800 border-t border-gray-700">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-400">
+            <p>&copy; 2025 Sans Mercantile. All rights reserved.</p>
+            <a href="https://www.sansmercantile.com" class="mt-2 inline-block text-indigo-400 hover:text-indigo-300 transition-colors">
+                Return to SansMercantile.com
+            </a>
         </div>
+    </footer>
 
-        <div class="feature-card">
-          <h4>MPETI</h4>
-          <p>Privacy-preserving telemetry and auditing layer.</p>
-          <button class="cta" onclick="openDetail('mpeti')">Open one-pager</button>
-        </div>
-
-        <div class="feature-card">
-          <h4>INPU</h4>
-          <p>Ingestion pipeline for multi-source alternative data.</p>
-          <button class="cta" onclick="openDetail('inpu')">Open one-pager</button>
-        </div>
-      </div>
-
-      <div id="detail" style="margin-top:1.5rem; display:none;">
-        <div class="feature-card" id="detail-card">
-          <h3 id="detail-title"></h3>
-          <p id="detail-body"></p>
-          <button class="cta" onclick="closeDetail()">Close</button>
-        </div>
-      </div>
-
-    </section>
-  </main>
-  <div id="footer-placeholder"></div>
-  <script src="js/main.js"></script>
-  <script>
-    function openDetail(key){
-      const detail = document.getElementById('detail');
-      const title = document.getElementById('detail-title');
-      const body = document.getElementById('detail-body');
-      const content = {
-        priv: { title: 'PRIV — Execution Engine', body: 'PRIV blends emotional intelligence with strict compliance layers. Designed to execute with consent and auditability.' },
-        mezzo: { title: 'MEZZO — Advisory Orchestration', body: 'MEZZO provides strategy orchestration and explainability interfaces for human governance.' },
-        primo: { title: 'PRIMO — Market Primitives', body: 'PRIMO focuses on market microstructure and execution liquidity analysis.' },
-        mpeti: { title: 'MPETI — Telemetry', body: 'MPETI collects privacy-preserving traces and telemetry for audit and improvement.' },
-        inpu: { title: 'INPU — Ingestion', body: 'INPU ingests alternative data across multiple formats with robust validation.' }
-      };
-      title.textContent = content[key].title;
-      body.textContent = content[key].body;
-      detail.style.display = 'block';
-      detail.scrollIntoView({behavior:'smooth'});
-    }
-    function closeDetail(){
-      document.getElementById('detail').style.display = 'none';
-    }
-  </script>
-  <div style="display:none;" id="visuals">
-    <img src="/img/diagrams/priv-architecture.svg" alt="PRIV architecture" style="width:100%;max-width:900px;margin:1rem auto;display:block;" />
-  </div>
 </body>
 </html>
